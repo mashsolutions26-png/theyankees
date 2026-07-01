@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+  <title>The Yankees Diner — Est. 1952</title>
+  <meta name="description" content="The Yankees Diner — classic American burgers, hot dogs & shakes. Order online or book a table." />
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon (1).png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="img/favicon (1).png" />
+  <link rel="apple-touch-icon" href="img/favicon (1).png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            ink: { 950: '#08090b', 900: '#0d0f12', 800: '#141619', 700: '#1c1f24', 600: '#26292f' },
+            yankee: { red: '#c8102e', redDark: '#8f0c20', gold: '#f4b93e', goldSoft: '#e8a93a', cream: '#f4ede1' }
+          },
+          fontFamily: {
+            display: ['"Anton"', 'sans-serif'],
+            condensed: ['"Bebas Neue"', 'sans-serif'],
+            sans: ['"Inter"', 'sans-serif'],
+            label: ['"Oswald"', 'sans-serif'],
+          },
+          boxShadow: { glow: '0 0 40px -8px rgba(200,16,46,0.45)', goldglow: '0 0 40px -8px rgba(244,185,62,0.4)' }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root { --glass-bg: rgba(20,22,25,0.55); --glass-border: rgba(255,255,255,0.08); }
+    html { scroll-behavior: smooth; }
+    body {
+      background-color:#0a0b0d;
+      background-image: radial-gradient(circle at 15% 0%, rgba(200,16,46,0.16), transparent 45%),
+                        radial-gradient(circle at 85% 15%, rgba(244,185,62,0.10), transparent 40%),
+                        radial-gradient(circle at 50% 100%, rgba(200,16,46,0.08), transparent 50%);
+      overflow-x: hidden;
+      width: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
+    .glass { background: var(--glass-bg); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid var(--glass-border); }
+    .glass-strong { background: rgba(15,16,19,0.72); backdrop-filter: blur(24px) saturate(150%); -webkit-backdrop-filter: blur(24px) saturate(150%); border: 1px solid rgba(255,255,255,0.09); }
+    ::-webkit-scrollbar { width: 10px; height: 10px; }
+    ::-webkit-scrollbar-track { background: #0a0b0d; }
+    ::-webkit-scrollbar-thumb { background: #2a2d33; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #c8102e; }
+    .text-outline { -webkit-text-stroke: 1.5px rgba(244,185,62,0.6); color: transparent; }
+    .bump { transition: transform .18s ease; }
+    .bump:active { transform: scale(0.94); }
+    .menu-card { transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease; }
+    .menu-card:hover { transform: translateY(-4px); border-color: rgba(244,185,62,0.35); box-shadow: 0 18px 40px -18px rgba(200,16,46,0.5); }
+    input::placeholder, textarea::placeholder { color: rgba(244,237,225,0.35); }
+    
+    .menu-detail-panel {
+      background: rgba(12,14,18,0.95);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 2rem;
+      padding: 1.5rem;
+      max-height: 70vh;
+      overflow-y: auto;
+    }
+    .menu-detail-panel::-webkit-scrollbar { width: 6px; }
+    .menu-detail-panel::-webkit-scrollbar-thumb { background: #c8102e; border-radius: 12px; }
+    .menu-section-title {
+      font-family: 'Anton', sans-serif;
+      letter-spacing: 0.02em;
+      border-bottom: 2px solid rgba(244,185,62,0.2);
+      padding-bottom: 0.5rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .menu-item-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.05);
+      gap: 1rem;
+    }
+    .menu-item-name { font-weight: 500; color: #f4ede1; font-size: 0.95rem; }
+    .menu-item-price { font-family: 'Anton', sans-serif; color: #f4b93e; font-size: 1rem; white-space: nowrap; }
+    .menu-sub { font-size: 0.75rem; color: #b0a99b; margin-left: 0.25rem; display: block; }
+    .menu-item-left { flex: 1; }
+
+    /* ========== UPDATED HOURS STYLES ========== */
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+    }
+    .hours-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 1rem;
+      padding: 0.75rem 0.5rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+    }
+    .hours-card.today {
+      border-color: #f4b93e;
+      background: rgba(244,185,62,0.08);
+      box-shadow: 0 0 30px -8px rgba(244,185,62,0.15);
+    }
+    .hours-card.closed {
+      opacity: 0.5;
+    }
+    .hours-day {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: #f4ede1;
+      text-transform: uppercase;
+    }
+    .hours-date {
+      font-size: 0.6rem;
+      color: #b0a99b;
+      display: block;
+      margin-top: 0.1rem;
+    }
+    .hours-time {
+      font-family: 'Anton', sans-serif;
+      font-size: 0.9rem;
+      color: #f4b93e;
+    }
+    .hours-status {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      padding: 0.15rem 0.6rem;
+      border-radius: 20px;
+      display: inline-block;
+      margin-top: 0.2rem;
+    }
+    .status-open { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .status-closed { background: rgba(239,68,68,0.2); color: #ef4444; }
+
+    /* Countdown Timer Styles */
+    .countdown-wrapper {
+      background: rgba(12,14,18,0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .countdown-wrapper:hover {
+      border-color: rgba(244,185,62,0.2);
+      box-shadow: 0 0 50px -12px rgba(244,185,62,0.1);
+    }
+    .countdown-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: #f4ede1;
+      opacity: 0.4;
+    }
+    .countdown-timer {
+      font-family: 'Anton', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      line-height: 1.1;
+      background: linear-gradient(135deg, #f4b93e, #f0c86a);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 60px rgba(244,185,62,0.15);
+    }
+    .countdown-status-text {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #f4ede1;
+      margin-top: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .countdown-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse-dot 1.4s infinite ease-in-out;
+    }
+    .countdown-dot.open { background: #22c55e; box-shadow: 0 0 20px #22c55e88; }
+    .countdown-dot.closed { background: #ef4444; box-shadow: 0 0 20px #ef444488; }
+
+    @keyframes pulse-dot {
+      0% { opacity: 0.6; transform: scale(0.9); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0.6; transform: scale(0.9); }
+    }
+
+    /* Entrance Animations */
+    .anim-fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 0.9s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .anim-fade-up-d1 { animation-delay: 0.1s; }
+    .anim-fade-up-d2 { animation-delay: 0.2s; }
+    .anim-fade-up-d3 { animation-delay: 0.3s; }
+    .anim-fade-up-d4 { animation-delay: 0.4s; }
+    .anim-fade-up-d5 { animation-delay: 0.5s; }
+    .anim-fade-up-d6 { animation-delay: 0.6s; }
+    .anim-fade-up-d7 { animation-delay: 0.7s; }
+
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(30px) scale(0.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    #fullMenuPage, #aboutPage {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+      background: #0a0b0d;
+      overflow-y: auto;
+      transform: translateY(100%);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      padding-top: 80px;
+    }
+    #fullMenuPage.active, #aboutPage.active {
+      transform: translateY(0);
+    }
+    .close-page-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      background: rgba(200,16,46,0.9);
+      color: white;
+      border: none;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      font-size: 1.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .close-page-btn:hover {
+      transform: scale(1.1);
+      background: #c8102e;
+    }
+    .page-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 4rem;
+    }
+    .page-inner .menu-section-title {
+      font-size: 2rem;
+      margin-top: 2rem;
+    }
+    .page-inner .menu-item-row {
+      padding: 0.6rem 0;
+    }
+    .page-inner .menu-item-name {
+      font-size: 1rem;
+    }
+    .page-inner .menu-item-price {
+      font-size: 1.1rem;
+    }
+
+    .about-hero {
+      background: linear-gradient(135deg, rgba(200,16,46,0.15), rgba(244,185,62,0.08));
+      border-radius: 2rem;
+      padding: 2.5rem;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .location-card {
+      background: rgba(255,255,255,0.03);
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border: 1px solid rgba(255,255,255,0.05);
+      transition: all 0.3s ease;
+    }
+    .location-card:hover {
+      border-color: rgba(244,185,62,0.3);
+      transform: translateY(-4px);
+    }
+    .location-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(200,16,46,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+    }
+    .social-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .social-icon:hover {
+      background: rgba(200,16,46,0.2);
+      border-color: #f4b93e;
+      transform: scale(1.1);
+    }
+    #checkoutBtn {
+      display: none;
+    }
+    #checkoutBtn.visible {
+      display: flex;
+    }
+
+    .logo-img {
+      height: 44px;
+      width: auto;
+      max-width: 180px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 6px rgba(244,185,62,0.1));
+      transition: transform 0.2s ease;
+    }
+    .logo-img:hover {
+      transform: scale(1.02);
+    }
+
+    .menu-slider {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      gap: 1.5rem;
+      padding: 0.5rem 0.25rem 1.5rem;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+    }
+    .menu-slider::-webkit-scrollbar {
+      height: 6px;
+    }
+    .menu-slider::-webkit-scrollbar-thumb {
+      background: #c8102e;
+      border-radius: 20px;
+    }
+    .menu-slider::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.05);
+      border-radius: 20px;
+    }
+    .menu-slider .menu-panel {
+      flex: 0 0 100%;
+      scroll-snap-align: start;
+      background: rgba(12,14,18,0.85);
+      backdrop-filter: blur(4px);
+      border-radius: 2rem;
+      padding: 1.5rem 1rem;
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: border-color 0.3s;
+    }
+    .menu-slider .menu-panel:hover {
+      border-color: rgba(244,185,62,0.25);
+    }
+    .slider-nav {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+    .slider-nav button {
+      background: rgba(255,255,255,0.06);
+      border: none;
+      color: #f4ede1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.25s;
+      border: 1px solid transparent;
+    }
+    .slider-nav button.active {
+      background: rgba(200,16,46,0.25);
+      border-color: #f4b93e;
+      color: #f4b93e;
+    }
+    .slider-nav button:hover {
+      background: rgba(244,185,62,0.12);
+    }
+
+    @media (max-width: 480px) {
+      .menu-slider .menu-panel {
+        padding: 1rem 0.75rem;
+      }
+      .slider-nav button {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.9rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .hours-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .page-inner {
+        padding: 1rem 1rem 4rem;
+      }
+      .page-inner .menu-section-title {
+        font-size: 1.5rem;
+      }
+      .about-hero {
+        padding: 1.5rem;
+      }
+      .about-hero .flex {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo-img {
+        height: 32px;
+        max-width: 130px;
+      }
+      .glass {
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+      }
+      .glass-strong {
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+      .close-page-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        top: 12px;
+        right: 12px;
+      }
+      #fullMenuPage, #aboutPage {
+        padding-top: 60px;
+      }
+      .countdown-timer {
+        font-size: 2.8rem !important;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .hours-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+      }
+      .hours-card {
+        padding: 0.5rem 0.25rem;
+      }
+      .hours-time {
+        font-size: 0.7rem;
+      }
+      .hours-day {
+        font-size: 0.65rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      h1.font-display {
+        font-size: 12vw !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      #basketDrawer {
+        width: 100%;
+      }
+    }
+
+    iframe {
+      max-width: 100%;
+      height: auto;
+      aspect-ratio: 16/9;
+    }
+
+    @media (max-width: 768px) {
+      button, .add-to-order, .qty-btn {
+        min-height: 44px;
+        min-width: 44px;
+      }
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
+    .local-time-badge {
+      font-size: 0.7rem;
+      color: #b0a99b;
+      display: block;
+      margin-top: 0.4rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body class="bg-ink-950 text-yankee-cream font-sans antialiased selection:bg-yankee-red selection:text-white">
+
+<!-- ============ FULL MENU PAGE (Overlay) ============ -->
+<div id="fullMenuPage">
+  <button class="close-page-btn" onclick="closeFullMenu()">✕</button>
+  <div class="page-inner">
+    <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">OUR FULL MENU</h1>
+    <p class="text-yankee-cream/50 text-sm mb-6">Everything we serve — straight from our kitchen to your table.</p>
+
+    <div class="menu-slider" id="menuSlider">
+      <div class="menu-panel" data-panel="starters">
+        <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌮 STARTERS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Grilled Broccoli</span></div><span class="menu-item-price">$12</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Fries & Aioli</span></div><span class="menu-item-price">$11</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Hand Cooked Tortillas <span class="menu-sub">Fresh slaw, zesty peri-peri mayo & BBQ sauce (Chicken +6, Pulled Pork +7, Bacon +6)</span></span></div><span class="menu-item-price">$12</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Garlic Bread <span class="menu-sub">Warm toasty bread with blended cheese & garlic butter</span></span></div><span class="menu-item-price">$11</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sweet Potato Wedges & Aioli</span></div><span class="menu-item-price">$13</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Parmesan Truffle Fries <span class="menu-sub">Truffle mayo, parmesan cheese, croutons & mixed herbs</span></span></div><span class="menu-item-price">$17</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Fried Calamari <span class="menu-sub">Lemon & tartare sauce</span></span></div><span class="menu-item-price">$17</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Bruschetta <span class="menu-sub">Warm toasty bread, blended cheese, mixed veggies, cherry tomatoes (Chicken +6, Pulled Pork +7, Bacon +6, Smashed Avo +5)</span></span></div><span class="menu-item-price">$15</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Potato Wedges <span class="menu-sub">Yankee's seasoning, sweet chilli & sour cream</span></span></div><span class="menu-item-price">$14</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🍗 WINGS & RIBS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Chicken Wings <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese (+3) · Blue Cheese (+3) — Fried or grilled with salad</span></span></div><span class="menu-item-price">10pcs $19<br>20pcs $36<br>30pcs $52</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pork Ribs <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese (+3) — Marinated in house seasoning, with fresh salad & fries</span></span></div><span class="menu-item-price">$39</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🧀 NACHOS & LOADED FRIES</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">American Nachos <span class="menu-sub">Corn chips, blended cheese, tomatoes, onions, beans, smashed avo & sour cream (Chicken +6, Pulled Pork +7, Bacon +6)</span></span></div><span class="menu-item-price">$19</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Loaded Fries <span class="menu-sub">Crispy fries, melted cheese, pickles & jalapeños</span></span></div><span class="menu-item-price">$16</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Loaded Fries <span class="menu-sub">Crispy fries, melted cheese, pulled pork, pickles & jalapeños</span></span></div><span class="menu-item-price">$20</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🍽️ AMERICAN PLATTERS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Las Vegas Platter <span class="menu-sub">Nachos, Fried wings(5), Calamari rings, Nuggets(5), 2 dips, fries, salad, soft drink</span></span></div><span class="menu-item-price">$45</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Miami Platter <span class="menu-sub">Fried wings(10), Calamari rings, 2 sides (Chicken/Pulled Pork), 2 dips, fries, salad, 2 soft drinks</span></span></div><span class="menu-item-price">$69</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Yankee's Platter <span class="menu-sub">Garlic bread, Fried wings(10), Pork ribs, Calamari, 4 sides, Onion rings, Sausage zips, 2 dips, fries, salad, 4 soft drinks</span></span></div><span class="menu-item-price">$129</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🍔 BURGERS</h2>
+        <p class="text-sm text-yankee-cream/50 mb-3">GF & Grilled Options Available · Meal deals from $4.99 (excludes fries & drink)</p>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheese Burger (GF) <span class="menu-sub">Beef patty, cheese, onion, pickles, mustard & tomato sauce</span></span></div><span class="menu-item-price">$13</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Classic New Yorker (GF) <span class="menu-sub">Beef patty, maple bacon, cheese, mayo, mustard & tomato sauce</span></span></div><span class="menu-item-price">$17</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">BBQ Chicken <span class="menu-sub">Chicken patty, cheese, lettuce, pickles, BBQ sauce & garlic aioli</span></span></div><span class="menu-item-price">$16</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Yankee's Special Burger (GF) <span class="menu-sub">Double beef, crispy bacon, ham, double cheese, onion, pickles & special sauce</span></span></div><span class="menu-item-price">$24</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Smokin' Hot (GF) <span class="menu-sub">Beef patty, cheese, jalapeños, onions, mayo & hot sauce</span></span></div><span class="menu-item-price">$17</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Peri-Peri Chicken <span class="menu-sub">Chicken patty, cheese, lettuce, onion, jalapeños, peri-peri sauce & mayo</span></span></div><span class="menu-item-price">$18</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Southern Fried Chicken <span class="menu-sub">Chicken patty, crispy bacon, coleslaw, cheese, jalapeños, pickles, maple syrup & garlic aioli</span></span></div><span class="menu-item-price">$21</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Fish <span class="menu-sub">Fish patty, cheese, lettuce, tomato, pickles & tartare sauce</span></span></div><span class="menu-item-price">$17</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Ozzie (GF) <span class="menu-sub">Beef patty, bacon, egg, cheese, lettuce, pineapple, beetroot, tomato, onion, mayo & BBQ</span></span></div><span class="menu-item-price">$22</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Double BBQ Cheese <span class="menu-sub">Double beef, double cheese, crispy bacon, onion ring, pickles, baconised mayo & BBQ</span></span></div><span class="menu-item-price">$23</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Hulk <span class="menu-sub">Beef patty, chicken patty, bacon, egg, triple cheese, onion ring & BBQ</span></span></div><span class="menu-item-price">$29</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Veg <span class="menu-sub">Veg patty, cheese, lettuce, tomato, onion, jalapeños, tomato sauce & garlic aioli</span></span></div><span class="menu-item-price">$15</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Vego Beef <span class="menu-sub">V2 burger patty, vegan cheese, onion, lettuce, sweet chilli & BBQ</span></span></div><span class="menu-item-price">$20</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Vego Chicken <span class="menu-sub">V2 schnitzel, vegan cheese, lettuce, pickles, vegan garlic aioli & BBQ</span></span></div><span class="menu-item-price">$21</span></div>
+      </div>
+
+      <div class="menu-panel" data-panel="signature">
+        <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌭 AMERICAN HOTDOGS</h2>
+        <p class="text-sm text-yankee-cream/50 mb-3">All dogs are American style charred sausage</p>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Texas Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, onion, mayo & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chilli Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, jalapeños, onion, mustard, mayo & hot sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Deluxe Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, coleslaw, onion, jalapeños, Yankee's special sauce & BBQ</span></span></div><span class="menu-item-price">$??</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🍕 PIZZAS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Margherita <span class="menu-sub">Pizza sauce, blended cheese, tomatoes & mixed herbs</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">BBQ Chicken <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pepperoni <span class="menu-sub">Pizza sauce, blended cheese & pepperoni</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Garlic <span class="menu-sub">Garlic sauce, blended cheese & mixed herbs</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Piggy Lover <span class="menu-sub">Pizza sauce, blended cheese, onions, pulled pork & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Ham & Cheese <span class="menu-sub">Pizza sauce, blended cheese & ham</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Hawaiian <span class="menu-sub">Pizza sauce, blended cheese, ham & pineapple</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Spicy Veggie <span class="menu-sub">Pizza sauce, blended cheese, mushroom, onions, jalapeños, mixed herbs & peri peri sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Spicy Chicken <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken, jalapeños & peri peri sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Meat Lovers <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken, pepperoni, bacon & ham</span></span></div><span class="menu-item-price">$??</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">✨ SIGNATURE DISHES</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Skin Salmon <span class="menu-sub">Hollandaise sauce, lemon, on a bed of mashed potatoes & salad</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Lamb Shank <span class="menu-sub">Slow cooked 48 hours, mashed potatoes, grilled tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Parma <span class="menu-sub">Original · Ham · Pepperoni — crispy fried chicken breast, tomato gravy, blended cheese, salad & fries</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Schnitzel <span class="menu-sub">Crispy fried chicken breast, salad, fries & gravy</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Signature Chicken Skewers <span class="menu-sub">Flamed chargrilled with capsicum & onions, lemon & sriracha on salad</span></span></div><span class="menu-item-price">$??</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🥩 STEAKS — ARLO Queensland 10 Day Grain Fed Beef</h2>
+        <p class="text-sm text-yankee-cream/50 mb-3">ARLO cattle roam under clear blue skies and starry nights of northern Queensland. Each cut expresses the Australian territory upon which it was raised — unmatched tenderness and flavour.</p>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Rump 350g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Scotch Fillet 250g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sirloin 300g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Extras <span class="menu-sub">Peppercorn +4 · Gravy +4 · Mushroom Gravy +4</span></span></div><span class="menu-item-price"></span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🧂 DIPS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheese Dip · Gravy · Mushroom Gravy · Peppercorn · Yankee's Special Sauce · Baconised Mayo · Smashed Avo · Tomato Sauce · BBQ · Hot · Buffalo · Mayo · Aioli · Sweet Chilli · Peri Peri · Portuguese · Siricha Mayo · Tartare</span></div><span class="menu-item-price"></span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🧒 KIDS MENU</h2>
+        <p class="text-sm text-yankee-cream/50 mb-3">Served with a soft drink — exclusions apply</p>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Nuggets & Fries <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Popcorn Chicken <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Mozzarella Sticks (5) <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Junior Beef Burger <span class="menu-sub">Beef, cheese, tomato sauce & fries</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Junior Chicken Burger <span class="menu-sub">Chicken, cheese, lettuce, tomato sauce & fries</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Onion Rings <span class="menu-sub">Crispy onion rings with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🥗 SALADS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Caesar <span class="menu-sub">Grilled chicken, lettuce, cherry tomatoes, caesar dressing, bacon, cucumber, onions, croutons & parmesan</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Mediterranean Veg <span class="menu-sub">Cherry tomatoes, olives, onions, mixed leaves, feta, cucumber, fried onion & sweet potato</span></span></div><span class="menu-item-price">$??</span></div>
+
+        <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pancakes <span class="menu-sub">Vanilla · Chocolate · Strawberry syrup, served with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Brownies <span class="menu-sub">with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Caramel Sticky Date <span class="menu-sub">with vanilla ice cream & caramel sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Belgian Chocolate Waffles <span class="menu-sub">with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
+      </div>
+    </div>
+
+    <div class="slider-nav" id="sliderNav">
+      <button class="active" data-target="starters">🍔 Starters & More</button>
+      <button data-target="signature">✨ Signature Dishes</button>
+    </div>
+
+    <h2 class="menu-section-title text-yankee-cream">📅 WEEKLY LUNCH SPECIALS</h2>
+    <p class="text-sm text-yankee-cream/50 mb-3">Available after any drink purchase · 11:00 AM – 5:00 PM</p>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Monday — Burger & Chips Combo <span class="menu-sub">Cheese Burger, BBQ Chicken, or Premium Veg</span></span></div><span class="menu-item-price">$4.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Tuesday — Original Parma</span></div><span class="menu-item-price">$19.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Wednesday — 10 Wings <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese · Blue Cheese</span></span></div><span class="menu-item-price">$14.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Thursday — Pork Ribs <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese</span></span></div><span class="menu-item-price">$25.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Friday — Any Hotdog</span></div><span class="menu-item-price">$11.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Saturday — Nachos <span class="menu-sub">Chicken +6, Pulled Pork +7, Bacon +6</span></span></div><span class="menu-item-price">$14.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sunday — Any Pizza</span></div><span class="menu-item-price">$17.99</span></div>
+
+    <h2 class="menu-section-title text-yankee-cream">🍻 HAPPY HOUR</h2>
+    <p class="text-sm text-yankee-cream/50 mb-3">Everyday · 2:00 PM – 6:00 PM & 9:30 PM – 11:30 PM</p>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Buy One Cocktail Get One Free</span></div><span class="menu-item-price">—</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any 2 Beer Pots</span></div><span class="menu-item-price">$11.99</span></div>
+    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any Beer Jug</span></div><span class="menu-item-price">$17.99</span></div>
+
+    <div class="mt-8 text-center text-yankee-cream/30 text-xs">All prices in USD · Tax not included</div>
+  </div>
+</div>
+
+<!-- ============ ABOUT PAGE ============ -->
+<div id="aboutPage">
+  <button class="close-page-btn" onclick="closeAbout()">✕</button>
+  <div class="page-inner">
+    <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">ABOUT US</h1>
+    <p class="text-yankee-cream/50 text-sm mb-6">The story behind Yankee's Restaurant & Bar</p>
+    <div class="about-hero mb-10">
+      <div class="flex flex-col md:flex-row gap-8 items-center">
+        <div class="md:w-2/3">
+          <h2 class="font-display text-2xl sm:text-3xl text-yankee-cream mb-4">Bringing American Street Food to Australia</h2>
+          <p class="text-yankee-cream/70 leading-relaxed mb-4">
+            Yankee's Restaurant & Bar brings the vibrant essence of American street food culture to Australia with three prime locations in <span class="text-yankee-gold font-semibold">Melbourne</span>, <span class="text-yankee-gold font-semibold">Surfers Paradise</span>, and <span class="text-yankee-gold font-semibold">Hope Island</span>.
+          </p>
+          <p class="text-yankee-cream/70 leading-relaxed">
+            Known for its juicy, meaty burgers, hearty hot dogs, refreshing drinks, and lively atmosphere, Yankee's is the perfect destination for indulgent flavors and good times.
+          </p>
+        </div>
+        <div class="md:w-1/3">
+          <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yankee-red to-yankee-redDark border-4 border-yankee-gold flex items-center justify-center mx-auto shadow-glow">
+            <span class="font-display text-5xl text-yankee-gold">Y</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="menu-section-title text-yankee-cream">OUR LOCATIONS</h2>
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
+      <div class="location-card">
+        <div class="location-icon"><svg class="w-6 h-6 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 class="font-condensed text-xl text-yankee-cream">Melbourne CBD</h3>
+        <p class="text-yankee-cream/50 text-sm">Big-city vibes · live screenings</p>
+        <p class="text-yankee-cream/60 text-xs mt-2">187 King St, Melbourne VIC 3000</p>
+        <a href="tel:+61370239333" class="text-yankee-gold text-xs hover:underline mt-1 inline-block">📞 03 7023 9333</a>
+        <p class="text-yankee-cream/50 text-xs mt-1">Sun-Thu: 11am–1am · Fri-Sat: 11am–3am</p>
+      </div>
+      <div class="location-card">
+        <div class="location-icon"><svg class="w-6 h-6 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 class="font-condensed text-xl text-yankee-cream">Surfers Paradise</h3>
+        <p class="text-yankee-cream/50 text-sm">Beach vibes · DJ nights · sports</p>
+        <p class="text-yankee-cream/60 text-xs mt-2">4 Orchid Ave, Surfers Paradise QLD 4217</p>
+        <a href="tel:+61738486003" class="text-yankee-gold text-xs hover:underline mt-1 inline-block">📞 07 3848 6003</a>
+        <p class="text-yankee-cream/50 text-xs mt-1">Mon-Sun: 11am–1am</p>
+      </div>
+      <div class="location-card">
+        <div class="location-icon"><svg class="w-6 h-6 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 class="font-condensed text-xl text-yankee-cream">Hope Island</h3>
+        <p class="text-yankee-cream/50 text-sm">Coastal setting · Trivia Wednesdays</p>
+        <p class="text-yankee-cream/60 text-xs mt-2">Shop 2&3, Level 1/12 Santa Barbara Rd, Hope Island QLD 4212</p>
+        <a href="tel:+61756150014" class="text-yankee-gold text-xs hover:underline mt-1 inline-block">📞 (07) 5615 0014</a>
+        <p class="text-yankee-cream/50 text-xs mt-1">Mon-Tue: 7am–2pm, 4–9pm · Wed-Sun: 7am–9pm</p>
+      </div>
+    </div>
+
+    <h2 class="menu-section-title text-yankee-cream">OUR PROMISE</h2>
+    <div class="grid sm:grid-cols-3 gap-4 mt-4">
+      <div class="text-center p-4 rounded-xl bg-white/5 border border-white/5"><div class="text-3xl mb-2">🍔</div><h4 class="font-label text-sm text-yankee-gold">Quality Ingredients</h4><p class="text-yankee-cream/40 text-xs mt-1">Fresh, never frozen</p></div>
+      <div class="text-center p-4 rounded-xl bg-white/5 border border-white/5"><div class="text-3xl mb-2">🔥</div><h4 class="font-label text-sm text-yankee-gold">Lively Atmosphere</h4><p class="text-yankee-cream/40 text-xs mt-1">Good vibes guaranteed</p></div>
+      <div class="text-center p-4 rounded-xl bg-white/5 border border-white/5"><div class="text-3xl mb-2">❤️</div><h4 class="font-label text-sm text-yankee-gold">Memorable Moments</h4><p class="text-yankee-cream/40 text-xs mt-1">Created with every meal</p></div>
+    </div>
+    <div class="mt-8 p-6 rounded-2xl bg-gradient-to-r from-yankee-red/10 to-yankee-gold/10 border border-yankee-gold/20 text-center">
+      <p class="text-yankee-cream/80 text-sm italic">"Whether you're in the bustling city streets of Melbourne or enjoying the coastal vibes of Queensland, Yankee's delivers a consistent, delicious dining experience designed to create memorable moments."</p>
+      <p class="text-yankee-gold font-label text-xs tracking-widest mt-3">VISIT ONE OF OUR LOCATIONS</p>
+    </div>
+    <h2 class="menu-section-title text-yankee-cream">FOLLOW US</h2>
+    <div class="flex gap-4 justify-center mt-4">
+      <a href="https://www.instagram.com/the_yankees_hope_island?igsh=Zm9zb3pzM2o4Mzh2" target="_blank" class="social-icon"><svg class="w-5 h-5 text-yankee-cream/70" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c2.7 0 3 0 4 .1 1 .1 1.7.2 2.3.5.6.2 1.1.6 1.6 1.1.5.5.8 1 1.1 1.6.2.6.4 1.3.5 2.3.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.7-.5 2.3a4.6 4.6 0 01-1.1 1.6 4.6 4.6 0 01-1.6 1.1c-.6.2-1.3.4-2.3.5-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.7-.2-2.3-.5a4.6 4.6 0 01-1.6-1.1 4.6 4.6 0 01-1.1-1.6c-.2-.6-.4-1.3-.5-2.3-.1-1-.1-1.3-.1-4s0-3 .1-4c.1-1 .2-1.7.5-2.3.2-.6.6-1.1 1.1-1.6.5-.5 1-.8 1.6-1.1.6-.2 1.3-.4 2.3-.5 1-.1 1.3-.1 4-.1zM12 0C9.3 0 8.9 0 7.9.1c-1 .1-1.8.2-2.4.5a6.8 6.8 0 00-2.5 1.6A6.8 6.8 0 001.4 4.7c-.3.6-.4 1.4-.5 2.4C.8 8.1.8 8.5.8 11.2v1.6c0 2.7 0 3.1.1 4.1.1 1 .2 1.8.5 2.4.3 1 .8 1.8 1.6 2.5.7.8 1.5 1.3 2.5 1.6.6.3 1.4.4 2.4.5 1 .1 1.4.1 4.1.1s3.1 0 4.1-.1c1-.1 1.8-.2 2.4-.5a6.8 6.8 0 002.5-1.6 6.8 6.8 0 001.6-2.5c.3-.6.4-1.4.5-2.4.1-1 .1-1.4.1-4.1v-1.6c0-2.7 0-3.1-.1-4.1-.1-1-.2-1.8-.5-2.4a6.8 6.8 0 00-1.6-2.5A6.8 6.8 0 0018.9.6c-.6-.3-1.4-.4-2.4-.5C15.5 0 15.1 0 12.4 0H12zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm7.9-10.5a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0z"/></svg></a>
+      <a href="https://www.facebook.com/share/1EBPtcKRER/?mibextid=wwXIfr" target="_blank" class="social-icon"><svg class="w-5 h-5 text-yankee-cream/70" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+    </div>
+    <p class="text-center text-yankee-cream/40 text-xs mt-2">Follow us for updates, specials & more!</p>
+  </div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<header id="siteHeader" class="fixed top-0 inset-x-0 z-50 transition-all duration-300">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-3">
+    <div class="glass rounded-2xl shadow-black/40 shadow-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
+      <a href="#home" class="flex items-center gap-2 group shrink-0">
+        <img src="img/logo.png" alt="The Yankee's Restaurant & Bar logo" class="logo-img" />
+      </a>
+      <nav class="hidden lg:flex items-center gap-8 font-label text-sm tracking-wide text-yankee-cream/80">
+        <a href="#" onclick="openFullMenu(); return false;" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Menu</a>
+        <a href="#" onclick="openAbout(); return false;" class="tab-underline hover:text-yankee-gold transition-colors duration-300">About</a>
+        <a href="#specials" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Weekly Specials</a>
+        <a href="#hours" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Hours</a>
+        <a href="#booking" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Book a Table</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button id="basketToggle" class="relative hidden sm:flex items-center justify-center w-11 h-11 rounded-full glass hover:border-yankee-gold/50 transition-all duration-300 bump">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-yankee-cream" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span id="basketCount" class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-yankee-gold text-ink-950 text-[11px] font-bold flex items-center justify-center hidden">0</span>
+        </button>
+        <a href="#" onclick="openFullMenu(); return false;" class="hidden md:inline-flex items-center gap-2 bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-5 py-2.5 rounded-full shadow-glow transition-all duration-300 hover:scale-105">Order Now</a>
+        <button id="hamburgerBtn" class="lg:hidden w-11 h-11 rounded-full glass flex items-center justify-center" aria-label="Open menu">
+          <svg id="hamIcon" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div id="mobileMenu" class="lg:hidden overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
+      <div class="glass-strong rounded-2xl mt-2 px-6 py-6 flex flex-col gap-5 font-label text-base tracking-wide">
+        <a href="#" onclick="openFullMenu(); return false;" class="mobile-link hover:text-yankee-gold transition-colors">Menu</a>
+        <a href="#" onclick="openAbout(); return false;" class="mobile-link hover:text-yankee-gold transition-colors">About</a>
+        <a href="#specials" class="mobile-link hover:text-yankee-gold transition-colors">Weekly Specials</a>
+        <a href="#hours" class="mobile-link hover:text-yankee-gold transition-colors">Hours</a>
+        <a href="#booking" class="mobile-link hover:text-yankee-gold transition-colors">Book a Table</a>
+        <a href="#" onclick="openFullMenu(); return false;" class="mobile-link inline-flex justify-center items-center bg-gradient-to-r from-yankee-red to-yankee-redDark text-white px-5 py-3 rounded-full shadow-glow">Order Now</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section id="home" class="relative min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
+  <div class="absolute inset-0 -z-10">
+    <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=1974&auto=format&fit=crop" alt="Premium smash burger with melted cheese and fries" class="w-full h-full object-cover opacity-45" />
+    <div class="absolute inset-0 bg-gradient-to-b from-ink-950/70 via-ink-950/80 to-ink-950"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-ink-950 via-transparent to-ink-950/40"></div>
+  </div>
+  <div class="mx-auto max-w-7xl w-full px-4 sm:px-6 lg:px-8 grid lg:grid-cols-12 gap-10 items-center">
+    <div class="lg:col-span-7">
+      <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
+        <span class="w-2 h-2 rounded-full bg-yankee-gold"></span>
+        <span class="font-label text-xs tracking-[0.2em] text-yankee-cream/80" id="heroStatus">OPEN TODAY · 8:00 AM – 11:00 PM</span>
+      </div>
+      <h1 class="font-display text-[15vw] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[6.2rem] tracking-tight mb-6">
+        <span class="block text-yankee-cream">GRILLED</span>
+        <span class="block text-outline">DAILY.</span>
+        <span class="block text-yankee-gold">SERVED WITH</span>
+        <span class="block text-yankee-red">SWAGGER.</span>
+      </h1>
+      <p class="font-sans text-yankee-cream/70 text-base sm:text-lg max-w-xl mb-9 leading-relaxed">Hand-pressed smash burgers, all-beef dogs, and hand-spun shakes — the same recipe since 1952. No shortcuts, no gimmicks, just the diner classics done right.</p>
+      <div class="flex flex-wrap items-center gap-4">
+        <a href="#" onclick="openFullMenu(); return false;" class="inline-flex items-center gap-2 bg-yankee-gold hover:bg-yankee-goldSoft text-ink-950 font-label text-sm tracking-wide px-7 py-4 rounded-full shadow-goldglow transition-all duration-300 hover:scale-105">View Menu <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a href="#" onclick="openFullMenu(); return false;" class="inline-flex items-center gap-2 glass hover:border-yankee-red/50 text-yankee-cream font-label text-sm tracking-wide px-7 py-4 rounded-full transition-all duration-300 hover:scale-105">Order Online</a>
+      </div>
+      <div class="mt-12 flex flex-wrap gap-8">
+        <div><p class="font-display text-3xl text-yankee-red">70+</p><p class="font-label text-xs tracking-wider text-yankee-cream/50">YEARS SERVING</p></div>
+        <div><p class="font-display text-3xl text-yankee-gold">4.9★</p><p class="font-label text-xs tracking-wider text-yankee-cream/50">2,300+ REVIEWS</p></div>
+        <div><p class="font-display text-3xl text-yankee-cream">100%</p><p class="font-label text-xs tracking-wider text-yankee-cream/50">FRESH, NEVER FROZEN</p></div>
+      </div>
+    </div>
+    <div class="lg:col-span-5 relative hidden lg:block">
+      <div class="glass-strong rounded-3xl p-3 shadow-2xl rotate-2 hover:rotate-0 transition-transform duration-500">
+        <img src="https://images.unsplash.com/photo-1553979459-d2229ba7433b?q=80&w=1974&auto=format&fit=crop" alt="Loaded diner burger with fries" class="rounded-2xl w-full h-[520px] object-cover" />
+      </div>
+      <div class="absolute -bottom-6 -left-8 glass-strong rounded-2xl px-5 py-4 shadow-glow flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-yankee-red/20 flex items-center justify-center">
+          <svg class="w-5 h-5 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div><p class="font-label text-sm text-yankee-cream">Avg. delivery</p><p class="font-display text-lg text-yankee-gold leading-none">22 MIN</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ OPENING HOURS (UPDATED) ============ -->
+<section id="hours" class="relative py-24 sm:py-32 bg-ink-900/30">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <p class="font-label text-yankee-gold tracking-[0.3em] text-xs mb-3">WHEN WE'RE OPEN</p>
+      <h2 class="font-display text-4xl sm:text-5xl text-yankee-cream">OPENING HOURS</h2>
+      <p class="text-yankee-cream/60 mt-4">We're here to serve you — check our hours and plan your visit.</p>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="countdown-wrapper anim-fade-up anim-fade-up-d1 max-w-3xl mx-auto">
+      <div class="countdown-label">⏳ LIVE COUNTDOWN</div>
+      <div id="countdownDisplay" class="countdown-timer">--:--:--</div>
+      <div id="statusDisplay" class="countdown-status-text">
+        <span class="countdown-dot open" id="statusDot"></span>
+        <span id="statusText">Loading...</span>
+      </div>
+    </div>
+
+    <!-- Hours Grid -->
+    <div id="hoursContainer" class="hours-grid max-w-3xl mx-auto"></div>
+    <div id="currentStatus" class="text-center mt-6 font-label text-sm tracking-wide"></div>
+  </div>
+</section>
+
+<!-- ============ WEEKLY LUNCH SPECIALS ============ -->
+<section id="specials" class="relative py-24 sm:py-32">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="mb-14 max-w-2xl">
+      <p class="font-label text-yankee-gold tracking-[0.3em] text-xs mb-3">MONDAY – SUNDAY · 11AM – 3PM</p>
+      <h2 class="font-display text-4xl sm:text-5xl text-yankee-cream leading-tight">WEEKLY LUNCH<br class="hidden sm:block"> <span class="text-yankee-red">SPECIALS</span></h2>
+      <p class="text-yankee-cream/60 mt-4">A different deal every day of the week — because lunch break shouldn't break the bank.</p>
+    </div>
+    <div class="grid lg:grid-cols-12 gap-8 items-stretch">
+      <div class="lg:col-span-5">
+        <div class="relative glass-strong rounded-3xl overflow-hidden h-full shadow-2xl group">
+          <div class="relative h-64 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1974&auto=format&fit=crop" alt="Today's featured lunch special" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <div class="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/20 to-transparent"></div>
+            <span class="absolute top-4 left-4 bg-yankee-red text-white font-label text-xs tracking-widest px-3 py-1.5 rounded-full shadow-glow">TODAY'S FEATURE</span>
+          </div>
+          <div class="p-7">
+            <div class="flex items-start justify-between gap-4 mb-3">
+              <h3 class="font-condensed text-3xl text-yankee-cream tracking-wide">THE CLASSIC STADIUM STACK</h3>
+            </div>
+            <p class="text-yankee-cream/60 text-sm mb-6 leading-relaxed">Double smash patty, aged cheddar, pickles & house sauce on a toasted brioche — comes with fries and a fountain drink.</p>
+            <div class="flex items-center justify-between">
+              <div class="flex items-baseline gap-3">
+                <span class="font-display text-4xl text-yankee-gold">$8.99</span>
+                <span class="font-label text-yankee-cream/40 line-through text-lg">$13.50</span>
+              </div>
+              <span class="bg-yankee-gold/15 text-yankee-gold font-label text-xs tracking-wider px-3 py-1.5 rounded-full border border-yankee-gold/30">SAVE 33%</span>
+            </div>
+            <button data-name="Stadium Stack Lunch Special" data-price="8.99" class="add-to-order w-full mt-6 bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-3.5 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.02] bump">Add to Order</button>
+          </div>
+        </div>
+      </div>
+      <div class="lg:col-span-7">
+        <div class="glass rounded-3xl p-3 sm:p-4 h-full">
+          <div class="divide-y divide-white/5">
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">MON</span><span class="text-yankee-cream/90 font-medium">Burger & Chips Combo</span></div><span class="font-display text-xl text-yankee-gold">$4.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">TUE</span><span class="text-yankee-cream/90 font-medium">Original Parma</span></div><span class="font-display text-xl text-yankee-gold">$19.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4 rounded-2xl bg-yankee-red/10 ring-1 ring-yankee-red/30"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-gold w-12">WED</span><span class="text-yankee-cream font-semibold">10 Wings <span class="text-yankee-gold text-xs">· TODAY</span></span></div><span class="font-display text-xl text-yankee-gold">$14.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">THU</span><span class="text-yankee-cream/90 font-medium">Pork Ribs</span></div><span class="font-display text-xl text-yankee-gold">$25.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">FRI</span><span class="text-yankee-cream/90 font-medium">Any Hotdog</span></div><span class="font-display text-xl text-yankee-gold">$11.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">SAT</span><span class="text-yankee-cream/90 font-medium">Nachos</span></div><span class="font-display text-xl text-yankee-gold">$14.99</span></div>
+            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">SUN</span><span class="text-yankee-cream/90 font-medium">Any Pizza</span></div><span class="font-display text-xl text-yankee-gold">$17.99</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ BOOKING + LOCATION ============ -->
+<section id="booking" class="relative py-24 sm:py-32 bg-ink-900/40">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-2xl mx-auto mb-14">
+      <p class="font-label text-yankee-gold tracking-[0.3em] text-xs mb-3">SAVE YOUR SPOT</p>
+      <h2 class="font-display text-4xl sm:text-5xl text-yankee-cream">BOOK A TABLE</h2>
+      <p class="text-yankee-cream/60 mt-4">Walk-ins welcome, but reservations get the best booth by the window.</p>
+    </div>
+    <div class="grid lg:grid-cols-2 gap-8">
+      <form id="bookingForm" class="glass rounded-3xl p-6 sm:p-8 space-y-5">
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">FULL NAME</label><input required type="text" placeholder="Joe DiMaggio" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" /></div>
+          <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">PHONE</label><input required type="tel" placeholder="(555) 123-4567" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" /></div>
+        </div>
+        <div class="grid sm:grid-cols-3 gap-5">
+          <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">DATE</label><input required type="date" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" /></div>
+          <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">TIME</label><input required type="time" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" /></div>
+          <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">GUESTS</label><select class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300"><option>1 Guest</option><option selected>2 Guests</option><option>3 Guests</option><option>4 Guests</option><option>5+ Guests</option></select></div>
+        </div>
+        <div><label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">SPECIAL REQUESTS</label><textarea rows="3" placeholder="Booth seating, allergy info, birthday shoutout…" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300 resize-none"></textarea></div>
+        <button type="submit" class="w-full bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-4 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.01]">Confirm Reservation</button>
+        <p id="bookingSuccess" class="hidden text-center text-yankee-gold font-label text-sm tracking-wide">✓ Table request received — we'll text you a confirmation shortly.</p>
+      </form>
+      <div class="space-y-8">
+        <div class="glass rounded-3xl p-6 sm:p-8" id="location">
+          <h3 class="font-condensed text-2xl tracking-wide text-yankee-cream mb-5">HOURS & CONTACT</h3>
+          <div class="space-y-3 font-sans text-sm mb-6">
+            <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-yankee-cream/60">Mon – Thu</span><span class="text-yankee-cream">8:00 AM – 10:00 PM</span></div>
+            <div class="flex justify-between border-b border-white/5 pb-2"><span class="text-yankee-cream/60">Fri – Sat</span><span class="text-yankee-cream">8:00 AM – 11:30 PM</span></div>
+            <div class="flex justify-between"><span class="text-yankee-cream/60">Sunday</span><span class="text-yankee-cream">9:00 AM – 9:00 PM</span></div>
+          </div>
+          <div class="space-y-3 font-sans text-sm text-yankee-cream/70">
+            <p class="flex items-center gap-3"><svg class="w-4 h-4 text-yankee-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg> 5XM4+M2, Melbourne VIC, Australia</p>
+            <p class="flex items-center gap-3"><svg class="w-4 h-4 text-yankee-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg> <a href="tel:+61370239333" class="hover:text-yankee-gold transition-colors">+61 3 7023 9333</a></p>
+            <p class="flex items-center gap-3"><svg class="w-4 h-4 text-yankee-gold shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><rect x="2" y="4" width="20" height="16" rx="2"/></svg> hello@theyankeesdiner.com</p>
+          </div>
+        </div>
+        <div class="glass rounded-3xl overflow-hidden h-56 relative flex items-center justify-center">
+          <div class="absolute inset-0 bg-[linear-gradient(rgba(200,16,46,0.08),rgba(244,185,62,0.06))]"></div>
+          <div class="absolute inset-0 opacity-40" style="background-image:radial-gradient(circle, rgba(255,255,255,0.08) 1px, transparent 1px); background-size:22px 22px;"></div>
+          <div class="relative text-center w-full h-full">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d50433.46073810349!2d144.9073738!3d-37.8113305!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad65d785b090b4d%3A0xb0c181045ce7b5b4!2sThe%20Yankee&#39;s%20Restaurant%20%26%20Bar%20-%20Melbourne%20CBD!5e0!3m2!1sen!2slk!4v1782927626116!5m2!1sen!2slk" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="relative border-t border-white/5 bg-ink-900/60 pt-16 pb-8">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div><div class="flex items-center gap-3 mb-4"><div class="w-10 h-10 rounded-full bg-gradient-to-br from-yankee-red to-yankee-redDark border-2 border-yankee-gold flex items-center justify-center"><span class="font-display text-lg text-yankee-gold">Y</span></div><p class="font-condensed text-xl tracking-wide text-yankee-cream">THE YANKEES DINER</p></div><p class="text-yankee-cream/50 text-sm leading-relaxed">Classic American comfort food, grilled fresh daily since 1952.</p>
+        <div class="flex gap-3 mt-3">
+          <a href="https://www.instagram.com/the_yankees_hope_island?igsh=Zm9zb3pzM2o4Mzh2" target="_blank" class="text-yankee-cream/40 hover:text-yankee-gold transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c2.7 0 3 0 4 .1 1 .1 1.7.2 2.3.5.6.2 1.1.6 1.6 1.1.5.5.8 1 1.1 1.6.2.6.4 1.3.5 2.3.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.7-.5 2.3a4.6 4.6 0 01-1.1 1.6 4.6 4.6 0 01-1.6 1.1c-.6.2-1.3.4-2.3.5-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.7-.2-2.3-.5a4.6 4.6 0 01-1.6-1.1 4.6 4.6 0 01-1.1-1.6c-.2-.6-.4-1.3-.5-2.3-.1-1-.1-1.3-.1-4s0-3 .1-4c.1-1 .2-1.7.5-2.3.2-.6.6-1.1 1.1-1.6.5-.5 1-.8 1.6-1.1.6-.2 1.3-.4 2.3-.5 1-.1 1.3-.1 4-.1zM12 0C9.3 0 8.9 0 7.9.1c-1 .1-1.8.2-2.4.5a6.8 6.8 0 00-2.5 1.6A6.8 6.8 0 001.4 4.7c-.3.6-.4 1.4-.5 2.4C.8 8.1.8 8.5.8 11.2v1.6c0 2.7 0 3.1.1 4.1.1 1 .2 1.8.5 2.4.3 1 .8 1.8 1.6 2.5.7.8 1.5 1.3 2.5 1.6.6.3 1.4.4 2.4.5 1 .1 1.4.1 4.1.1s3.1 0 4.1-.1c1-.1 1.8-.2 2.4-.5a6.8 6.8 0 002.5-1.6 6.8 6.8 0 001.6-2.5c.3-.6.4-1.4.5-2.4.1-1 .1-1.4.1-4.1v-1.6c0-2.7 0-3.1-.1-4.1-.1-1-.2-1.8-.5-2.4a6.8 6.8 0 00-1.6-2.5A6.8 6.8 0 0018.9.6c-.6-.3-1.4-.4-2.4-.5C15.5 0 15.1 0 12.4 0H12zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm7.9-10.5a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0z"/></svg></a>
+          <a href="https://www.facebook.com/share/1EBPtcKRER/?mibextid=wwXIfr" target="_blank" class="text-yankee-cream/40 hover:text-yankee-gold transition-colors"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg></a>
+        </div>
+      </div>
+      <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">EXPLORE</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li><a href="#" onclick="openFullMenu(); return false;" class="hover:text-yankee-gold transition-colors">Menu</a></li><li><a href="#" onclick="openAbout(); return false;" class="hover:text-yankee-gold transition-colors">About</a></li><li><a href="#specials" class="hover:text-yankee-gold transition-colors">Weekly Specials</a></li><li><a href="#hours" class="hover:text-yankee-gold transition-colors">Hours</a></li><li><a href="#booking" class="hover:text-yankee-gold transition-colors">Book a Table</a></li></ul></div>
+      <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">HOURS</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li>Mon – Thu: 8AM – 10PM</li><li>Fri – Sat: 8AM – 11:30PM</li><li>Sunday: 9AM – 9PM</li></ul></div>
+      <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">CONTACT</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li><a href="tel:+61370239333" class="hover:text-yankee-gold transition-colors">📞 +61 3 7023 9333</a></li><li><a href="https://www.instagram.com/the_yankees_hope_island" target="_blank" class="hover:text-yankee-gold transition-colors">📷 Instagram</a></li><li><a href="https://www.facebook.com/share/1EBPtcKRER/?mibextid=wwXIfr" target="_blank" class="hover:text-yankee-gold transition-colors">👍 Facebook</a></li></ul></div>
+    </div>
+    <div class="border-t border-white/5 pt-6 flex flex-col items-center gap-3">
+      <p class="text-yankee-cream/40 text-xs" id="copyrightLine">© 2026 The Yankees Diner. All rights reserved.</p>
+      <a href="#" class="font-label text-[11px] tracking-[0.25em] text-yankee-cream/30 hover:opacity-100 opacity-70 transition-opacity duration-300">DESIGNED &amp; DEVELOPED BY <span class="text-yankee-gold">MASH SOLUTIONS</span></a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ BASKET ============ -->
+<div id="basketPanel" class="fixed inset-0 z-[60] pointer-events-none">
+  <div id="basketOverlay" class="absolute inset-0 bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+  <aside id="basketDrawer" class="absolute top-0 right-0 h-full w-full sm:w-[420px] translate-x-full transition-transform duration-500 ease-out pointer-events-auto">
+    <div class="glass-strong h-full flex flex-col sm:rounded-l-3xl">
+      <div class="flex items-center justify-between px-6 py-5 border-b border-white/5">
+        <div><p class="font-label text-xs tracking-widest text-yankee-gold">YOUR ORDER</p><h3 class="font-condensed text-2xl tracking-wide text-yankee-cream">Order Basket</h3></div>
+        <button id="basketClose" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:border-yankee-red/50 transition-all duration-300"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div id="basketItems" class="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+        <div id="basketEmpty" class="text-center py-16"><svg class="w-12 h-12 text-yankee-cream/20 mx-auto mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><p class="text-yankee-cream/40 text-sm">Your basket is empty.<br>Add something delicious!</p></div>
+      </div>
+      <div class="border-t border-white/5 px-6 py-5 space-y-3">
+        <div class="flex justify-between text-sm text-yankee-cream/60"><span>Subtotal</span><span id="subtotalVal">$0.00</span></div>
+        <div class="flex justify-between text-sm text-yankee-cream/60"><span>Delivery / Service Fee</span><span id="feeVal">$0.00</span></div>
+        <div class="flex justify-between font-display text-xl text-yankee-gold pt-2 border-t border-white/5"><span class="font-condensed text-base tracking-wide text-yankee-cream self-end">TOTAL</span><span id="totalVal">$0.00</span></div>
+        <button id="checkoutBtn" class="w-full bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-4 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.01] flex items-center justify-center gap-2 mt-2">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0012 0 11.9 11.9 0 000 12a11.8 11.8 0 001.7 6.2L0 24l5.9-1.6A11.9 11.9 0 0012 24a11.9 11.9 0 0012-12 11.8 11.8 0 00-3.5-8.5zM12 21.8a9.8 9.8 0 01-5-1.4l-.4-.2-3.5 1 1-3.4-.2-.4A9.8 9.8 0 1121.8 12 9.8 9.8 0 0112 21.8zm5.4-7.3c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1a8 8 0 01-2.3-1.4 8.7 8.7 0 01-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.4c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.1-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
+          Place Order via WhatsApp
+        </button>
+      </div>
+    </div>
+  </aside>
+</div>
+<button id="basketFab" class="sm:hidden fixed bottom-5 right-5 z-40 w-16 h-16 rounded-full bg-gradient-to-br from-yankee-red to-yankee-redDark shadow-glow flex items-center justify-center border-2 border-yankee-gold/60 transition-transform duration-300 bump">
+  <svg class="w-6 h-6 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+  <span id="basketFabCount" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-yankee-gold text-ink-950 text-xs font-bold flex items-center justify-center hidden">0</span>
+</button>
+
+<script>
+(function(){
+  "use strict";
+
+  // FULL MENU
+  window.openFullMenu = function() {
+    document.getElementById('fullMenuPage').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeFullMenu = function() {
+    document.getElementById('fullMenuPage').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  // ABOUT
+  window.openAbout = function() {
+    document.getElementById('aboutPage').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  };
+  window.closeAbout = function() {
+    document.getElementById('aboutPage').classList.remove('active');
+    document.body.style.overflow = '';
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeFullMenu();
+      closeAbout();
+    }
+  });
+
+  // ---- SLIDER NAVIGATION ----
+  const slider = document.getElementById('menuSlider');
+  const navBtns = document.querySelectorAll('#sliderNav button');
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      navBtns.forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      const target = this.dataset.target;
+      const panels = slider.querySelectorAll('.menu-panel');
+      panels.forEach((panel, idx) => {
+        if (panel.dataset.panel === target) {
+          slider.scrollTo({ left: panel.offsetLeft, behavior: 'smooth' });
+        }
+      });
+    });
+  });
+
+  slider.addEventListener('scroll', function() {
+    const panels = slider.querySelectorAll('.menu-panel');
+    let activeIdx = 0;
+    const center = slider.scrollLeft + slider.offsetWidth / 2;
+    panels.forEach((panel, idx) => {
+      const left = panel.offsetLeft;
+      const right = left + panel.offsetWidth;
+      if (center >= left && center < right) activeIdx = idx;
+    });
+    navBtns.forEach((b, i) => {
+      b.classList.toggle('active', i === activeIdx);
+    });
+  });
+
+  // ========== UPDATED HOURS WITH DATES ==========
+  // The week of July 2-8, 2026
+  const weekStartDate = new Date(2026, 6, 2); // July 2, 2026 (month is 0-indexed)
+  
+  const hoursData = [
+    { day: 'Thursday', date: 2, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Friday', date: 3, open: '11:00 AM', close: '3:00 AM', nextDay: true },
+    { day: 'Saturday', date: 4, open: '11:00 AM', close: '3:00 AM', nextDay: true },
+    { day: 'Sunday', date: 5, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Monday', date: 6, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Tuesday', date: 7, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Wednesday', date: 8, open: '11:00 AM', close: '1:00 AM', nextDay: true }
+  ];
+
+  const dayMap = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const now = new Date();
+  // For testing, you can uncomment the next line and set a specific date:
+  // const now = new Date(2026, 6, 2, 14, 30, 0); // July 2, 2026 at 2:30 PM
+  const currentDay = dayMap[now.getDay()];
+  const currentDate = now.getDate();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+
+  // Check if today is within the week we're displaying (July 2-8, 2026)
+  // For demo purposes, we'll show this week regardless of actual date
+  // But we still need to determine which day is "today" for highlighting
+  
+  function isToday(dayData) {
+    // Check if the day in the week matches today's date
+    return dayData.day === currentDay && currentMonth === 6 && currentYear === 2026;
+  }
+
+  function isOpen(day, open, close, nextDay) {
+    let openHour = parseInt(open.split(':')[0]);
+    let openMin = parseInt(open.split(':')[1].split(' ')[0]);
+    let openPeriod = open.split(' ')[1];
+    let closeHour = parseInt(close.split(':')[0]);
+    let closeMin = parseInt(close.split(':')[1].split(' ')[0]);
+    let closePeriod = close.split(' ')[1];
+    if (openPeriod === 'PM' && openHour !== 12) openHour += 12;
+    if (openPeriod === 'AM' && openHour === 12) openHour = 0;
+    if (closePeriod === 'PM' && closeHour !== 12) closeHour += 12;
+    if (closePeriod === 'AM' && closeHour === 12) closeHour = 0;
+    if (nextDay) closeHour += 24;
+    const nowMinutes = currentHour * 60 + currentMinute;
+    const openMinutes = openHour * 60 + openMin;
+    const closeMinutes = closeHour * 60 + closeMin;
+    if (closeMinutes < openMinutes) {
+      if (nowMinutes >= openMinutes || nowMinutes < closeMinutes) return true;
+      return false;
+    }
+    return nowMinutes >= openMinutes && nowMinutes < closeMinutes;
+  }
+
+  const container = document.getElementById('hoursContainer');
+  const statusEl = document.getElementById('currentStatus');
+  let isCurrentlyOpen = false;
+  let todayOpen = '';
+  let todayClose = '';
+
+  // Reorder to start with Thursday (July 2) as shown in the screenshot
+  const orderedDays = ['Thursday', 'Friday', 'Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday'];
+  const reordered = orderedDays.map(dayName => hoursData.find(h => h.day === dayName));
+
+  reordered.forEach((h, index) => {
+    const todayCheck = isToday(h);
+    const openStatus = isOpen(h.day, h.open, h.close, h.nextDay);
+    if (todayCheck) {
+      isCurrentlyOpen = openStatus;
+      todayOpen = h.open;
+      todayClose = h.close;
+    }
+    const card = document.createElement('div');
+    card.className = `hours-card ${todayCheck ? 'today' : ''} ${!openStatus && todayCheck ? 'closed' : ''} anim-fade-up anim-fade-up-d${(index % 7) + 1}`;
+    // Format date: July 2, 3, 4, etc.
+    const dateDisplay = `July ${h.date}`;
+    card.innerHTML = `
+      <div class="hours-day">${h.day}</div>
+      <span class="hours-date">${dateDisplay}</span>
+      <div class="hours-time">${h.open} – ${h.close}</div>
+      ${todayCheck ? `<span class="hours-status ${openStatus ? 'status-open' : 'status-closed'}">${openStatus ? '● OPEN NOW' : '● CLOSED'}</span>` : ''}
+    `;
+    container.appendChild(card);
+  });
+
+  // Update hero status with today's date
+  const heroStatus = document.getElementById('heroStatus');
+  if (isCurrentlyOpen && todayOpen && todayClose) {
+    heroStatus.textContent = `OPEN TODAY · ${todayOpen} – ${todayClose}`;
+    statusEl.innerHTML = `<span class="text-yankee-gold">✅ We're open now!</span> <span class="text-yankee-cream/50 ml-2">Open today ${todayOpen} – ${todayClose}</span>`;
+  } else if (todayOpen && todayClose) {
+    heroStatus.textContent = `CLOSED TODAY · Opens at ${todayOpen}`;
+    statusEl.innerHTML = `<span class="text-yankee-red">⛔ We're closed right now.</span> <span class="text-yankee-cream/50 ml-2">Opens today at ${todayOpen}</span>`;
+  }
+
+  // ========== COUNTDOWN TIMER ==========
+  function getNextEventTime() {
+    const now = new Date();
+    const h = now.getHours();
+    const m = now.getMinutes();
+    const s = now.getSeconds();
+    const totalSeconds = h * 3600 + m * 60 + s;
+
+    // Find today's schedule
+    const todaySched = hoursData.find(h => h.day === currentDay);
+    if (!todaySched) return { seconds: 0, type: 'open' };
+
+    let openHour = parseInt(todaySched.open.split(':')[0]);
+    let openMin = parseInt(todaySched.open.split(':')[1].split(' ')[0]);
+    let openPeriod = todaySched.open.split(' ')[1];
+    if (openPeriod === 'PM' && openHour !== 12) openHour += 12;
+    if (openPeriod === 'AM' && openHour === 12) openHour = 0;
+    let openSeconds = openHour * 3600 + openMin * 60;
+
+    let closeHour = parseInt(todaySched.close.split(':')[0]);
+    let closeMin = parseInt(todaySched.close.split(':')[1].split(' ')[0]);
+    let closePeriod = todaySched.close.split(' ')[1];
+    if (closePeriod === 'PM' && closeHour !== 12) closeHour += 12;
+    if (closePeriod === 'AM' && closeHour === 12) closeHour = 0;
+    if (todaySched.nextDay) closeHour += 24;
+    let closeSeconds = closeHour * 3600 + closeMin * 60;
+
+    if (closeSeconds < openSeconds) closeSeconds += 86400;
+
+    if (isCurrentlyOpen) {
+      let diff = closeSeconds - totalSeconds;
+      if (diff < 0) diff += 86400;
+      return { seconds: diff, type: 'close' };
+    } else {
+      let diff = openSeconds - totalSeconds;
+      if (diff < 0) diff += 86400;
+      return { seconds: diff, type: 'open' };
+    }
+  }
+
+  function updateCountdown() {
+    const event = getNextEventTime();
+    const hours = Math.floor(event.seconds / 3600);
+    const minutes = Math.floor((event.seconds % 3600) / 60);
+    const seconds = Math.floor(event.seconds % 60);
+
+    const display = document.getElementById('countdownDisplay');
+    display.textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+
+    const statusText = document.getElementById('statusText');
+    const dot = document.getElementById('statusDot');
+
+    if (isCurrentlyOpen) {
+      statusText.textContent = `OPEN · Closes at ${todayClose}`;
+      dot.className = 'countdown-dot open';
+    } else {
+      const nextOpen = hoursData.find(h => h.day === currentDay);
+      statusText.textContent = `CLOSED · Opens today at ${nextOpen ? nextOpen.open : '11:00 AM'}`;
+      dot.className = 'countdown-dot closed';
+    }
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+
+  // MOBILE
+  const hamburgerBtn = document.getElementById('hamburgerBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const hamIcon = document.getElementById('hamIcon');
+  let menuOpen = false;
+  function toggleMobileMenu(forceClose){
+    menuOpen = forceClose === true ? false : !menuOpen;
+    if (menuOpen) { mobileMenu.style.maxHeight = mobileMenu.scrollHeight + 'px'; hamIcon.innerHTML = '<path d="M18 6L6 18M6 6l12 12"/>'; } 
+    else { mobileMenu.style.maxHeight = '0px'; hamIcon.innerHTML = '<path d="M4 6h16M4 12h16M4 18h16"/>'; }
+  }
+  hamburgerBtn.addEventListener('click', () => toggleMobileMenu());
+  document.querySelectorAll('.mobile-link').forEach(link => link.addEventListener('click', () => toggleMobileMenu(true)));
+
+  // BASKET
+  const DELIVERY_FEE = 3.50;
+  let basket = [];
+  const basketItemsEl = document.getElementById('basketItems');
+  const basketEmptyEl = document.getElementById('basketEmpty');
+  const subtotalEl = document.getElementById('subtotalVal');
+  const feeEl = document.getElementById('feeVal');
+  const totalEl = document.getElementById('totalVal');
+  const basketCountEl = document.getElementById('basketCount');
+  const basketFabCountEl = document.getElementById('basketFabCount');
+  const basketToggle = document.getElementById('basketToggle');
+  const basketFab = document.getElementById('basketFab');
+  const basketDrawer = document.getElementById('basketDrawer');
+  const basketOverlay = document.getElementById('basketOverlay');
+  const basketClose = document.getElementById('basketClose');
+  const checkoutBtn = document.getElementById('checkoutBtn');
+
+  function fmt(n){ return '$' + n.toFixed(2); }
+
+  function addToBasket(name, price){
+    const existing = basket.find(i => i.name === name);
+    if (existing) existing.qty += 1;
+    else basket.push({ name, price, qty: 1 });
+    renderBasket();
+    openBasket();
+  }
+
+  function changeQty(name, delta){
+    const item = basket.find(i => i.name === name);
+    if (!item) return;
+    item.qty += delta;
+    if (item.qty <= 0) basket = basket.filter(i => i.name !== name);
+    renderBasket();
+  }
+
+  function renderBasket(){
+    basketItemsEl.querySelectorAll('.basket-row').forEach(el => el.remove());
+    if (basket.length === 0) { 
+      basketEmptyEl.classList.remove('hidden'); 
+      checkoutBtn.classList.remove('visible');
+    } else {
+      basketEmptyEl.classList.add('hidden');
+      checkoutBtn.classList.add('visible');
+      basket.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'basket-row glass rounded-2xl px-4 py-3 flex items-center justify-between gap-3';
+        row.innerHTML = `<div class="flex-1 min-w-0"><p class="text-yankee-cream text-sm font-medium truncate">${item.name}</p><p class="text-yankee-gold text-sm font-display">${fmt(item.price)}</p></div><div class="flex items-center gap-2"><button class="qty-btn w-7 h-7 rounded-full bg-ink-800 hover:bg-yankee-red text-yankee-cream flex items-center justify-center transition-colors duration-300" data-name="${item.name}" data-delta="-1">−</button><span class="w-5 text-center text-sm text-yankee-cream">${item.qty}</span><button class="qty-btn w-7 h-7 rounded-full bg-ink-800 hover:bg-yankee-red text-yankee-cream flex items-center justify-center transition-colors duration-300" data-name="${item.name}" data-delta="1">+</button></div>`;
+        basketItemsEl.appendChild(row);
+      });
+      basketItemsEl.querySelectorAll('.qty-btn').forEach(btn => btn.addEventListener('click', () => changeQty(btn.dataset.name, parseInt(btn.dataset.delta, 10))));
+    }
+    const subtotal = basket.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const totalQty = basket.reduce((sum, i) => sum + i.qty, 0);
+    const fee = subtotal > 0 ? DELIVERY_FEE : 0;
+    const total = subtotal + fee;
+    subtotalEl.textContent = fmt(subtotal);
+    feeEl.textContent = fmt(fee);
+    totalEl.textContent = fmt(total);
+    [basketCountEl, basketFabCountEl].forEach(el => { if (totalQty > 0) { el.textContent = totalQty; el.classList.remove('hidden'); } else { el.classList.add('hidden'); } });
+    basketToggle.classList.toggle('has-items', totalQty > 0);
+  }
+
+  document.querySelectorAll('.add-to-order').forEach(btn => {
+    btn.addEventListener('click', () => { addToBasket(btn.dataset.name, parseFloat(btn.dataset.price)); });
+  });
+
+  function openBasket(){ basketDrawer.classList.remove('translate-x-full'); basketOverlay.classList.remove('opacity-0', 'pointer-events-none'); basketOverlay.classList.add('opacity-100', 'pointer-events-auto'); }
+  function closeBasket(){ basketDrawer.classList.add('translate-x-full'); basketOverlay.classList.add('opacity-0', 'pointer-events-none'); basketOverlay.classList.remove('opacity-100', 'pointer-events-auto'); }
+  basketToggle.addEventListener('click', openBasket);
+  basketFab.addEventListener('click', openBasket);
+  basketClose.addEventListener('click', closeBasket);
+  basketOverlay.addEventListener('click', closeBasket);
+
+  document.getElementById('checkoutBtn').addEventListener('click', () => {
+    if (basket.length === 0) return;
+    const lines = basket.map(i => `${i.qty}x ${i.name} — ${fmt(i.price * i.qty)}`).join('%0A');
+    const subtotal = basket.reduce((sum, i) => sum + i.price * i.qty, 0);
+    const total = subtotal + DELIVERY_FEE;
+    const message = `Hi! I'd like to place an order:%0A${lines}%0A%0ASubtotal: ${fmt(subtotal)}%0ADelivery Fee: ${fmt(DELIVERY_FEE)}%0ATotal: ${fmt(total)}`;
+    window.open(`https://wa.me/61370239333?text=${message}`, '_blank');
+  });
+
+  // BOOKING
+  const bookingForm = document.getElementById('bookingForm');
+  const bookingSuccess = document.getElementById('bookingSuccess');
+  bookingForm.addEventListener('submit', (e) => { e.preventDefault(); bookingSuccess.classList.remove('hidden'); bookingForm.reset(); setTimeout(() => bookingSuccess.classList.add('hidden'), 5000); });
+
+  document.getElementById('copyrightLine').textContent = `© ${new Date().getFullYear()} The Yankees Diner. All rights reserved.`;
+  renderBasket();
+})();
+</script>
+</body>
+</html>
