@@ -1886,14 +1886,15 @@
   });
 
   // ============ HOURS ============
+  // Ordered from Monday to Sunday
   const hoursData = [
+    { day: 'Monday', date: 6, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Tuesday', date: 7, open: '11:00 AM', close: '1:00 AM', nextDay: true },
+    { day: 'Wednesday', date: 8, open: '11:00 AM', close: '1:00 AM', nextDay: true },
     { day: 'Thursday', date: 2, open: '11:00 AM', close: '1:00 AM', nextDay: true },
     { day: 'Friday', date: 3, open: '11:00 AM', close: '3:00 AM', nextDay: true },
     { day: 'Saturday', date: 4, open: '11:00 AM', close: '3:00 AM', nextDay: true },
-    { day: 'Sunday', date: 5, open: '11:00 AM', close: '1:00 AM', nextDay: true },
-    { day: 'Monday', date: 6, open: '11:00 AM', close: '1:00 AM', nextDay: true },
-    { day: 'Tuesday', date: 7, open: '11:00 AM', close: '1:00 AM', nextDay: true },
-    { day: 'Wednesday', date: 8, open: '11:00 AM', close: '1:00 AM', nextDay: true }
+    { day: 'Sunday', date: 5, open: '11:00 AM', close: '1:00 AM', nextDay: true }
   ];
   const dayMap = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   const now = new Date();
@@ -1923,7 +1924,8 @@
   const statusEl = document.getElementById('currentStatus');
   let isCurrentlyOpen = false;
   let todayOpen = '', todayClose = '';
-  const orderedDays = ['Thursday','Friday','Saturday','Sunday','Monday','Tuesday','Wednesday'];
+  // Use the ordered list directly
+  const orderedDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   const reordered = orderedDays.map(dayName => hoursData.find(h => h.day === dayName));
   reordered.forEach((h, index) => {
     const todayCheck = isToday(h);
