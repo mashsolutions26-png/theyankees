@@ -817,6 +817,42 @@
       50% { opacity: 0.6; }
     }
 
+    /* ===== DYNAMIC DAILY SPECIALS ===== */
+    .daily-special-highlight {
+      background: linear-gradient(135deg, rgba(200,16,46,0.12), rgba(244,185,62,0.08));
+      border: 2px solid #f4b93e;
+      border-radius: 1rem;
+      padding: 1rem 1.5rem;
+      margin: 0.5rem 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: pulseGlow 2s infinite;
+    }
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 20px rgba(244,185,62,0.1); }
+      50% { box-shadow: 0 0 40px rgba(244,185,62,0.25); }
+    }
+    .daily-special-highlight .day-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      color: #f4b93e;
+      text-transform: uppercase;
+    }
+    .daily-special-highlight .special-name {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.4rem;
+      color: #f4ede1;
+    }
+    .daily-special-highlight .special-price {
+      font-family: 'Anton', sans-serif;
+      font-size: 1.8rem;
+      color: #f4b93e;
+    }
+
     @media (max-width: 480px) {
       .menu-slider .menu-panel { padding: 1rem 0.75rem; }
       .slider-nav button { font-size: 0.65rem; padding: 0.3rem 0.9rem; }
@@ -837,6 +873,10 @@
       .discount-section .discount-price .discounted { font-size: 1.6rem; }
       .discount-section .discount-timer { font-size: 1.3rem; }
       .discount-section .discount-details { gap: 1rem; }
+      .daily-special-highlight { flex-direction: column; text-align: center; padding: 1rem; }
+      .daily-special-highlight .special-name { font-size: 1.1rem; }
+      .daily-special-highlight .special-price { font-size: 1.4rem; }
+      .discount-section { padding: 1.25rem 1rem; margin: 1rem 0.5rem; }
     }
     @media (max-width: 400px) {
       .hours-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
@@ -865,93 +905,50 @@
   <div class="page-inner">
     <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">OUR FULL MENU</h1>
     <p class="text-yankee-cream/50 text-sm mb-6">Everything we serve — straight from our kitchen to your table.</p>
+    
+    <!-- TODAY'S SPECIAL HIGHLIGHT -->
+    <div id="dailySpecialHighlight" class="daily-special-highlight">
+      <div>
+        <span class="day-label" id="todayLabel">TODAY'S SPECIAL</span>
+        <span class="special-name" id="dailySpecialName">Loading...</span>
+      </div>
+      <span class="special-price" id="dailySpecialPrice">$0.00</span>
+    </div>
+    
     <div class="menu-slider" id="menuSlider">
-      <div class="menu-panel" data-panel="starters">
+      <div class="menu-panel" data-panel="starters" id="menuPanelStarters">
         <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌮 STARTERS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Grilled Broccoli</span></div><span class="menu-item-price">$12</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Fries & Aioli</span></div><span class="menu-item-price">$11</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Hand Cooked Tortillas <span class="menu-sub">Fresh slaw, zesty peri-peri mayo & BBQ sauce (Chicken +6, Pulled Pork +7, Bacon +6)</span></span></div><span class="menu-item-price">$12</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Garlic Bread <span class="menu-sub">Warm toasty bread with blended cheese & garlic butter</span></span></div><span class="menu-item-price">$11</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sweet Potato Wedges & Aioli</span></div><span class="menu-item-price">$13</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Parmesan Truffle Fries <span class="menu-sub">Truffle mayo, parmesan cheese, croutons & mixed herbs</span></span></div><span class="menu-item-price">$17</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Fried Calamari <span class="menu-sub">Lemon & tartare sauce</span></span></div><span class="menu-item-price">$17</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Bruschetta <span class="menu-sub">Warm toasty bread, blended cheese, mixed veggies, cherry tomatoes (Chicken +6, Pulled Pork +7, Bacon +6, Smashed Avo +5)</span></span></div><span class="menu-item-price">$15</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Potato Wedges <span class="menu-sub">Yankee's seasoning, sweet chilli & sour cream</span></span></div><span class="menu-item-price">$14</span></div>
+        <div id="menuStartersContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍗 WINGS & RIBS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Chicken Wings <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese (+3) · Blue Cheese (+3) — Fried or grilled with salad</span></span></div><span class="menu-item-price">10pcs $19<br>20pcs $36<br>30pcs $52</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pork Ribs <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese (+3) — Marinated in house seasoning, with fresh salad & fries</span></span></div><span class="menu-item-price">$39</span></div>
+        <div id="menuWingsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🧀 NACHOS & LOADED FRIES</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">American Nachos <span class="menu-sub">Corn chips, blended cheese, tomatoes, onions, beans, smashed avo & sour cream (Chicken +6, Pulled Pork +7, Bacon +6)</span></span></div><span class="menu-item-price">$19</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Loaded Fries <span class="menu-sub">Crispy fries, melted cheese, pickles & jalapeños</span></span></div><span class="menu-item-price">$16</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Loaded Fries <span class="menu-sub">Crispy fries, melted cheese, pulled pork, pickles & jalapeños</span></span></div><span class="menu-item-price">$20</span></div>
+        <div id="menuNachosContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍽️ AMERICAN PLATTERS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Las Vegas Platter <span class="menu-sub">Nachos, Fried wings(5), Calamari rings, Nuggets(5), 2 dips, fries, salad, soft drink</span></span></div><span class="menu-item-price">$45</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Miami Platter <span class="menu-sub">Fried wings(10), Calamari rings, 2 sides (Chicken/Pulled Pork), 2 dips, fries, salad, 2 soft drinks</span></span></div><span class="menu-item-price">$69</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Yankee's Platter <span class="menu-sub">Garlic bread, Fried wings(10), Pork ribs, Calamari, 4 sides, Onion rings, Sausage zips, 2 dips, fries, salad, 4 soft drinks</span></span></div><span class="menu-item-price">$129</span></div>
+        <div id="menuPlattersContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍔 BURGERS</h2>
         <p class="text-sm text-yankee-cream/50 mb-3">GF & Grilled Options Available · Meal deals from $4.99 (excludes fries & drink)</p>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheese Burger (GF) <span class="menu-sub">Beef patty, cheese, onion, pickles, mustard & tomato sauce</span></span></div><span class="menu-item-price">$13</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Classic New Yorker (GF) <span class="menu-sub">Beef patty, maple bacon, cheese, mayo, mustard & tomato sauce</span></span></div><span class="menu-item-price">$17</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">BBQ Chicken <span class="menu-sub">Chicken patty, cheese, lettuce, pickles, BBQ sauce & garlic aioli</span></span></div><span class="menu-item-price">$16</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Yankee's Special Burger (GF) <span class="menu-sub">Double beef, crispy bacon, ham, double cheese, onion, pickles & special sauce</span></span></div><span class="menu-item-price">$24</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Smokin' Hot (GF) <span class="menu-sub">Beef patty, cheese, jalapeños, onions, mayo & hot sauce</span></span></div><span class="menu-item-price">$17</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Peri-Peri Chicken <span class="menu-sub">Chicken patty, cheese, lettuce, onion, jalapeños, peri-peri sauce & mayo</span></span></div><span class="menu-item-price">$18</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Southern Fried Chicken <span class="menu-sub">Chicken patty, crispy bacon, coleslaw, cheese, jalapeños, pickles, maple syrup & garlic aioli</span></span></div><span class="menu-item-price">$21</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Fish <span class="menu-sub">Fish patty, cheese, lettuce, tomato, pickles & tartare sauce</span></span></div><span class="menu-item-price">$17</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Ozzie (GF) <span class="menu-sub">Beef patty, bacon, egg, cheese, lettuce, pineapple, beetroot, tomato, onion, mayo & BBQ</span></span></div><span class="menu-item-price">$22</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Double BBQ Cheese <span class="menu-sub">Double beef, double cheese, crispy bacon, onion ring, pickles, baconised mayo & BBQ</span></span></div><span class="menu-item-price">$23</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">The Hulk <span class="menu-sub">Beef patty, chicken patty, bacon, egg, triple cheese, onion ring & BBQ</span></span></div><span class="menu-item-price">$29</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Veg <span class="menu-sub">Veg patty, cheese, lettuce, tomato, onion, jalapeños, tomato sauce & garlic aioli</span></span></div><span class="menu-item-price">$15</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Vego Beef <span class="menu-sub">V2 burger patty, vegan cheese, onion, lettuce, sweet chilli & BBQ</span></span></div><span class="menu-item-price">$20</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Vego Chicken <span class="menu-sub">V2 schnitzel, vegan cheese, lettuce, pickles, vegan garlic aioli & BBQ</span></span></div><span class="menu-item-price">$21</span></div>
+        <div id="menuBurgersContainer"></div>
       </div>
-      <div class="menu-panel" data-panel="signature">
+      <div class="menu-panel" data-panel="signature" id="menuPanelSignature">
         <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌭 AMERICAN HOTDOGS</h2>
         <p class="text-sm text-yankee-cream/50 mb-3">All dogs are American style charred sausage</p>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Texas Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, onion, mayo & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chilli Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, jalapeños, onion, mustard, mayo & hot sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Premium Deluxe Dog <span class="menu-sub">Chargrilled sausage, cheese, bacon, coleslaw, onion, jalapeños, Yankee's special sauce & BBQ</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuHotdogsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍕 PIZZAS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Margherita <span class="menu-sub">Pizza sauce, blended cheese, tomatoes & mixed herbs</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">BBQ Chicken <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pepperoni <span class="menu-sub">Pizza sauce, blended cheese & pepperoni</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheesy Garlic <span class="menu-sub">Garlic sauce, blended cheese & mixed herbs</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Piggy Lover <span class="menu-sub">Pizza sauce, blended cheese, onions, pulled pork & BBQ sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Ham & Cheese <span class="menu-sub">Pizza sauce, blended cheese & ham</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Hawaiian <span class="menu-sub">Pizza sauce, blended cheese, ham & pineapple</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Spicy Veggie <span class="menu-sub">Pizza sauce, blended cheese, mushroom, onions, jalapeños, mixed herbs & peri peri sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Spicy Chicken <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken, jalapeños & peri peri sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Meat Lovers <span class="menu-sub">Pizza sauce, blended cheese, shredded chicken, pepperoni, bacon & ham</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuPizzasContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">✨ SIGNATURE DISHES</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Crispy Skin Salmon <span class="menu-sub">Hollandaise sauce, lemon, on a bed of mashed potatoes & salad</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Lamb Shank <span class="menu-sub">Slow cooked 48 hours, mashed potatoes, grilled tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Parma <span class="menu-sub">Original · Ham · Pepperoni — crispy fried chicken breast, tomato gravy, blended cheese, salad & fries</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Schnitzel <span class="menu-sub">Crispy fried chicken breast, salad, fries & gravy</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Signature Chicken Skewers <span class="menu-sub">Flamed chargrilled with capsicum & onions, lemon & sriracha on salad</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuSignatureContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🥩 STEAKS — ARLO Queensland 10 Day Grain Fed Beef</h2>
         <p class="text-sm text-yankee-cream/50 mb-3">ARLO cattle roam under clear blue skies and starry nights of northern Queensland. Each cut expresses the Australian territory upon which it was raised — unmatched tenderness and flavour.</p>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Rump 350g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Scotch Fillet 250g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sirloin 300g <span class="menu-sub">Mashed potatoes, broccolini, carrots, fries, house salad & house gravy</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Extras <span class="menu-sub">Peppercorn +4 · Gravy +4 · Mushroom Gravy +4</span></span></div><span class="menu-item-price"></span></div>
+        <div id="menuSteaksContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🧂 DIPS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Cheese Dip · Gravy · Mushroom Gravy · Peppercorn · Yankee's Special Sauce · Baconised Mayo · Smashed Avo · Tomato Sauce · BBQ · Hot · Buffalo · Mayo · Aioli · Sweet Chilli · Peri Peri · Portuguese · Siricha Mayo · Tartare</span></div><span class="menu-item-price"></span></div>
+        <div id="menuDipsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🧒 KIDS MENU</h2>
         <p class="text-sm text-yankee-cream/50 mb-3">Served with a soft drink — exclusions apply</p>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Nuggets & Fries <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Popcorn Chicken <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Mozzarella Sticks (5) <span class="menu-sub">with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Junior Beef Burger <span class="menu-sub">Beef, cheese, tomato sauce & fries</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Junior Chicken Burger <span class="menu-sub">Chicken, cheese, lettuce, tomato sauce & fries</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Onion Rings <span class="menu-sub">Crispy onion rings with tomato sauce</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuKidsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🥗 SALADS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Chicken Caesar <span class="menu-sub">Grilled chicken, lettuce, cherry tomatoes, caesar dressing, bacon, cucumber, onions, croutons & parmesan</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Mediterranean Veg <span class="menu-sub">Cherry tomatoes, olives, onions, mixed leaves, feta, cucumber, fried onion & sweet potato</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuSaladsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Pancakes <span class="menu-sub">Vanilla · Chocolate · Strawberry syrup, served with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Brownies <span class="menu-sub">with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Caramel Sticky Date <span class="menu-sub">with vanilla ice cream & caramel sauce</span></span></div><span class="menu-item-price">$??</span></div>
-        <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Belgian Chocolate Waffles <span class="menu-sub">with vanilla ice cream</span></span></div><span class="menu-item-price">$??</span></div>
+        <div id="menuDessertsContainer"></div>
       </div>
     </div>
     <div class="slider-nav" id="sliderNav">
@@ -960,13 +957,7 @@
     </div>
     <h2 class="menu-section-title text-yankee-cream">📅 WEEKLY LUNCH SPECIALS</h2>
     <p class="text-sm text-yankee-cream/50 mb-3">Available after any drink purchase · 11:00 AM – 5:00 PM</p>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Monday — Burger & Chips Combo <span class="menu-sub">Cheese Burger, BBQ Chicken, or Premium Veg</span></span></div><span class="menu-item-price">$4.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Tuesday — Original Parma</span></div><span class="menu-item-price">$19.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Wednesday — 10 Wings <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese · Blue Cheese</span></span></div><span class="menu-item-price">$14.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Thursday — Pork Ribs <span class="menu-sub">Original · BBQ · Hot · Buffalo · Portuguese</span></span></div><span class="menu-item-price">$25.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Friday — Any Hotdog</span></div><span class="menu-item-price">$11.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Saturday — Nachos <span class="menu-sub">Chicken +6, Pulled Pork +7, Bacon +6</span></span></div><span class="menu-item-price">$14.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Sunday — Any Pizza</span></div><span class="menu-item-price">$17.99</span></div>
+    <div id="weeklyLunchSpecials"></div>
     <h2 class="menu-section-title text-yankee-cream">🍻 HAPPY HOUR</h2>
     <p class="text-sm text-yankee-cream/50 mb-3">Everyday · 2:00 PM – 6:00 PM & 9:30 PM – 11:30 PM</p>
     <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Buy One Cocktail Get One Free</span></div><span class="menu-item-price">—</span></div>
@@ -989,9 +980,7 @@
           <p class="text-yankee-cream/70 leading-relaxed mb-4">
             Yankee's Restaurant & Bar brings the vibrant essence of American street food culture to Australia with three prime locations in <span class="text-yankee-gold font-semibold">Melbourne</span>, <span class="text-yankee-gold font-semibold">Surfers Paradise</span>, and <span class="text-yankee-gold font-semibold">Hope Island</span>.
           </p>
-          <p class="text-yankee-cream/70 leading-relaxed">
-            Known for its juicy, meaty burgers, hearty hot dogs, refreshing drinks, and lively atmosphere, Yankee's is the perfect destination for indulgent flavors and good times.
-          </p>
+          <p class="text-yankee-cream/70 leading-relaxed">Known for its juicy, meaty burgers, hearty hot dogs, refreshing drinks, and lively atmosphere, Yankee's is the perfect destination for indulgent flavors and good times.</p>
         </div>
         <div class="md:w-1/3">
           <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yankee-red to-yankee-redDark border-4 border-yankee-gold flex items-center justify-center mx-auto shadow-glow">
@@ -1065,7 +1054,6 @@
             <span id="authBtnText">Login</span>
           </button>
         </div>
-        <!-- DISCOUNT BADGE IN NAVBAR -->
         <span id="discountNavBadge" class="discount-nav-badge" style="display:none;">🔥 SALE</span>
       </nav>
       <div class="flex items-center gap-3">
@@ -1225,30 +1213,23 @@
           </div>
           <div class="p-7">
             <div class="flex items-start justify-between gap-4 mb-3">
-              <h3 class="font-condensed text-3xl text-yankee-cream tracking-wide">THE CLASSIC STADIUM STACK</h3>
+              <h3 class="font-condensed text-3xl text-yankee-cream tracking-wide" id="featuredSpecialName">THE CLASSIC STADIUM STACK</h3>
             </div>
-            <p class="text-yankee-cream/60 text-sm mb-6 leading-relaxed">Double smash patty, aged cheddar, pickles & house sauce on a toasted brioche — comes with fries and a fountain drink.</p>
+            <p class="text-yankee-cream/60 text-sm mb-6 leading-relaxed" id="featuredSpecialDesc">Double smash patty, aged cheddar, pickles & house sauce on a toasted brioche — comes with fries and a fountain drink.</p>
             <div class="flex items-center justify-between">
               <div class="flex items-baseline gap-3">
-                <span class="font-display text-4xl text-yankee-gold">$8.99</span>
-                <span class="font-label text-yankee-cream/40 line-through text-lg">$13.50</span>
+                <span class="font-display text-4xl text-yankee-gold" id="featuredSpecialPrice">$8.99</span>
               </div>
-              <span class="bg-yankee-gold/15 text-yankee-gold font-label text-xs tracking-wider px-3 py-1.5 rounded-full border border-yankee-gold/30">SAVE 33%</span>
+              <span class="bg-yankee-gold/15 text-yankee-gold font-label text-xs tracking-wider px-3 py-1.5 rounded-full border border-yankee-gold/30">⭐ TODAY ONLY</span>
             </div>
-            <button data-name="Stadium Stack Lunch Special" data-price="8.99" class="add-to-order w-full mt-6 bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-3.5 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.02] bump">Add to Order</button>
+            <button data-name="Lunch Special" data-price="8.99" class="add-to-order w-full mt-6 bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-3.5 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.02] bump">Add to Order</button>
           </div>
         </div>
       </div>
       <div class="lg:col-span-7">
         <div class="glass rounded-3xl p-3 sm:p-4 h-full">
-          <div class="divide-y divide-white/5">
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">MON</span><span class="text-yankee-cream/90 font-medium">Burger & Chips Combo</span></div><span class="font-display text-xl text-yankee-gold">$4.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">TUE</span><span class="text-yankee-cream/90 font-medium">Original Parma</span></div><span class="font-display text-xl text-yankee-gold">$19.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4 rounded-2xl bg-yankee-red/10 ring-1 ring-yankee-red/30"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-gold w-12">WED</span><span class="text-yankee-cream font-semibold">10 Wings <span class="text-yankee-gold text-xs">· TODAY</span></span></div><span class="font-display text-xl text-yankee-gold">$14.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">THU</span><span class="text-yankee-cream/90 font-medium">Pork Ribs</span></div><span class="font-display text-xl text-yankee-gold">$25.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">FRI</span><span class="text-yankee-cream/90 font-medium">Any Hotdog</span></div><span class="font-display text-xl text-yankee-gold">$11.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">SAT</span><span class="text-yankee-cream/90 font-medium">Nachos</span></div><span class="font-display text-xl text-yankee-gold">$14.99</span></div>
-            <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4"><div class="flex items-center gap-4"><span class="font-label text-xs tracking-widest text-yankee-red w-12">SUN</span><span class="text-yankee-cream/90 font-medium">Any Pizza</span></div><span class="font-display text-xl text-yankee-gold">$17.99</span></div>
+          <div class="divide-y divide-white/5" id="weeklySpecialsList">
+            <!-- Dynamically populated -->
           </div>
         </div>
       </div>
@@ -1280,6 +1261,37 @@
                 <option value="+44">🇬🇧 +44</option>
                 <option value="+91">🇮🇳 +91</option>
                 <option value="+86">🇨🇳 +86</option>
+                <option value="+81">🇯🇵 +81</option>
+                <option value="+49">🇩🇪 +49</option>
+                <option value="+33">🇫🇷 +33</option>
+                <option value="+39">🇮🇹 +39</option>
+                <option value="+55">🇧🇷 +55</option>
+                <option value="+7">🇷🇺 +7</option>
+                <option value="+82">🇰🇷 +82</option>
+                <option value="+64">🇳🇿 +64</option>
+                <option value="+27">🇿🇦 +27</option>
+                <option value="+34">🇪🇸 +34</option>
+                <option value="+31">🇳🇱 +31</option>
+                <option value="+46">🇸🇪 +46</option>
+                <option value="+41">🇨🇭 +41</option>
+                <option value="+65">🇸🇬 +65</option>
+                <option value="+60">🇲🇾 +60</option>
+                <option value="+63">🇵🇭 +63</option>
+                <option value="+66">🇹🇭 +66</option>
+                <option value="+62">🇮🇩 +62</option>
+                <option value="+971">🇦🇪 +971</option>
+                <option value="+966">🇸🇦 +966</option>
+                <option value="+52">🇲🇽 +52</option>
+                <option value="+54">🇦🇷 +54</option>
+                <option value="+56">🇨🇱 +56</option>
+                <option value="+57">🇨🇴 +57</option>
+                <option value="+351">🇵🇹 +351</option>
+                <option value="+30">🇬🇷 +30</option>
+                <option value="+90">🇹🇷 +90</option>
+                <option value="+48">🇵🇱 +48</option>
+                <option value="+47">🇳🇴 +47</option>
+                <option value="+45">🇩🇰 +45</option>
+                <option value="+358">🇫🇮 +358</option>
               </select>
               <input required type="tel" placeholder="(555) 123-4567" class="w-2/3 bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" />
             </div>
@@ -2059,7 +2071,6 @@
   }
 
   // ===== LISTEN FOR PROMO UPDATES =====
-  // Method 1: Custom event from admin panel (cross-tab communication)
   window.addEventListener('promoUpdated', (e) => {
     const promo = e.detail;
     if (promo) {
@@ -2068,7 +2079,6 @@
     }
   });
 
-  // Method 2: Listen for storage changes (from other tabs)
   window.addEventListener('storage', (e) => {
     if (e.key === 'sitePromo' && e.newValue) {
       try {
@@ -2080,14 +2090,12 @@
     }
   });
 
-  // Method 3: Listen for messages from admin panel (same tab)
   window.addEventListener('message', (e) => {
     if (e.data && e.data.type === 'promoData') {
       updateDiscountDisplay(e.data.data);
     }
   });
 
-  // ===== CHECK FOR EXISTING PROMO ON LOAD =====
   function loadExistingPromo() {
     const saved = localStorage.getItem('sitePromo');
     if (saved) {
@@ -2103,14 +2111,11 @@
   loadExistingPromo();
 
   // ===== FIREBASE REAL-TIME PROMO LISTENER =====
-  // Listen for active promotions from Firestore
   firebase.firestore().collection('promotions')
     .where('active', '==', true)
     .onSnapshot((snapshot) => {
       if (!snapshot.empty) {
-        // Get the most recent active promo
         const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        // Sort by createdAt and get the latest
         docs.sort((a, b) => {
           const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
           const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
@@ -2120,7 +2125,6 @@
         localStorage.setItem('sitePromo', JSON.stringify(promo));
         updateDiscountDisplay(promo);
       } else {
-        // No active promos
         const saved = localStorage.getItem('sitePromo');
         if (saved) {
           try {
@@ -2137,8 +2141,191 @@
       console.error('Firestore promo listener error:', error);
     });
 
-  console.log('🎯 Discount section loaded and ready!');
-  console.log('📡 Listening for promotions from admin panel...');
+  // ================================================================
+  // ===== DYNAMIC DAILY SPECIALS - AUTO UPDATES BASED ON DAY =====
+  // ================================================================
+  
+  // Default weekly specials (fallback if Firestore fails)
+  const defaultWeeklySpecials = [
+    { day: 'Monday', name: 'Burger & Chips Combo', price: '4.99', desc: 'Cheese Burger, BBQ Chicken, or Premium Veg' },
+    { day: 'Tuesday', name: 'Original Parma', price: '19.99', desc: 'Classic chicken parmigiana with napoli sauce' },
+    { day: 'Wednesday', name: '10 Wings', price: '14.99', desc: 'Original · BBQ · Hot · Buffalo · Portuguese · Blue Cheese' },
+    { day: 'Thursday', name: 'Pork Ribs', price: '25.99', desc: 'Original · BBQ · Hot · Buffalo · Portuguese' },
+    { day: 'Friday', name: 'Any Hotdog', price: '11.99', desc: 'Texas, Chilli, or Premium Deluxe' },
+    { day: 'Saturday', name: 'Nachos', price: '14.99', desc: 'Chicken +6, Pulled Pork +7, Bacon +6' },
+    { day: 'Sunday', name: 'Any Pizza', price: '17.99', desc: 'All pizzas included' }
+  ];
+
+  let weeklySpecials = [];
+  
+  // Load weekly specials from Firestore
+  function loadWeeklySpecials() {
+    firebase.firestore().collection('weeklySpecials')
+      .onSnapshot((snapshot) => {
+        if (!snapshot.empty) {
+          weeklySpecials = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        } else {
+          // Use defaults and save to Firestore
+          weeklySpecials = defaultWeeklySpecials;
+          defaultWeeklySpecials.forEach(async (spec) => {
+            try {
+              const existing = await firebase.firestore().collection('weeklySpecials')
+                .where('day', '==', spec.day).get();
+              if (existing.empty) {
+                await firebase.firestore().collection('weeklySpecials').add(spec);
+              }
+            } catch (e) {
+              console.warn('Could not save default specials:', e);
+            }
+          });
+        }
+        updateDailySpecials();
+      }, (error) => {
+        console.warn('Weekly specials load error, using defaults:', error);
+        weeklySpecials = defaultWeeklySpecials;
+        updateDailySpecials();
+      });
+  }
+
+  function updateDailySpecials() {
+    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const today = days[new Date().getDay()];
+    
+    // Find today's special
+    const todaySpecial = weeklySpecials.find(s => s.day === today) || 
+                         defaultWeeklySpecials.find(s => s.day === today);
+    
+    // Update the menu page highlight
+    const dailySpecialHighlight = document.getElementById('dailySpecialHighlight');
+    const dailySpecialName = document.getElementById('dailySpecialName');
+    const dailySpecialPrice = document.getElementById('dailySpecialPrice');
+    const todayLabel = document.getElementById('todayLabel');
+    
+    if (todaySpecial && dailySpecialHighlight) {
+      dailySpecialName.textContent = todaySpecial.name || 'Special';
+      dailySpecialPrice.textContent = `$${todaySpecial.price || '0.00'}`;
+      todayLabel.textContent = `${today.toUpperCase()}'S SPECIAL`;
+      dailySpecialHighlight.style.display = 'flex';
+      
+      // Update the featured section too
+      document.getElementById('featuredSpecialName').textContent = todaySpecial.name || 'The Classic Stadium Stack';
+      document.getElementById('featuredSpecialDesc').textContent = todaySpecial.desc || 'Today\'s featured lunch special!';
+      document.getElementById('featuredSpecialPrice').textContent = `$${todaySpecial.price || '8.99'}`;
+      
+      // Update add to order button
+      const addBtn = document.querySelector('.daily-special-highlight .add-to-order');
+      if (addBtn) {
+        addBtn.dataset.name = todaySpecial.name;
+        addBtn.dataset.price = todaySpecial.price;
+      }
+    } else if (dailySpecialHighlight) {
+      dailySpecialHighlight.style.display = 'none';
+    }
+    
+    // Update weekly specials list in the weekly section
+    const weeklyList = document.getElementById('weeklySpecialsList');
+    if (weeklyList) {
+      // Get unique specials by day
+      const uniqueSpecials = [];
+      const seenDays = new Set();
+      weeklySpecials.forEach(spec => {
+        if (!seenDays.has(spec.day)) {
+          seenDays.add(spec.day);
+          uniqueSpecials.push(spec);
+        }
+      });
+      
+      // Sort by day order
+      const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      uniqueSpecials.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
+      
+      weeklyList.innerHTML = uniqueSpecials.map(spec => {
+        const isToday = spec.day === today;
+        return `
+          <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4 ${isToday ? 'rounded-2xl bg-yankee-red/10 ring-1 ring-yankee-red/30' : ''}">
+            <div class="flex items-center gap-4">
+              <span class="font-label text-xs tracking-widest ${isToday ? 'text-yankee-gold' : 'text-yankee-red'} w-12">${spec.day.substring(0, 3)}</span>
+              <span class="${isToday ? 'text-yankee-cream font-semibold' : 'text-yankee-cream/90 font-medium'}">${spec.name} ${isToday ? '<span class="text-yankee-gold text-xs">· TODAY</span>' : ''}</span>
+            </div>
+            <span class="font-display text-xl text-yankee-gold">$${spec.price}</span>
+          </div>
+        `;
+      }).join('');
+      
+      // Re-attach add-to-order listeners for weekly specials
+      document.querySelectorAll('#weeklySpecialsList .add-to-order').forEach(btn => {
+        btn.addEventListener('click', function() {
+          addToBasket(this.dataset.name, parseFloat(this.dataset.price));
+        });
+      });
+    }
+  }
+
+  // Load menu items from Firestore and populate dynamic containers
+  function loadMenuItems() {
+    const categoryMap = {
+      'Starters': 'menuStartersContainer',
+      'Wings': 'menuWingsContainer',
+      'Nachos': 'menuNachosContainer',
+      'Platters': 'menuPlattersContainer',
+      'Burgers': 'menuBurgersContainer',
+      'Hotdogs': 'menuHotdogsContainer',
+      'Pizzas': 'menuPizzasContainer',
+      'Signature': 'menuSignatureContainer',
+      'Steaks': 'menuSteaksContainer',
+      'Dips': 'menuDipsContainer',
+      'Kids': 'menuKidsContainer',
+      'Salads': 'menuSaladsContainer',
+      'Desserts': 'menuDessertsContainer'
+    };
+
+    firebase.firestore().collection('menu')
+      .onSnapshot((snapshot) => {
+        // Clear all containers
+        Object.values(categoryMap).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = '';
+        });
+        
+        // Group items by category
+        const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        const grouped = {};
+        items.forEach(item => {
+          const cat = item.category || 'Uncategorized';
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(item);
+        });
+        
+        // Render each category
+        for (const [category, items] of Object.entries(grouped)) {
+          const containerId = categoryMap[category];
+          const container = document.getElementById(containerId);
+          if (container) {
+            items.forEach(item => {
+              const row = document.createElement('div');
+              row.className = 'menu-item-row';
+              const subHTML = item.description ? `<span class="menu-sub">${item.description}</span>` : '';
+              row.innerHTML = `
+                <div class="menu-item-left">
+                  <span class="menu-item-name">${item.name} ${subHTML}</span>
+                </div>
+                <span class="menu-item-price">$${item.price || '0.00'}</span>
+              `;
+              container.appendChild(row);
+            });
+          }
+        }
+      }, (error) => {
+        console.warn('Menu load error, using static fallback:', error);
+      });
+  }
+
+  // Initialize dynamic content
+  loadWeeklySpecials();
+  loadMenuItems();
+
+  console.log('🎯 Dynamic daily specials loaded!');
+  console.log('📡 Listening for updates from admin panel...');
 
 })();
 </script>
