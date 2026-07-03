@@ -34,7 +34,7 @@
     }
   </script>
 
-  <!-- Firebase SDKs - NEW PROJECT -->
+  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
@@ -712,6 +712,111 @@
 
     .local-time-badge { font-size: 0.7rem; color: #b0a99b; display: block; margin-top: 0.4rem; opacity: 0.6; }
 
+    /* ===== DISCOUNT SECTION STYLES ===== */
+    .discount-section {
+      background: linear-gradient(135deg, rgba(200,16,46,0.08), rgba(244,185,62,0.05));
+      border: 1px solid rgba(244,185,62,0.15);
+      border-radius: 2rem;
+      padding: 2rem 1.5rem;
+      margin: 2rem auto;
+      max-width: 900px;
+      transition: all 0.3s ease;
+      display: none;
+    }
+    .discount-section.active {
+      display: block;
+      animation: fadeInDiscount 0.6s ease;
+    }
+    @keyframes fadeInDiscount {
+      from { opacity: 0; transform: translateY(20px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .discount-section .discount-badge {
+      display: inline-block;
+      background: #c8102e;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      padding: 0.3rem 1rem;
+      border-radius: 30px;
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .discount-section .discount-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 2rem;
+      color: #f4ede1;
+      margin-bottom: 0.25rem;
+    }
+    .discount-section .discount-title .highlight {
+      color: #f4b93e;
+    }
+    .discount-section .discount-details {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    .discount-section .discount-price {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+    }
+    .discount-section .discount-price .original {
+      color: #888;
+      text-decoration: line-through;
+      font-size: 1.2rem;
+    }
+    .discount-section .discount-price .discounted {
+      font-family: 'Anton', sans-serif;
+      font-size: 2.2rem;
+      color: #f4b93e;
+    }
+    .discount-section .discount-percent {
+      background: rgba(244,185,62,0.15);
+      color: #f4b93e;
+      font-family: 'Anton', sans-serif;
+      font-size: 1.5rem;
+      padding: 0.2rem 1rem;
+      border-radius: 30px;
+      border: 1px solid rgba(244,185,62,0.2);
+    }
+    .discount-section .discount-timer {
+      font-family: 'Courier New', monospace;
+      font-size: 1.8rem;
+      color: #f4b93e;
+      letter-spacing: 2px;
+      margin-left: auto;
+    }
+    .discount-section .discount-timer.expired {
+      color: #ef4444;
+    }
+    .discount-section .discount-item {
+      color: #b0a99b;
+      font-size: 0.9rem;
+    }
+    .discount-section .discount-item strong {
+      color: #f4ede1;
+    }
+    .discount-nav-badge {
+      background: #c8102e;
+      color: white;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.65rem;
+      letter-spacing: 0.05em;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      margin-left: 0.5rem;
+      display: inline-block;
+      animation: pulseBadge 2s infinite;
+    }
+    @keyframes pulseBadge {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
     @media (max-width: 480px) {
       .menu-slider .menu-panel { padding: 1rem 0.75rem; }
       .slider-nav button { font-size: 0.65rem; padding: 0.3rem 0.9rem; }
@@ -728,6 +833,10 @@
       .countdown-timer { font-size: 2.8rem !important; }
       .auth-box { padding: 1.2rem; }
       .user-menu-trigger .user-name { max-width: 60px; font-size: 0.7rem; }
+      .discount-section .discount-title { font-size: 1.5rem; }
+      .discount-section .discount-price .discounted { font-size: 1.6rem; }
+      .discount-section .discount-timer { font-size: 1.3rem; }
+      .discount-section .discount-details { gap: 1rem; }
     }
     @media (max-width: 400px) {
       .hours-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
@@ -942,7 +1051,6 @@
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-3">
     <div class="glass rounded-2xl shadow-black/40 shadow-2xl px-4 sm:px-6 py-3 flex items-center justify-between">
       <a href="#home" class="flex items-center gap-2 group shrink-0">
-        <!-- Updated logo to match footer: uses real .png logo image -->
         <img src="img/logo.png" alt="The Yankee's Restaurant & Bar logo" class="logo-img" />
       </a>
       <nav class="hidden lg:flex items-center gap-6 font-label text-sm tracking-wide text-yankee-cream/80">
@@ -957,6 +1065,8 @@
             <span id="authBtnText">Login</span>
           </button>
         </div>
+        <!-- DISCOUNT BADGE IN NAVBAR -->
+        <span id="discountNavBadge" class="discount-nav-badge" style="display:none;">🔥 SALE</span>
       </nav>
       <div class="flex items-center gap-3">
         <button id="basketToggle" class="relative hidden sm:flex items-center justify-center w-11 h-11 rounded-full glass hover:border-yankee-gold/50 transition-all duration-300 bump">
@@ -1060,6 +1170,22 @@
   </div>
 </section>
 
+<!-- ============ DISCOUNT SECTION ============ -->
+<section id="discountSection" class="discount-section">
+  <div class="discount-badge">🔥 Limited Time Offer</div>
+  <h2 class="discount-title" id="discountTitle">Flash Sale</h2>
+  <div class="discount-details">
+    <div class="discount-price">
+      <span class="original" id="discountOriginal">$18.99</span>
+      <span class="discounted" id="discountPrice">$12.99</span>
+    </div>
+    <span class="discount-percent" id="discountPercent">-32%</span>
+    <span class="discount-item">On <strong id="discountItemName">Classic Burger</strong></span>
+    <span class="discount-timer" id="discountTimer">--:--:--</span>
+  </div>
+  <p style="color:#888;font-size:0.8rem;margin-top:0.75rem;" id="discountExpiry"></p>
+</section>
+
 <!-- ============ OPENING HOURS ============ -->
 <section id="hours" class="relative py-24 sm:py-32 bg-ink-900/30">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1130,7 +1256,7 @@
   </div>
 </section>
 
-<!-- ============ BOOKING + LOCATION (UPDATED WITH FULL COUNTRY LIST) ============ -->
+<!-- ============ BOOKING + LOCATION ============ -->
 <section id="booking" class="relative py-24 sm:py-32 bg-ink-900/40">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
     <div class="text-center max-w-2xl mx-auto mb-14">
@@ -1149,247 +1275,11 @@
             <label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">PHONE</label>
             <div class="flex gap-2">
               <select id="countryCode" class="w-1/3 bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-2 py-3 text-yankee-cream outline-none transition-colors duration-300 text-sm">
-                <option value="+93">🇦🇫 +93</option>
-                <option value="+355">🇦🇱 +355</option>
-                <option value="+213">🇩🇿 +213</option>
-                <option value="+1684">🇦🇸 +1684</option>
-                <option value="+376">🇦🇩 +376</option>
-                <option value="+244">🇦🇴 +244</option>
-                <option value="+1264">🇦🇮 +1264</option>
-                <option value="+672">🇦🇶 +672</option>
-                <option value="+1268">🇦🇬 +1268</option>
-                <option value="+54">🇦🇷 +54</option>
-                <option value="+374">🇦🇲 +374</option>
-                <option value="+297">🇦🇼 +297</option>
-                <option value="+247">🇦🇨 +247</option>
                 <option value="+61" selected>🇦🇺 +61</option>
-                <option value="+43">🇦🇹 +43</option>
-                <option value="+994">🇦🇿 +994</option>
-                <option value="+1242">🇧🇸 +1242</option>
-                <option value="+973">🇧🇭 +973</option>
-                <option value="+880">🇧🇩 +880</option>
-                <option value="+1246">🇧🇧 +1246</option>
-                <option value="+375">🇧🇾 +375</option>
-                <option value="+32">🇧🇪 +32</option>
-                <option value="+501">🇧🇿 +501</option>
-                <option value="+229">🇧🇯 +229</option>
-                <option value="+1441">🇧🇲 +1441</option>
-                <option value="+975">🇧🇹 +975</option>
-                <option value="+591">🇧🇴 +591</option>
-                <option value="+387">🇧🇦 +387</option>
-                <option value="+267">🇧🇼 +267</option>
-                <option value="+55">🇧🇷 +55</option>
-                <option value="+1284">🇻🇬 +1284</option>
-                <option value="+673">🇧🇳 +673</option>
-                <option value="+359">🇧🇬 +359</option>
-                <option value="+226">🇧🇫 +226</option>
-                <option value="+95">🇲🇲 +95</option>
-                <option value="+257">🇧🇮 +257</option>
-                <option value="+855">🇰🇭 +855</option>
-                <option value="+237">🇨🇲 +237</option>
-                <option value="+1">🇨🇦 +1</option>
-                <option value="+238">🇨🇻 +238</option>
-                <option value="+1345">🇰🇾 +1345</option>
-                <option value="+236">🇨🇫 +236</option>
-                <option value="+235">🇹🇩 +235</option>
-                <option value="+56">🇨🇱 +56</option>
-                <option value="+86">🇨🇳 +86</option>
-                <option value="+61">🇨🇽 +61</option>
-                <option value="+61">🇨🇨 +61</option>
-                <option value="+57">🇨🇴 +57</option>
-                <option value="+269">🇰🇲 +269</option>
-                <option value="+242">🇨🇬 +242</option>
-                <option value="+243">🇨🇩 +243</option>
-                <option value="+682">🇨🇰 +682</option>
-                <option value="+506">🇨🇷 +506</option>
-                <option value="+385">🇭🇷 +385</option>
-                <option value="+53">🇨🇺 +53</option>
-                <option value="+599">🇨🇼 +599</option>
-                <option value="+357">🇨🇾 +357</option>
-                <option value="+420">🇨🇿 +420</option>
-                <option value="+45">🇩🇰 +45</option>
-                <option value="+253">🇩🇯 +253</option>
-                <option value="+1767">🇩🇲 +1767</option>
-                <option value="+1849">🇩🇴 +1849</option>
-                <option value="+670">🇹🇱 +670</option>
-                <option value="+593">🇪🇨 +593</option>
-                <option value="+20">🇪🇬 +20</option>
-                <option value="+503">🇸🇻 +503</option>
-                <option value="+240">🇬🇶 +240</option>
-                <option value="+291">🇪🇷 +291</option>
-                <option value="+372">🇪🇪 +372</option>
-                <option value="+251">🇪🇹 +251</option>
-                <option value="+500">🇫🇰 +500</option>
-                <option value="+298">🇫🇴 +298</option>
-                <option value="+679">🇫🇯 +679</option>
-                <option value="+358">🇫🇮 +358</option>
-                <option value="+33">🇫🇷 +33</option>
-                <option value="+594">🇬🇫 +594</option>
-                <option value="+689">🇵🇫 +689</option>
-                <option value="+241">🇬🇦 +241</option>
-                <option value="+220">🇬🇲 +220</option>
-                <option value="+995">🇬🇪 +995</option>
-                <option value="+49">🇩🇪 +49</option>
-                <option value="+233">🇬🇭 +233</option>
-                <option value="+350">🇬🇮 +350</option>
-                <option value="+30">🇬🇷 +30</option>
-                <option value="+299">🇬🇱 +299</option>
-                <option value="+1473">🇬🇩 +1473</option>
-                <option value="+590">🇬🇵 +590</option>
-                <option value="+1671">🇬🇺 +1671</option>
-                <option value="+502">🇬🇹 +502</option>
-                <option value="+44">🇬🇬 +44</option>
-                <option value="+224">🇬🇳 +224</option>
-                <option value="+245">🇬🇼 +245</option>
-                <option value="+592">🇬🇾 +592</option>
-                <option value="+509">🇭🇹 +509</option>
-                <option value="+504">🇭🇳 +504</option>
-                <option value="+852">🇭🇰 +852</option>
-                <option value="+36">🇭🇺 +36</option>
-                <option value="+354">🇮🇸 +354</option>
-                <option value="+91">🇮🇳 +91</option>
-                <option value="+62">🇮🇩 +62</option>
-                <option value="+98">🇮🇷 +98</option>
-                <option value="+964">🇮🇶 +964</option>
-                <option value="+353">🇮🇪 +353</option>
-                <option value="+44">🇮🇲 +44</option>
-                <option value="+972">🇮🇱 +972</option>
-                <option value="+39">🇮🇹 +39</option>
-                <option value="+225">🇨🇮 +225</option>
-                <option value="+1876">🇯🇲 +1876</option>
-                <option value="+81">🇯🇵 +81</option>
-                <option value="+44">🇯🇪 +44</option>
-                <option value="+962">🇯🇴 +962</option>
-                <option value="+7">🇰🇿 +7</option>
-                <option value="+254">🇰🇪 +254</option>
-                <option value="+686">🇰🇮 +686</option>
-                <option value="+383">🇽🇰 +383</option>
-                <option value="+965">🇰🇼 +965</option>
-                <option value="+996">🇰🇬 +996</option>
-                <option value="+856">🇱🇦 +856</option>
-                <option value="+371">🇱🇻 +371</option>
-                <option value="+961">🇱🇧 +961</option>
-                <option value="+266">🇱🇸 +266</option>
-                <option value="+231">🇱🇷 +231</option>
-                <option value="+218">🇱🇾 +218</option>
-                <option value="+423">🇱🇮 +423</option>
-                <option value="+370">🇱🇹 +370</option>
-                <option value="+352">🇱🇺 +352</option>
-                <option value="+853">🇲🇴 +853</option>
-                <option value="+389">🇲🇰 +389</option>
-                <option value="+261">🇲🇬 +261</option>
-                <option value="+265">🇲🇼 +265</option>
-                <option value="+60">🇲🇾 +60</option>
-                <option value="+960">🇲🇻 +960</option>
-                <option value="+223">🇲🇱 +223</option>
-                <option value="+356">🇲🇹 +356</option>
-                <option value="+692">🇲🇭 +692</option>
-                <option value="+596">🇲🇶 +596</option>
-                <option value="+222">🇲🇷 +222</option>
-                <option value="+230">🇲🇺 +230</option>
-                <option value="+262">🇾🇹 +262</option>
-                <option value="+52">🇲🇽 +52</option>
-                <option value="+691">🇫🇲 +691</option>
-                <option value="+373">🇲🇩 +373</option>
-                <option value="+377">🇲🇨 +377</option>
-                <option value="+976">🇲🇳 +976</option>
-                <option value="+382">🇲🇪 +382</option>
-                <option value="+1664">🇲🇸 +1664</option>
-                <option value="+212">🇲🇦 +212</option>
-                <option value="+258">🇲🇿 +258</option>
-                <option value="+95">🇲🇲 +95</option>
-                <option value="+264">🇳🇦 +264</option>
-                <option value="+674">🇳🇷 +674</option>
-                <option value="+977">🇳🇵 +977</option>
-                <option value="+31">🇳🇱 +31</option>
-                <option value="+687">🇳🇨 +687</option>
-                <option value="+64">🇳🇿 +64</option>
-                <option value="+505">🇳🇮 +505</option>
-                <option value="+227">🇳🇪 +227</option>
-                <option value="+234">🇳🇬 +234</option>
-                <option value="+683">🇳🇺 +683</option>
-                <option value="+672">🇳🇫 +672</option>
-                <option value="+850">🇰🇵 +850</option>
-                <option value="+47">🇳🇴 +47</option>
-                <option value="+968">🇴🇲 +968</option>
-                <option value="+92">🇵🇰 +92</option>
-                <option value="+680">🇵🇼 +680</option>
-                <option value="+970">🇵🇸 +970</option>
-                <option value="+507">🇵🇦 +507</option>
-                <option value="+675">🇵🇬 +675</option>
-                <option value="+595">🇵🇾 +595</option>
-                <option value="+51">🇵🇪 +51</option>
-                <option value="+63">🇵🇭 +63</option>
-                <option value="+48">🇵🇱 +48</option>
-                <option value="+351">🇵🇹 +351</option>
-                <option value="+1787">🇵🇷 +1787</option>
-                <option value="+974">🇶🇦 +974</option>
-                <option value="+262">🇷🇪 +262</option>
-                <option value="+40">🇷🇴 +40</option>
-                <option value="+7">🇷🇺 +7</option>
-                <option value="+250">🇷🇼 +250</option>
-                <option value="+590">🇧🇱 +590</option>
-                <option value="+290">🇸🇭 +290</option>
-                <option value="+1869">🇰🇳 +1869</option>
-                <option value="+1758">🇱🇨 +1758</option>
-                <option value="+508">🇵🇲 +508</option>
-                <option value="+1784">🇻🇨 +1784</option>
-                <option value="+685">🇼🇸 +685</option>
-                <option value="+378">🇸🇲 +378</option>
-                <option value="+239">🇸🇹 +239</option>
-                <option value="+966">🇸🇦 +966</option>
-                <option value="+221">🇸🇳 +221</option>
-                <option value="+381">🇷🇸 +381</option>
-                <option value="+248">🇸🇨 +248</option>
-                <option value="+232">🇸🇱 +232</option>
-                <option value="+65">🇸🇬 +65</option>
-                <option value="+1721">🇸🇽 +1721</option>
-                <option value="+421">🇸🇰 +421</option>
-                <option value="+386">🇸🇮 +386</option>
-                <option value="+677">🇸🇧 +677</option>
-                <option value="+252">🇸🇴 +252</option>
-                <option value="+27">🇿🇦 +27</option>
-                <option value="+500">🇬🇸 +500</option>
-                <option value="+82">🇰🇷 +82</option>
-                <option value="+211">🇸🇸 +211</option>
-                <option value="+34">🇪🇸 +34</option>
-                <option value="+94">🇱🇰 +94</option>
-                <option value="+249">🇸🇩 +249</option>
-                <option value="+597">🇸🇷 +597</option>
-                <option value="+47">🇸🇯 +47</option>
-                <option value="+268">🇸🇿 +268</option>
-                <option value="+46">🇸🇪 +46</option>
-                <option value="+41">🇨🇭 +41</option>
-                <option value="+963">🇸🇾 +963</option>
-                <option value="+886">🇹🇼 +886</option>
-                <option value="+992">🇹🇯 +992</option>
-                <option value="+255">🇹🇿 +255</option>
-                <option value="+66">🇹🇭 +66</option>
-                <option value="+228">🇹🇬 +228</option>
-                <option value="+690">🇹🇰 +690</option>
-                <option value="+676">🇹🇴 +676</option>
-                <option value="+1868">🇹🇹 +1868</option>
-                <option value="+216">🇹🇳 +216</option>
-                <option value="+90">🇹🇷 +90</option>
-                <option value="+993">🇹🇲 +993</option>
-                <option value="+1649">🇹🇨 +1649</option>
-                <option value="+688">🇹🇻 +688</option>
-                <option value="+256">🇺🇬 +256</option>
-                <option value="+380">🇺🇦 +380</option>
-                <option value="+971">🇦🇪 +971</option>
-                <option value="+44">🇬🇧 +44</option>
                 <option value="+1">🇺🇸 +1</option>
-                <option value="+598">🇺🇾 +598</option>
-                <option value="+998">🇺🇿 +998</option>
-                <option value="+678">🇻🇺 +678</option>
-                <option value="+39">🇻🇦 +39</option>
-                <option value="+58">🇻🇪 +58</option>
-                <option value="+84">🇻🇳 +84</option>
-                <option value="+681">🇼🇫 +681</option>
-                <option value="+212">🇪🇭 +212</option>
-                <option value="+967">🇾🇪 +967</option>
-                <option value="+260">🇿🇲 +260</option>
-                <option value="+263">🇿🇼 +263</option>
+                <option value="+44">🇬🇧 +44</option>
+                <option value="+91">🇮🇳 +91</option>
+                <option value="+86">🇨🇳 +86</option>
               </select>
               <input required type="tel" placeholder="(555) 123-4567" class="w-2/3 bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300" />
             </div>
@@ -1418,9 +1308,9 @@
         <div>
           <label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">LOCATION</label>
           <select class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300">
-            <option value="melbourne">Melbourne CBD</option>
-            <option value="surfers">Surfers Paradise</option>
-            <option value="hope">Hope Island</option>
+            <option value="Melbourne CBD">Melbourne CBD</option>
+            <option value="Surfers Paradise">Surfers Paradise</option>
+            <option value="Hope Island">Hope Island</option>
           </select>
         </div>
         <div>
@@ -1462,18 +1352,15 @@
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
       <div>
         <div class="flex items-center gap-3 mb-4">
-          <!-- Updated: use logo image instead of text 'Y' -->
           <img src="img/logo.png" alt="The Yankee's Restaurant & Bar logo" class="h-10 w-auto" />
         </div>
         <p class="text-yankee-cream/50 text-sm leading-relaxed">Classic American comfort food, grilled fresh daily since 1952.</p>
         <div class="flex gap-3 mt-3">
-          <!-- Instagram with real SVG -->
           <a href="https://www.instagram.com/the_yankees_hope_island?igsh=Zm9zb3pzM2o4Mzh2" target="_blank" class="text-yankee-cream/40 hover:text-yankee-gold transition-colors duration-300 transform hover:scale-110">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12 2.2c2.7 0 3 0 4 .1 1 .1 1.7.2 2.3.5.6.2 1.1.6 1.6 1.1.5.5.8 1 1.1 1.6.2.6.4 1.3.5 2.3.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.7-.5 2.3a4.6 4.6 0 01-1.1 1.6 4.6 4.6 0 01-1.6 1.1c-.6.2-1.3.4-2.3.5-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.7-.2-2.3-.5a4.6 4.6 0 01-1.6-1.1 4.6 4.6 0 01-1.1-1.6c-.2-.6-.4-1.3-.5-2.3-.1-1-.1-1.3-.1-4s0-3 .1-4c.1-1 .2-1.7.5-2.3.2-.6.6-1.1 1.1-1.6.5-.5 1-.8 1.6-1.1.6-.2 1.3-.4 2.3-.5 1-.1 1.3-.1 4-.1zM12 0C9.3 0 8.9 0 7.9.1c-1 .1-1.8.2-2.4.5a6.8 6.8 0 00-2.5 1.6A6.8 6.8 0 001.4 4.7c-.3.6-.4 1.4-.5 2.4C.8 8.1.8 8.5.8 11.2v1.6c0 2.7 0 3.1.1 4.1.1 1 .2 1.8.5 2.4.3 1 .8 1.8 1.6 2.5.7.8 1.5 1.3 2.5 1.6.6.3 1.4.4 2.4.5 1 .1 1.4.1 4.1.1s3.1 0 4.1-.1c1-.1 1.8-.2 2.4-.5a6.8 6.8 0 002.5-1.6 6.8 6.8 0 001.6-2.5c.3-.6.4-1.4.5-2.4.1-1 .1-1.4.1-4.1v-1.6c0-2.7 0-3.1-.1-4.1-.1-1-.2-1.8-.5-2.4a6.8 6.8 0 00-1.6-2.5A6.8 6.8 0 0018.9.6c-.6-.3-1.4-.4-2.4-.5C15.5 0 15.1 0 12.4 0H12zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm7.9-10.5a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0z"/>
             </svg>
           </a>
-          <!-- Facebook with real SVG -->
           <a href="https://www.facebook.com/share/1EBPtcKRER/?mibextid=wwXIfr" target="_blank" class="text-yankee-cream/40 hover:text-yankee-gold transition-colors duration-300 transform hover:scale-110">
             <svg class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
               <path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/>
@@ -1485,14 +1372,12 @@
       <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">HOURS</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li>Mon – Thu: 8AM – 10PM</li><li>Fri – Sat: 8AM – 11:30PM</li><li>Sunday: 9AM – 9PM</li></ul></div>
       <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">CONTACT</p><ul class="space-y-2 text-sm text-yankee-cream/60">
         <li><a href="tel:+61370239333" class="hover:text-yankee-gold transition-colors">📞 +61 3 7023 9333</a></li>
-        <!-- Updated: Use real Instagram and Facebook icons for contact section -->
         <li><a href="https://www.instagram.com/the_yankees_hope_island?igsh=Zm9zb3pzM2o4Mzh2" target="_blank" class="hover:text-yankee-gold transition-colors flex items-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c2.7 0 3 0 4 .1 1 .1 1.7.2 2.3.5.6.2 1.1.6 1.6 1.1.5.5.8 1 1.1 1.6.2.6.4 1.3.5 2.3.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.7-.5 2.3a4.6 4.6 0 01-1.1 1.6 4.6 4.6 0 01-1.6 1.1c-.6.2-1.3.4-2.3.5-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.7-.2-2.3-.5a4.6 4.6 0 01-1.6-1.1 4.6 4.6 0 01-1.1-1.6c-.2-.6-.4-1.3-.5-2.3-.1-1-.1-1.3-.1-4s0-3 .1-4c.1-1 .2-1.7.5-2.3.2-.6.6-1.1 1.1-1.6.5-.5 1-.8 1.6-1.1.6-.2 1.3-.4 2.3-.5 1-.1 1.3-.1 4-.1zM12 0C9.3 0 8.9 0 7.9.1c-1 .1-1.8.2-2.4.5a6.8 6.8 0 00-2.5 1.6A6.8 6.8 0 001.4 4.7c-.3.6-.4 1.4-.5 2.4C.8 8.1.8 8.5.8 11.2v1.6c0 2.7 0 3.1.1 4.1.1 1 .2 1.8.5 2.4.3 1 .8 1.8 1.6 2.5.7.8 1.5 1.3 2.5 1.6.6.3 1.4.4 2.4.5 1 .1 1.4.1 4.1.1s3.1 0 4.1-.1c1-.1 1.8-.2 2.4-.5a6.8 6.8 0 002.5-1.6 6.8 6.8 0 001.6-2.5c.3-.6.4-1.4.5-2.4.1-1 .1-1.4.1-4.1v-1.6c0-2.7 0-3.1-.1-4.1-.1-1-.2-1.8-.5-2.4a6.8 6.8 0 00-1.6-2.5A6.8 6.8 0 0018.9.6c-.6-.3-1.4-.4-2.4-.5C15.5 0 15.1 0 12.4 0H12zm0 5.8a6.2 6.2 0 100 12.4 6.2 6.2 0 000-12.4zm0 10.2a4 4 0 110-8 4 4 0 010 8zm7.9-10.5a1.4 1.4 0 11-2.8 0 1.4 1.4 0 012.8 0z"/></svg> Instagram</a></li>
         <li><a href="https://www.facebook.com/share/1EBPtcKRER/?mibextid=wwXIfr" target="_blank" class="hover:text-yankee-gold transition-colors flex items-center gap-2"><svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M22 12a10 10 0 10-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.4v7A10 10 0 0022 12z"/></svg> Facebook</a></li>
       </ul></div>
     </div>
     <div class="border-t border-white/5 pt-6 flex flex-col items-center gap-3">
       <p class="text-yankee-cream/40 text-xs" id="copyrightLine">© 2026 The Yankees Diner. All rights reserved.</p>
-      <!-- Mash Solutions WhatsApp link -->
       <a href="https://wa.me/713171006" target="_blank" class="font-label text-[11px] tracking-[0.25em] text-yankee-cream/30 hover:opacity-100 opacity-70 transition-opacity duration-300 hover:text-yankee-gold flex items-center gap-1">
         DESIGNED &amp; DEVELOPED BY <span class="text-yankee-gold">MASH SOLUTIONS</span>
         <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
@@ -1534,7 +1419,7 @@
 (function(){
   "use strict";
 
-  // ============ FIREBASE INIT - NEW PROJECT ============
+  // ============ FIREBASE INIT ============
   const firebaseConfig = {
     apiKey: "AIzaSyCyN-wFrLGwBWpy1espFiLrQ9geRxuLT30",
     authDomain: "theyankees20.firebaseapp.com",
@@ -1605,13 +1490,12 @@
     authPassword.placeholder = isLogin ? 'Password' : 'Create Password';
   }
 
-  // ============ UPDATE AUTH UI WITH DROPDOWN (BOTH DESKTOP & MOBILE) ============
+  // ============ UPDATE AUTH UI ============
   function updateAuthUI(user) {
     const isLoggedIn = !!user;
     const displayName = user ? user.displayName || user.email?.split('@')[0] || 'User' : null;
     const initial = displayName ? displayName.charAt(0).toUpperCase() : 'U';
 
-    // --- Desktop Nav ---
     if (isLoggedIn) {
       authNavLink.innerHTML = `
         <div class="user-menu-container">
@@ -1626,23 +1510,18 @@
           </div>
         </div>
       `;
-      // Desktop dropdown events
       setTimeout(() => {
         const trigger = document.getElementById('userMenuTrigger');
         const dropdown = document.getElementById('userDropdown');
         const chevron = document.getElementById('chevronIcon');
-        
         if (trigger && dropdown) {
           const newTrigger = trigger.cloneNode(true);
           trigger.parentNode.replaceChild(newTrigger, trigger);
-          
           const newDropdown = dropdown.cloneNode(true);
           dropdown.parentNode.replaceChild(newDropdown, dropdown);
-          
           const newChevron = document.getElementById('chevronIcon');
           const finalTrigger = document.getElementById('userMenuTrigger');
           const finalDropdown = document.getElementById('userDropdown');
-          
           if (finalTrigger && finalDropdown) {
             finalTrigger.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1650,7 +1529,6 @@
               finalDropdown.classList.toggle('active');
               if (newChevron) newChevron.classList.toggle('open');
             });
-            
             document.addEventListener('click', function(e) {
               if (finalTrigger && finalDropdown && !finalTrigger.contains(e.target) && !finalDropdown.contains(e.target)) {
                 finalDropdown.classList.remove('active');
@@ -1658,7 +1536,6 @@
               }
             });
           }
-          
           const logoutBtn = document.getElementById('dropdownLogoutBtn');
           if (logoutBtn) {
             const newLogoutBtn = logoutBtn.cloneNode(true);
@@ -1680,7 +1557,7 @@
       document.getElementById('authToggleBtn')?.addEventListener('click', function() { showAuthModal('login'); });
     }
 
-    // --- Mobile Nav ---
+    // Mobile
     if (isLoggedIn) {
       mobileAuthLink.innerHTML = `
         <div class="mobile-user-menu" style="width:100%;">
@@ -1703,18 +1580,14 @@
         const trigger = document.getElementById('mobileUserMenuTrigger');
         const dropdown = document.getElementById('mobileUserDropdown');
         const chevron = document.getElementById('mobileChevronIcon');
-        
         if (trigger && dropdown) {
           const newTrigger = trigger.cloneNode(true);
           trigger.parentNode.replaceChild(newTrigger, trigger);
-          
           const newDropdown = dropdown.cloneNode(true);
           dropdown.parentNode.replaceChild(newDropdown, dropdown);
-          
           const newChevron = document.getElementById('mobileChevronIcon');
           const finalTrigger = document.getElementById('mobileUserMenuTrigger');
           const finalDropdown = document.getElementById('mobileUserDropdown');
-          
           if (finalTrigger && finalDropdown) {
             finalTrigger.addEventListener('click', function(e) {
               e.stopPropagation();
@@ -1722,7 +1595,6 @@
               finalDropdown.classList.toggle('active');
               if (newChevron) newChevron.classList.toggle('open');
             });
-            
             document.addEventListener('click', function(e) {
               if (finalTrigger && finalDropdown && !finalTrigger.contains(e.target) && !finalDropdown.contains(e.target)) {
                 finalDropdown.classList.remove('active');
@@ -1730,7 +1602,6 @@
               }
             });
           }
-          
           const logoutBtn = document.getElementById('mobileDropdownLogoutBtn');
           if (logoutBtn) {
             const newLogoutBtn = logoutBtn.cloneNode(true);
@@ -1911,7 +1782,6 @@
   });
 
   // ============ HOURS ============
-  // Ordered from Monday to Sunday
   const hoursData = [
     { day: 'Monday', date: 6, open: '11:00 AM', close: '1:00 AM', nextDay: true },
     { day: 'Tuesday', date: 7, open: '11:00 AM', close: '1:00 AM', nextDay: true },
@@ -1949,7 +1819,6 @@
   const statusEl = document.getElementById('currentStatus');
   let isCurrentlyOpen = false;
   let todayOpen = '', todayClose = '';
-  // Use the ordered list directly
   const orderedDays = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
   const reordered = orderedDays.map(dayName => hoursData.find(h => h.day === dayName));
   reordered.forEach((h, index) => {
@@ -1976,7 +1845,7 @@
     statusEl.innerHTML = `<span class="text-yankee-red">⛔ We're closed right now.</span> <span class="text-yankee-cream/50 ml-2">Opens today at ${todayOpen}</span>`;
   }
 
-  // COUNTDOWN
+  // ============ COUNTDOWN ============
   function getNextEventTime() {
     const now = new Date();
     const totalSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
@@ -2113,6 +1982,164 @@
   renderBasket();
 
   setTimeout(function() { auth.onAuthStateChanged(function(user) { updateAuthUI(user); }); }, 100);
+
+  // ================================================================
+  // ===== DISCOUNT SECTION - REAL-TIME SYNC WITH ADMIN PANEL =====
+  // ================================================================
+  
+  const discountSection = document.getElementById('discountSection');
+  const discountTitle = document.getElementById('discountTitle');
+  const discountOriginal = document.getElementById('discountOriginal');
+  const discountPrice = document.getElementById('discountPrice');
+  const discountPercent = document.getElementById('discountPercent');
+  const discountItemName = document.getElementById('discountItemName');
+  const discountTimer = document.getElementById('discountTimer');
+  const discountExpiry = document.getElementById('discountExpiry');
+  const discountNavBadge = document.getElementById('discountNavBadge');
+  
+  let discountInterval = null;
+
+  function updateDiscountDisplay(promo) {
+    if (!promo || !promo.active) {
+      discountSection.classList.remove('active');
+      discountNavBadge.style.display = 'none';
+      if (discountInterval) {
+        clearInterval(discountInterval);
+        discountInterval = null;
+      }
+      return;
+    }
+
+    discountSection.classList.add('active');
+    discountNavBadge.style.display = 'inline-block';
+    discountTitle.textContent = promo.title || 'Flash Sale';
+    discountOriginal.textContent = `$${promo.original || '0'}`;
+    discountPrice.textContent = `$${promo.discounted || '0'}`;
+    discountPercent.textContent = `-${promo.discount || 0}%`;
+    discountItemName.textContent = promo.item || 'Item';
+
+    // Countdown timer
+    if (discountInterval) {
+      clearInterval(discountInterval);
+    }
+
+    function updateTimer() {
+      const end = new Date(promo.end);
+      const now = new Date();
+      const diff = end - now;
+
+      if (diff <= 0) {
+        discountTimer.textContent = 'EXPIRED';
+        discountTimer.classList.add('expired');
+        discountExpiry.textContent = 'This offer has expired.';
+        // Auto-deactivate
+        promo.active = false;
+        localStorage.setItem('sitePromo', JSON.stringify(promo));
+        setTimeout(() => {
+          discountSection.classList.remove('active');
+          discountNavBadge.style.display = 'none';
+        }, 3000);
+        clearInterval(discountInterval);
+        discountInterval = null;
+        return;
+      }
+
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      discountTimer.textContent = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      discountTimer.classList.remove('expired');
+      
+      const expiryDate = new Date(promo.end);
+      discountExpiry.textContent = `Expires: ${expiryDate.toLocaleDateString()} at ${expiryDate.toLocaleTimeString()}`;
+    }
+
+    updateTimer();
+    discountInterval = setInterval(updateTimer, 1000);
+  }
+
+  // ===== LISTEN FOR PROMO UPDATES =====
+  // Method 1: Custom event from admin panel (cross-tab communication)
+  window.addEventListener('promoUpdated', (e) => {
+    const promo = e.detail;
+    if (promo) {
+      localStorage.setItem('sitePromo', JSON.stringify(promo));
+      updateDiscountDisplay(promo);
+    }
+  });
+
+  // Method 2: Listen for storage changes (from other tabs)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'sitePromo' && e.newValue) {
+      try {
+        const promo = JSON.parse(e.newValue);
+        updateDiscountDisplay(promo);
+      } catch (err) {
+        console.error('Error parsing promo:', err);
+      }
+    }
+  });
+
+  // Method 3: Listen for messages from admin panel (same tab)
+  window.addEventListener('message', (e) => {
+    if (e.data && e.data.type === 'promoData') {
+      updateDiscountDisplay(e.data.data);
+    }
+  });
+
+  // ===== CHECK FOR EXISTING PROMO ON LOAD =====
+  function loadExistingPromo() {
+    const saved = localStorage.getItem('sitePromo');
+    if (saved) {
+      try {
+        const promo = JSON.parse(saved);
+        updateDiscountDisplay(promo);
+      } catch (e) {
+        console.error('Error loading promo:', e);
+      }
+    }
+  }
+
+  loadExistingPromo();
+
+  // ===== FIREBASE REAL-TIME PROMO LISTENER =====
+  // Listen for active promotions from Firestore
+  firebase.firestore().collection('promotions')
+    .where('active', '==', true)
+    .onSnapshot((snapshot) => {
+      if (!snapshot.empty) {
+        // Get the most recent active promo
+        const docs = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        // Sort by createdAt and get the latest
+        docs.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt) : new Date(0);
+          const dateB = b.createdAt ? new Date(b.createdAt) : new Date(0);
+          return dateB - dateA;
+        });
+        const promo = docs[0];
+        localStorage.setItem('sitePromo', JSON.stringify(promo));
+        updateDiscountDisplay(promo);
+      } else {
+        // No active promos
+        const saved = localStorage.getItem('sitePromo');
+        if (saved) {
+          try {
+            const promo = JSON.parse(saved);
+            if (promo.active) {
+              promo.active = false;
+              localStorage.setItem('sitePromo', JSON.stringify(promo));
+              updateDiscountDisplay(null);
+            }
+          } catch (e) {}
+        }
+      }
+    }, (error) => {
+      console.error('Firestore promo listener error:', error);
+    });
+
+  console.log('🎯 Discount section loaded and ready!');
+  console.log('📡 Listening for promotions from admin panel...');
+
 })();
 </script>
 </body>
