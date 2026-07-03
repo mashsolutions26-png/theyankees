@@ -895,6 +895,49 @@
       button, .add-to-order, .qty-btn { min-height: 44px; min-width: 44px; }
       input, select, textarea { font-size: 16px !important; }
     }
+
+    /* ===== TOP NAV BUTTONS ===== */
+    .menu-top-nav {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .menu-top-nav button {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #b0a99b;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    .menu-top-nav button.active {
+      background: rgba(200,16,46,0.2);
+      border-color: #f4b93e;
+      color: #f4b93e;
+      box-shadow: 0 0 30px rgba(244,185,62,0.08);
+    }
+    .menu-top-nav button:hover:not(.active) {
+      background: rgba(255,255,255,0.08);
+      color: #f4ede1;
+    }
+    @media (max-width: 480px) {
+      .menu-top-nav button {
+        font-size: 0.65rem;
+        padding: 0.4rem 1rem;
+      }
+      .menu-top-nav {
+        gap: 0.5rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-ink-950 text-yankee-cream font-sans antialiased selection:bg-yankee-red selection:text-white">
@@ -905,6 +948,12 @@
   <div class="page-inner">
     <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">OUR FULL MENU</h1>
     <p class="text-yankee-cream/50 text-sm mb-6">Everything we serve — straight from our kitchen to your table.</p>
+    
+    <!-- TOP NAVIGATION BUTTONS -->
+    <div class="menu-top-nav" id="menuTopNav">
+      <button class="active" data-target="starters">🍔 Starters & More</button>
+      <button data-target="signature">✨ Signature Dishes</button>
+    </div>
     
     <!-- TODAY'S SPECIAL HIGHLIGHT -->
     <div id="dailySpecialHighlight" class="daily-special-highlight">
@@ -951,10 +1000,7 @@
         <div id="menuDessertsContainer"></div>
       </div>
     </div>
-    <div class="slider-nav" id="sliderNav">
-      <button class="active" data-target="starters">🍔 Starters & More</button>
-      <button data-target="signature">✨ Signature Dishes</button>
-    </div>
+    
     <h2 class="menu-section-title text-yankee-cream">📅 WEEKLY LUNCH SPECIALS</h2>
     <p class="text-sm text-yankee-cream/50 mb-3">Available after any drink purchase · 11:00 AM – 5:00 PM</p>
     <div id="weeklyLunchSpecials"></div>
@@ -1768,19 +1814,41 @@
   // ============ SLIDER ============
   const slider = document.getElementById('menuSlider');
   const navBtns = document.querySelectorAll('#sliderNav button');
-  navBtns.forEach(btn => {
+  
+  // Get the top nav buttons
+  const topNavBtns = document.querySelectorAll('#menuTopNav button');
+  
+  // Function to switch panels
+  function switchPanel(target) {
+    // Update top nav buttons
+    topNavBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+    // Update bottom nav buttons (keep for compatibility)
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+    
+    const panels = slider.querySelectorAll('.menu-panel');
+    panels.forEach(panel => {
+      if (panel.dataset.panel === target) {
+        slider.scrollTo({ left: panel.offsetLeft, behavior: 'smooth' });
+      }
+    });
+  }
+
+  // Top nav buttons
+  topNavBtns.forEach(btn => {
     btn.addEventListener('click', function() {
-      navBtns.forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
       const target = this.dataset.target;
-      const panels = slider.querySelectorAll('.menu-panel');
-      panels.forEach(panel => {
-        if (panel.dataset.panel === target) {
-          slider.scrollTo({ left: panel.offsetLeft, behavior: 'smooth' });
-        }
-      });
+      switchPanel(target);
     });
   });
+
+  // Bottom nav buttons (keep for compatibility)
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const target = this.dataset.target;
+      switchPanel(target);
+    });
+  });
+
   slider.addEventListener('scroll', function() {
     const panels = slider.querySelectorAll('.menu-panel');
     let activeIdx = 0;
@@ -1790,7 +1858,9 @@
       const right = left + panel.offsetWidth;
       if (center >= left && center < right) activeIdx = idx;
     });
-    navBtns.forEach((b, i) => b.classList.toggle('active', i === activeIdx));
+    const target = panels[activeIdx]?.dataset.panel || 'starters';
+    topNavBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
+    navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
   });
 
   // ============ HOURS ============
@@ -1965,8 +2035,16 @@
     [basketCountEl, basketFabCountEl].forEach(el => { if (totalQty > 0) { el.textContent = totalQty; el.classList.remove('hidden'); } else { el.classList.add('hidden'); } });
   }
 
-  document.querySelectorAll('.add-to-order').forEach(btn => {
-    btn.addEventListener('click', function() { addToBasket(this.dataset.name, parseFloat(this.dataset.price)); });
+  // Attach add-to-order listeners to all buttons with class add-to-order
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.add-to-order');
+    if (btn) {
+      const name = btn.dataset.name;
+      const price = parseFloat(btn.dataset.price);
+      if (name && !isNaN(price)) {
+        addToBasket(name, price);
+      }
+    }
   });
 
   function openBasket(){ basketDrawer.classList.remove('translate-x-full'); basketOverlay.classList.remove('opacity-0', 'pointer-events-none'); basketOverlay.classList.add('opacity-100', 'pointer-events-auto'); }
@@ -2251,18 +2329,110 @@
           </div>
         `;
       }).join('');
-      
-      // Re-attach add-to-order listeners for weekly specials
-      document.querySelectorAll('#weeklySpecialsList .add-to-order').forEach(btn => {
-        btn.addEventListener('click', function() {
-          addToBasket(this.dataset.name, parseFloat(this.dataset.price));
-        });
-      });
     }
   }
 
-  // Load menu items from Firestore and populate dynamic containers
-  function loadMenuItems() {
+  // ===== FULL MENU DATA =====
+  const fullMenuData = {
+    'Starters': [
+      { name: 'Gilled Broccoli', price: '12' },
+      { name: 'Fries & Aioli', price: '11' },
+      { name: 'Hand Cooked Tortillas', price: '12', description: 'Filled with Fresh Slaw, Zesty Peri-Peri Mayo & BBQ Sauce (Chicken +6 | Pulled Pork +7 | Bacon +6)' },
+      { name: 'Cheesy Garlic Bread', price: '11', description: 'Warm Toasty Bread Smothered with Blended Cheese & Garlic Butter' },
+      { name: 'Sweet Potato Wedges & Aioli', price: '13', description: 'Sweet Potato Fries With Tangy Seasoning' },
+      { name: 'Parmesan Truffle Fries', price: '17', description: 'Crispy Seasoned Fries Topped with Truffle Mayo, Parmesan Cheese, Croutons & Mixed Herbs' },
+      { name: 'Crispy Fried Calamari', price: '17', description: 'Crispy Fried Calamari served with Lemon & Tartare Sauce' },
+      { name: 'Bruschetta', price: '15', description: 'Warm Toasty Bread Covered in Blended Cheese, Mixed Veggies And Topped with Cherry Tomatoes (Chicken +6 | Pulled Pork +7 | Bacon +6 | Smashed Avo +5)' },
+      { name: 'Potato Wedges', price: '14', description: 'Wedges topped with Yankee\'s seasoning and served with Sweet Chilli & Sour Cream' }
+    ],
+    'Wings': [
+      { name: 'Premium Chicken Wings (10 pcs)', price: '19', description: 'Original | BBQ +2 | Hot +2 | Buffalo +2 | Portuguese +3 | Blue Cheese +3' },
+      { name: 'Premium Chicken Wings (20 pcs)', price: '36', description: 'Original | BBQ +2 | Hot +2 | Buffalo +2 | Portuguese +3 | Blue Cheese +3' },
+      { name: 'Premium Chicken Wings (30 pcs)', price: '52', description: 'Original | BBQ +2 | Hot +2 | Buffalo +2 | Portuguese +3 | Blue Cheese +3' },
+      { name: 'Pork Ribs', price: '39', description: 'Marinated in House Made Seasoning, Served With Fresh Salad & Fries (Original | BBQ +3 | Hot +3 | Buffalo +3 | Portuguese +3)' }
+    ],
+    'Nachos': [
+      { name: 'American Nachos', price: '19', description: 'Corn Chips mixed with Blended Cheese, Tomatoes, Onions, Beans, Topped with Smash Avo and Sour Cream (Chicken +6 | Pulled Pork +7 | Bacon +6)' },
+      { name: 'Cheesy Loaded Fries', price: '16', description: 'Crispy Potato Fries Topped With Melted Cheese, Pickles & Jalapeños' },
+      { name: 'Chicken Loaded Fries', price: '20', description: 'Crispy Potato Fries Topped With Melted Cheese, Pickles, Pulled Pork, Pickles & Jalapeños' }
+    ],
+    'Platters': [
+      { name: 'Las Vegas Platter', price: '45', description: 'American Nachos, Fried Chicken Wings(5), Fried Calamari Rings, Chicken Nuggets(5), Choice of Any 2 Dipping Sauces, Served With Fries, Mixed Salad & Choice of Any Soft Drink.' },
+      { name: 'Miami Platter', price: '69', description: 'Fried Chicken Wings(10), Fried Calamari Rings, Choice of Any 2 Sides (Chicken | Pulled Pork), Choice of 2 Dipping Sauces, Served With Fries, Mixed Salad & Choice of Any 2 Soft Drinks.' },
+      { name: 'The Yankee\'s Platter', price: '129', description: 'Cheesy Garlic Bread, Fried Wings (10), Pork Ribs, Fried Calamari Rings, Choice of Any 4 Sides(Chicken | Pulled Pork), Onion Rings, Sausage Zips, Choice of Any 2 Dipping Sauces, Served With Fries, Mixed Salad & Choice of Any 4 Soft Drinks.' }
+    ],
+    'Burgers': [
+      { name: 'Cheese Burger (GF)', price: '13', description: 'Beef Patty, Cheese, Onion, Pickles, Mustard Sauce & Tomato Sauce' },
+      { name: 'Classic New Yorker (GF)', price: '17', description: 'Beef Patty, Maple Bacon, Cheese, Mayonnaise, Mustard Sauce and Tomato Sauce' },
+      { name: 'BBQ Chicken', price: '16', description: 'Chicken Patty, Cheese, Lettuce, Pickles, BBQ Sauce and Garlic Aioli' },
+      { name: 'Yankee\'s Special Burger (GF)', price: '24', description: 'Double Beef Patty, Crispy Bacon, Ham, Double Cheese, Onion, Pickles and Yankee\'s Special Sauce' },
+      { name: 'Smokin\' Hot (GF)', price: '17', description: 'Beef Patty, Cheese, Jalapenos, Onions, Mayonnaise & Hot Sauce' },
+      { name: 'Peri-Peri Chicken', price: '18', description: 'Chicken Patty, Cheese, Lettuce, Onion, Jalapenos, Peri Peri Sauce and Mayonnaise' },
+      { name: 'Southern Fried Chicken', price: '21', description: 'Chicken Patty, Crispy Bacon, Coleslaw, Cheese, Jalapenos, Pickles, Maple Syrup and Garlic Aioli' },
+      { name: 'Crispy Fish', price: '17', description: 'Fish Patty, Cheese, Lettuce, Tomato, Pickles and Tartare Sauce' },
+      { name: 'The Ozzie (GF)', price: '22', description: 'Beef Patty, Crispy Bacon, Egg, Cheese, Lettuce, Pineapple, Beetroot, Tomato, Onion, Mayonnaise and BBQ Sauce' },
+      { name: 'Double BBQ Cheese', price: '23', description: 'Double Beef Patty, Double Cheese, Crispy Bacon, Onion Ring, Pickles, Baconised Mayo and BBQ Sauce' },
+      { name: 'The Hulk', price: '29', description: 'Beef Patty, Chicken Patty, Crispy Bacon, Egg, Triple Cheese, Onion Ring and BBQ Sauce' },
+      { name: 'Premium Veg', price: '15', description: 'Premium Veg Patty, Cheese, Lettuce, Tomato, Onion, Jalapenos, Tomato Sauce and Garlic Aioli' },
+      { name: 'Premium Vego Beef', price: '20', description: 'V2 Burger Patty, Vegan Cheese, Onion, Lettuce, Sweet Chilli and BBQ Sauce' },
+      { name: 'Premium Vego Chicken', price: '21', description: 'V2 Schnitzel, Vegan Cheese, Lettuce, Pickles, Vegan Garlic Aioli and BBQ Sauce' }
+    ],
+    'Hotdogs': [
+      { name: 'Texas Hotdog', price: '15', description: 'Chargrilled Sausage, Cheese, Bacon, Onion, Mayo & BBQ Sauce' },
+      { name: 'Chilli Dog', price: '17', description: 'Chargrilled Sausage, Cheese, Bacon, Jalapenos, Onion, Mustard, Mayo & Hot Sauce' },
+      { name: 'Premium Deluxe Dog', price: '18', description: 'Chargrilled Sausage, Cheese, Bacon, Coleslaw, Onion, Jalapenos, Yankee\'s Special Sauce & BBQ Sauce' }
+    ],
+    'Pizzas': [
+      { name: 'Margherita 🌿', price: '22', description: 'Pizza Sauce, Blended Cheese, Tomatoes and Mixed Herbs' },
+      { name: 'BBQ Chicken', price: '26', description: 'Pizza Sauce, Blended Cheese, Shredded Chicken & BBQ Sauce' },
+      { name: 'Pepperoni ⭐', price: '24', description: 'Pizza Sauce, Blended Cheese & Pepperoni' },
+      { name: 'Cheesy Garlic 🌿', price: '23', description: 'Garlic Sauce, Blended Cheese & Mixed Herbs' },
+      { name: 'Piggy Lover ⭐', price: '26', description: 'Pizza Sauce, Blended Cheese, Onions, Pulled Pork & BBQ Sauce' },
+      { name: 'Ham & Cheese', price: '24', description: 'Pizza Sauce, Blended Cheese & Ham' },
+      { name: 'Hawaiian ⭐', price: '26', description: 'Pizza Sauce, Blended Cheese, Ham & Pineapple' },
+      { name: 'Spicy Veggie 🌿🌶️', price: '26', description: 'Pizza Sauce, Blended Cheese, Mushroom, Onions, Jalapeños, Mixed Herbs & Peri Peri Sauce' },
+      { name: 'Spicy Chicken 🌶️⭐', price: '30', description: 'Pizza Sauce, Blended Cheese, Shredded Chicken, Jalapeños & Peri Peri Sauce' },
+      { name: 'Meat Lovers', price: '33', description: 'Pizza Sauce, Blended Cheese, Shredded Chicken, Pepperoni, Bacon & Ham' }
+    ],
+    'Signature': [
+      { name: 'Crispy Skin Salmon ⭐', price: '32', description: 'Crispy Skin Salmon, Hollandaise Sauce, Lemon, Served On A Bed of Mashed Potatoes & Salad' },
+      { name: 'Lamb Shank ⭐', price: '32', description: 'Lamb Shank Slow Cooked for 48 Hours, Served On A Bed of Mashed Potatoes & Glazed With Grilled Tomato Sauce' },
+      { name: 'Chicken Parma (Original | Ham | Pepperoni)', price: '30', description: 'Crispy Fried Chicken Breast Topped With Tomato Gravy, Blended Cheese, Served With Salad & Fries' },
+      { name: 'Chicken Schnitzel', price: '27', description: 'Crispy Fried Chicken Breast Served With Salad, Fries & Gravy' },
+      { name: 'Signature Chicken Skewers ⭐', price: '30', description: 'Flamed Chargrilled Chicken Skewers With Chargrilled Capsicum & Onions Served With Lemon & Sriracha On a Bed of Salad' }
+    ],
+    'Steaks': [
+      { name: 'Rump 350g ⭐', price: '42', description: 'Served on a bed of Mashed Potatoes with Broccolin, Carrots, Peas, House Salad and House Gravy.' },
+      { name: 'Scotch Fillet 250g', price: '45', description: 'Served on a bed of Mashed Potatoes with Broccolin, Carrots, Peas, House Salad and House Gravy.' },
+      { name: 'Sirloin 300g', price: '42', description: 'Served on a bed of Mashed Potatoes with Broccolin, Carrots, Peas, House Salad and House Gravy.' }
+    ],
+    'Dips': [
+      { name: 'Cheese Dip | Gravy | Mushroom Gravy | Peppercorn', price: '4' },
+      { name: 'Yankee\'s Special Sauce | Baconised Mayo | Smashed Avo', price: '3' },
+      { name: 'Tomato Sauce | BBQ | Hot | Buffalo | Mayo | Aioli | Sweet Chilli | Peri Peri | Portuguese | Sriracha Mayo | Tartare', price: '2' }
+    ],
+    'Kids': [
+      { name: 'Nuggets & Fries', price: '11', description: 'Served with Tomato Sauce' },
+      { name: 'Popcorn Chicken', price: '11', description: 'Served with Tomato Sauce' },
+      { name: 'Mozzarella Sticks (5) ⭐', price: '12', description: 'Served with Tomato Sauce' },
+      { name: 'Junior Beef Burger ⭐', price: '17', description: 'Beef, Cheese, Tomato Sauce & Served With Fries' },
+      { name: 'Junior Chicken Burger ⭐', price: '17', description: 'Chicken, Cheese, Lettuce, Tomato Sauce & Served With Fries' },
+      { name: 'Onion Rings 🌿', price: '12', description: 'Crispy Onion Rings Served With Tomato Sauce' }
+    ],
+    'Salads': [
+      { name: 'Chicken Caesar ⭐', price: '24', description: 'Grilled Chicken, Lettuce, Cherry Tomatoes, Caesar Dressing, Bacon, Cucumber, Onions, Croutons & Parmesan Cheese' },
+      { name: 'Mediterranean Veg 🌿', price: '20', description: 'Cherry Tomatoes, Olives, Onions, Mixed Leaves, Feta, Cucumber, Fried Onion & Sweet Potato' }
+    ],
+    'Desserts': [
+      { name: 'Pancakes', price: '12', description: 'Vanilla Syrup | Chocolate Syrup | Strawberry Syrup Served With Vanilla Ice Cream' },
+      { name: 'Brownies ⭐', price: '12', description: 'Served with Vanilla Ice Cream' },
+      { name: 'Caramel Sticky Date ⭐', price: '12', description: 'Served with Vanilla Ice Cream & Caramel Sauce' },
+      { name: 'Belgian Chocolate Waffles', price: '12', description: 'Served with Vanilla Ice Cream' }
+    ]
+  };
+
+  // Populate menu containers with hardcoded data
+  function populateMenu() {
     const categoryMap = {
       'Starters': 'menuStartersContainer',
       'Wings': 'menuWingsContainer',
@@ -2279,50 +2449,29 @@
       'Desserts': 'menuDessertsContainer'
     };
 
-    firebase.firestore().collection('menu')
-      .onSnapshot((snapshot) => {
-        // Clear all containers
-        Object.values(categoryMap).forEach(id => {
-          const el = document.getElementById(id);
-          if (el) el.innerHTML = '';
-        });
-        
-        // Group items by category
-        const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        const grouped = {};
+    for (const [category, items] of Object.entries(fullMenuData)) {
+      const containerId = categoryMap[category];
+      const container = document.getElementById(containerId);
+      if (container) {
         items.forEach(item => {
-          const cat = item.category || 'Uncategorized';
-          if (!grouped[cat]) grouped[cat] = [];
-          grouped[cat].push(item);
+          const row = document.createElement('div');
+          row.className = 'menu-item-row';
+          const subHTML = item.description ? `<span class="menu-sub">${item.description}</span>` : '';
+          row.innerHTML = `
+            <div class="menu-item-left">
+              <span class="menu-item-name">${item.name} ${subHTML}</span>
+            </div>
+            <span class="menu-item-price">$${item.price}</span>
+          `;
+          container.appendChild(row);
         });
-        
-        // Render each category
-        for (const [category, items] of Object.entries(grouped)) {
-          const containerId = categoryMap[category];
-          const container = document.getElementById(containerId);
-          if (container) {
-            items.forEach(item => {
-              const row = document.createElement('div');
-              row.className = 'menu-item-row';
-              const subHTML = item.description ? `<span class="menu-sub">${item.description}</span>` : '';
-              row.innerHTML = `
-                <div class="menu-item-left">
-                  <span class="menu-item-name">${item.name} ${subHTML}</span>
-                </div>
-                <span class="menu-item-price">$${item.price || '0.00'}</span>
-              `;
-              container.appendChild(row);
-            });
-          }
-        }
-      }, (error) => {
-        console.warn('Menu load error, using static fallback:', error);
-      });
+      }
+    }
   }
 
   // Initialize dynamic content
   loadWeeklySpecials();
-  loadMenuItems();
+  populateMenu();
 
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('📡 Listening for updates from admin panel...');
