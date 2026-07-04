@@ -86,6 +86,7 @@
     .menu-item-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 0.5rem 0;
       border-bottom: 1px dashed rgba(255,255,255,0.05);
       gap: 1rem;
@@ -94,6 +95,30 @@
     .menu-item-price { font-family: 'Anton', sans-serif; color: #f4b93e; font-size: 1rem; white-space: nowrap; }
     .menu-sub { font-size: 0.75rem; color: #b0a99b; margin-left: 0.25rem; display: block; }
     .menu-item-left { flex: 1; }
+    .add-item-btn {
+      background: rgba(244,185,62,0.15);
+      border: 1px solid rgba(244,185,62,0.3);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #f4b93e;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      margin-left: 0.5rem;
+      line-height: 1;
+    }
+    .add-item-btn:hover {
+      background: rgba(244,185,62,0.25);
+      transform: scale(1.1);
+      border-color: #f4b93e;
+    }
+    .add-item-btn:active { transform: scale(0.9); }
 
     .hours-grid {
       display: grid;
@@ -877,6 +902,7 @@
       .daily-special-highlight .special-name { font-size: 1.1rem; }
       .daily-special-highlight .special-price { font-size: 1.4rem; }
       .discount-section { padding: 1.25rem 1rem; margin: 1rem 0.5rem; }
+      .add-item-btn { width: 28px; height: 28px; font-size: 1rem; }
     }
     @media (max-width: 400px) {
       .hours-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
@@ -1996,14 +2022,29 @@
   const basketClose = document.getElementById('basketClose');
   const checkoutBtn = document.getElementById('checkoutBtn');
 
+  // Helper: Check if user is logged in
+  function isUserLoggedIn() {
+    return !!auth.currentUser;
+  }
+
   function fmt(n){ return '$' + n.toFixed(2); }
+
+  // Main add function with auth check
   function addToBasket(name, price){
+    // Check if user is logged in
+    if (!isUserLoggedIn()) {
+      // Show login modal
+      showAuthModal('login');
+      return;
+    }
+
     const existing = basket.find(i => i.name === name);
     if (existing) existing.qty += 1;
     else basket.push({ name, price, qty: 1 });
     renderBasket();
     openBasket();
   }
+
   function changeQty(name, delta){
     const item = basket.find(i => i.name === name);
     if (!item) return;
@@ -2011,6 +2052,7 @@
     if (item.qty <= 0) basket = basket.filter(i => i.name !== name);
     renderBasket();
   }
+
   function renderBasket(){
     basketItemsEl.querySelectorAll('.basket-row').forEach(el => el.remove());
     if (basket.length === 0) { basketEmptyEl.classList.remove('hidden'); checkoutBtn.classList.remove('visible'); } 
@@ -2038,6 +2080,18 @@
   // Attach add-to-order listeners to all buttons with class add-to-order
   document.addEventListener('click', function(e) {
     const btn = e.target.closest('.add-to-order');
+    if (btn) {
+      const name = btn.dataset.name;
+      const price = parseFloat(btn.dataset.price);
+      if (name && !isNaN(price)) {
+        addToBasket(name, price);
+      }
+    }
+  });
+
+  // Also handle click on the "+" buttons added to menu items
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.add-item-btn');
     if (btn) {
       const name = btn.dataset.name;
       const price = parseFloat(btn.dataset.price);
@@ -2480,7 +2534,7 @@ bookingForm.addEventListener('submit', async function(e) {
     ]
   };
 
-  // Populate menu containers with hardcoded data
+  // Populate menu containers with hardcoded data and add "+" buttons
   function populateMenu() {
     const categoryMap = {
       'Starters': 'menuStartersContainer',
@@ -2511,6 +2565,7 @@ bookingForm.addEventListener('submit', async function(e) {
               <span class="menu-item-name">${item.name} ${subHTML}</span>
             </div>
             <span class="menu-item-price">$${item.price}</span>
+            <button class="add-item-btn" data-name="${item.name}" data-price="${item.price}">+</button>
           `;
           container.appendChild(row);
         });
