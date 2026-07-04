@@ -249,6 +249,46 @@
       100% { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    /* ===== HERO SLIDE ANIMATIONS ===== */
+    .slide-left {
+      opacity: 0;
+      transform: translateX(-120px);
+      animation: slideLeft 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .slide-right {
+      opacity: 0;
+      transform: translateX(120px);
+      animation: slideRight 1.2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 1.4s ease forwards;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes slideLeft {
+      0% { opacity: 0; transform: translateX(-120px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideRight {
+      0% { opacity: 0; transform: translateX(120px); }
+      100% { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+
+    /* ===== HERO OVERRIDE: keep original text-outline etc. ===== */
+    .hero-headline .slide-left,
+    .hero-headline .slide-right {
+      display: inline-block;
+    }
+    .hero-headline .slide-left span,
+    .hero-headline .slide-right span {
+      display: inline-block;
+    }
+
     #fullMenuPage, #aboutPage {
       position: fixed;
       top: 0;
@@ -737,7 +777,6 @@
 
     .local-time-badge { font-size: 0.7rem; color: #b0a99b; display: block; margin-top: 0.4rem; opacity: 0.6; }
 
-    /* ===== DISCOUNT SECTION STYLES ===== */
     .discount-section {
       background: linear-gradient(135deg, rgba(200,16,46,0.08), rgba(244,185,62,0.05));
       border: 1px solid rgba(244,185,62,0.15);
@@ -842,7 +881,6 @@
       50% { opacity: 0.6; }
     }
 
-    /* ===== DYNAMIC DAILY SPECIALS ===== */
     .daily-special-highlight {
       background: linear-gradient(135deg, rgba(200,16,46,0.12), rgba(244,185,62,0.08));
       border: 2px solid #f4b93e;
@@ -878,7 +916,6 @@
       color: #f4b93e;
     }
 
-    /* ===== DRINKS MENU STYLES ===== */
     .drinks-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -963,7 +1000,6 @@
       input, select, textarea { font-size: 16px !important; }
     }
 
-    /* ===== TOP NAV BUTTONS ===== */
     .menu-top-nav {
       display: flex;
       justify-content: center;
@@ -1006,7 +1042,6 @@
       }
     }
 
-    /* ===== BOOKING EXTRA FIELDS ===== */
     .booking-extra-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1073,13 +1108,11 @@
     <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">OUR FULL MENU</h1>
     <p class="text-yankee-cream/50 text-sm mb-6">Everything we serve — straight from our kitchen to your table.</p>
     
-    <!-- TOP NAVIGATION BUTTONS -->
     <div class="menu-top-nav" id="menuTopNav">
       <button class="active" data-target="starters">🍔 Starters & More</button>
       <button data-target="signature">✨ Signature Dishes</button>
     </div>
     
-    <!-- TODAY'S SPECIAL HIGHLIGHT -->
     <div id="dailySpecialHighlight" class="daily-special-highlight">
       <div>
         <span class="day-label" id="todayLabel">TODAY'S SPECIAL</span>
@@ -1123,7 +1156,6 @@
         <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
         <div id="menuDessertsContainer"></div>
         
-        <!-- ===== NEW DRINKS SECTION ===== -->
         <h2 class="menu-section-title text-yankee-cream">🥤 DRINKS</h2>
         <p class="text-sm text-yankee-cream/50 mb-3">Refreshing beverages to pair with your meal</p>
         <div id="menuDrinksContainer"></div>
@@ -1302,13 +1334,28 @@
         <span class="w-2 h-2 rounded-full bg-yankee-gold"></span>
         <span class="font-label text-xs tracking-[0.2em] text-yankee-cream/80" id="heroStatus">OPEN TODAY · 8:00 AM – 11:00 PM</span>
       </div>
-      <h1 class="font-display text-[15vw] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[6.2rem] tracking-tight mb-6">
-        <span class="block text-yankee-cream">GRILLED</span>
-        <span class="block text-outline">DAILY.</span>
-        <span class="block text-yankee-gold">SERVED WITH</span>
-        <span class="block text-yankee-red">SWAGGER.</span>
+
+      <!-- ========== NEW ANIMATED HERO HEADLINE ========== -->
+      <h1 class="font-display text-[15vw] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[6.2rem] tracking-tight mb-6 hero-headline">
+        <span class="block text-yankee-cream slide-left" style="animation-delay:0.1s;">
+          GRILLED
+        </span>
+        <span class="block text-outline slide-right" style="animation-delay:0.2s;">
+          DAILY.
+        </span>
+        <span class="block text-yankee-gold slide-left" style="animation-delay:0.5s;">
+          SERVED WITH
+        </span>
+        <span class="block text-yankee-red slide-right" style="animation-delay:0.7s;">
+          SWAGGER.
+        </span>
       </h1>
-      <p class="font-sans text-yankee-cream/70 text-base sm:text-lg max-w-xl mb-9 leading-relaxed">Hand-pressed smash burgers, all-beef dogs, and hand-spun shakes — the same recipe since 1952. No shortcuts, no gimmicks, just the diner classics done right.</p>
+
+      <!-- Fade-in subtext -->
+      <p class="font-sans text-yankee-cream/70 text-base sm:text-lg max-w-xl mb-9 leading-relaxed fade-in">
+        Hand-pressed smash burgers, all-beef dogs, and hand-spun shakes — the same recipe since 1952. No shortcuts, no gimmicks, just the diner classics done right.
+      </p>
+
       <div class="flex flex-wrap items-center gap-4">
         <a href="#" onclick="openFullMenu(); return false;" class="inline-flex items-center gap-2 bg-yankee-gold hover:bg-yankee-goldSoft text-ink-950 font-label text-sm tracking-wide px-7 py-4 rounded-full shadow-goldglow transition-all duration-300 hover:scale-105">View Menu <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
         <a href="#" onclick="openFullMenu(); return false;" class="inline-flex items-center gap-2 glass hover:border-yankee-red/50 text-yankee-cream font-label text-sm tracking-wide px-7 py-4 rounded-full transition-all duration-300 hover:scale-105">Order Online</a>
@@ -1501,7 +1548,6 @@
           </select>
         </div>
 
-        <!-- ===== ADDITIONAL BOOKING DETAILS ===== -->
         <div class="booking-extra-row">
           <div class="select-wrapper">
             <label for="bookingSeating">Where would you like to be seated?</label>
@@ -1967,14 +2013,10 @@
   const slider = document.getElementById('menuSlider');
   const navBtns = document.querySelectorAll('#sliderNav button');
   
-  // Get the top nav buttons
   const topNavBtns = document.querySelectorAll('#menuTopNav button');
   
-  // Function to switch panels
   function switchPanel(target) {
-    // Update top nav buttons
     topNavBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
-    // Update bottom nav buttons (keep for compatibility)
     navBtns.forEach(b => b.classList.toggle('active', b.dataset.target === target));
     
     const panels = slider.querySelectorAll('.menu-panel');
@@ -1985,7 +2027,6 @@
     });
   }
 
-  // Top nav buttons
   topNavBtns.forEach(btn => {
     btn.addEventListener('click', function() {
       const target = this.dataset.target;
@@ -1993,7 +2034,6 @@
     });
   });
 
-  // Bottom nav buttons (keep for compatibility)
   navBtns.forEach(btn => {
     btn.addEventListener('click', function() {
       const target = this.dataset.target;
@@ -2148,21 +2188,17 @@
   const basketClose = document.getElementById('basketClose');
   const checkoutBtn = document.getElementById('checkoutBtn');
 
-  // Helper: Check if user is logged in
   function isUserLoggedIn() {
     return !!auth.currentUser;
   }
 
   function fmt(n){ return '$' + n.toFixed(2); }
 
-  // Main add function with auth check
   function addToBasket(name, price){
-    // Check if user is logged in
     if (!isUserLoggedIn()) {
       showAuthModal('login');
       return;
     }
-
     const existing = basket.find(i => i.name === name);
     if (existing) existing.qty += 1;
     else basket.push({ name, price, qty: 1 });
@@ -2202,7 +2238,6 @@
     [basketCountEl, basketFabCountEl].forEach(el => { if (totalQty > 0) { el.textContent = totalQty; el.classList.remove('hidden'); } else { el.classList.add('hidden'); } });
   }
 
-  // Attach add-to-order listeners to all buttons with class add-to-order
   document.addEventListener('click', function(e) {
     const btn = e.target.closest('.add-to-order');
     if (btn) {
@@ -2214,7 +2249,6 @@
     }
   });
 
-  // Also handle click on the "+" buttons added to menu items
   document.addEventListener('click', function(e) {
     const btn = e.target.closest('.add-item-btn');
     if (btn) {
