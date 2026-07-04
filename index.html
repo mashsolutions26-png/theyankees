@@ -1005,6 +1005,63 @@
         gap: 0.5rem;
       }
     }
+
+    /* ===== BOOKING EXTRA FIELDS ===== */
+    .booking-extra-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .booking-extra-row select {
+      width: 100%;
+      padding: 0.7rem 1rem;
+      background: #1c1f24;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0.75rem;
+      color: #f4ede1;
+      outline: none;
+      transition: border 0.3s;
+      font-size: 0.9rem;
+      -webkit-appearance: none;
+      appearance: none;
+      cursor: pointer;
+    }
+    .booking-extra-row select:focus {
+      border-color: #f4b93e;
+    }
+    .booking-extra-row select option {
+      background: #141619;
+      color: #f4ede1;
+    }
+    .booking-extra-row label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
+      color: #b0a99b;
+      display: block;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+    }
+    .booking-extra-row .select-wrapper {
+      position: relative;
+    }
+    .booking-extra-row .select-wrapper::after {
+      content: '▾';
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #b0a99b;
+      pointer-events: none;
+      font-size: 0.8rem;
+    }
+    @media (max-width: 480px) {
+      .booking-extra-row {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+      }
+    }
   </style>
 </head>
 <body class="bg-ink-950 text-yankee-cream font-sans antialiased selection:bg-yankee-red selection:text-white">
@@ -1443,8 +1500,31 @@
             <option value="Hope Island">Hope Island</option>
           </select>
         </div>
+
+        <!-- ===== ADDITIONAL BOOKING DETAILS ===== -->
+        <div class="booking-extra-row">
+          <div class="select-wrapper">
+            <label for="bookingSeating">Where would you like to be seated?</label>
+            <select id="bookingSeating" class="w-full">
+              <option value="Upstairs">Upstairs</option>
+              <option value="Downstairs">Downstairs</option>
+            </select>
+          </div>
+          <div class="select-wrapper">
+            <label for="bookingSpecialRequests">Special Requests (optional)</label>
+            <select id="bookingSpecialRequests" class="w-full">
+              <option value="">— Select —</option>
+              <option value="High Chair">High Chair</option>
+              <option value="Birthday">Birthday</option>
+              <option value="Catch-up">Catch-up</option>
+              <option value="Dietary Requirement">Dietary Requirement</option>
+              <option value="Disabled Access">Disabled Access</option>
+            </select>
+          </div>
+        </div>
+
         <div>
-          <label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">SPECIAL REQUESTS</label>
+          <label class="block font-label text-xs tracking-widest text-yankee-cream/60 mb-2">SPECIAL REQUESTS (additional)</label>
           <textarea id="bookingRequests" rows="3" placeholder="Booth seating, allergy info, birthday shoutout…" class="w-full bg-ink-800/70 border border-white/10 focus:border-yankee-gold rounded-xl px-4 py-3 text-yankee-cream outline-none transition-colors duration-300 resize-none"></textarea>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-4 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.01]">Confirm Reservation</button>
@@ -2176,7 +2256,9 @@ bookingForm.addEventListener('submit', async function(e) {
     const time = document.getElementById('bookingTime').value;
     const guests = document.getElementById('bookingGuests').value;
     const shop = document.getElementById('bookingShop').value;
-    const specialRequests = document.getElementById('bookingRequests').value.trim();
+    const seating = document.getElementById('bookingSeating').value;
+    const specialReq = document.getElementById('bookingSpecialRequests').value;
+    const requests = document.getElementById('bookingRequests').value.trim();
     
     if (!name || !phone || !date || !time) {
         alert('Please fill in all required fields.');
@@ -2193,7 +2275,9 @@ bookingForm.addEventListener('submit', async function(e) {
             time: time,
             guests: guests,
             shop: shop,
-            specialRequests: specialRequests || 'None',
+            seating: seating,
+            specialRequest: specialReq,
+            additionalRequests: requests || 'None',
             createdAt: firebase.firestore.FieldValue.serverTimestamp(),
             status: 'pending'
         });
@@ -2652,6 +2736,7 @@ bookingForm.addEventListener('submit', async function(e) {
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('📡 Listening for updates from admin panel...');
   console.log('🥤 Drinks menu loaded!');
+  console.log('📋 Booking extra fields added: Seating & Special Requests');
 
 })();
 </script>
