@@ -878,6 +878,47 @@
       color: #f4b93e;
     }
 
+    /* ===== DRINKS MENU STYLES ===== */
+    .drinks-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .drinks-grid .drink-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.4rem 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.04);
+    }
+    .drinks-grid .drink-item .drink-name {
+      font-size: 0.9rem;
+      color: #f4ede1;
+    }
+    .drinks-grid .drink-item .drink-price {
+      font-family: 'Anton', sans-serif;
+      font-size: 0.95rem;
+      color: #f4b93e;
+      white-space: nowrap;
+      margin-left: 0.5rem;
+    }
+    .drinks-grid .drink-item .add-item-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 1rem;
+      margin-left: 0.4rem;
+    }
+    @media (max-width: 480px) {
+      .drinks-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+      .drinks-grid .drink-item {
+        padding: 0.3rem 0;
+      }
+    }
+
     @media (max-width: 480px) {
       .menu-slider .menu-panel { padding: 1rem 0.75rem; }
       .slider-nav button { font-size: 0.65rem; padding: 0.3rem 0.9rem; }
@@ -1024,6 +1065,11 @@
         <div id="menuSaladsContainer"></div>
         <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
         <div id="menuDessertsContainer"></div>
+        
+        <!-- ===== NEW DRINKS SECTION ===== -->
+        <h2 class="menu-section-title text-yankee-cream">🥤 DRINKS</h2>
+        <p class="text-sm text-yankee-cream/50 mb-3">Refreshing beverages to pair with your meal</p>
+        <div id="menuDrinksContainer"></div>
       </div>
     </div>
     
@@ -2033,7 +2079,6 @@
   function addToBasket(name, price){
     // Check if user is logged in
     if (!isUserLoggedIn()) {
-      // Show login modal
       showAuthModal('login');
       return;
     }
@@ -2124,7 +2169,6 @@ const bookingSuccess = document.getElementById('bookingSuccess');
 bookingForm.addEventListener('submit', async function(e) {
     e.preventDefault();
     
-    // Get form values
     const name = document.getElementById('bookingName').value.trim();
     const countryCode = document.getElementById('countryCode').value;
     const phone = document.getElementById('bookingPhone').value.trim();
@@ -2134,7 +2178,6 @@ bookingForm.addEventListener('submit', async function(e) {
     const shop = document.getElementById('bookingShop').value;
     const specialRequests = document.getElementById('bookingRequests').value.trim();
     
-    // Validation
     if (!name || !phone || !date || !time) {
         alert('Please fill in all required fields.');
         return;
@@ -2143,7 +2186,6 @@ bookingForm.addEventListener('submit', async function(e) {
     const fullPhone = countryCode + phone;
     
     try {
-        // Save to Firebase Firestore
         const docRef = await db.collection('bookings').add({
             name: name,
             phone: fullPhone,
@@ -2157,19 +2199,12 @@ bookingForm.addEventListener('submit', async function(e) {
         });
         
         console.log('✅ Booking saved with ID:', docRef.id);
-        
-        // Show success message
         bookingSuccess.classList.remove('hidden');
         bookingSuccess.textContent = '✓ Table booked successfully! We\'ll text you a confirmation shortly.';
-        
-        // Reset form
         this.reset();
-        
-        // Hide success message after 5 seconds
         setTimeout(function() {
             bookingSuccess.classList.add('hidden');
         }, 5000);
-        
     } catch (error) {
         console.error('❌ Error saving booking:', error);
         alert('Booking failed. Please try again or call us directly.');
@@ -2211,7 +2246,6 @@ bookingForm.addEventListener('submit', async function(e) {
     discountPercent.textContent = `-${promo.discount || 0}%`;
     discountItemName.textContent = promo.item || 'Item';
 
-    // Countdown timer
     if (discountInterval) {
       clearInterval(discountInterval);
     }
@@ -2225,7 +2259,6 @@ bookingForm.addEventListener('submit', async function(e) {
         discountTimer.textContent = 'EXPIRED';
         discountTimer.classList.add('expired');
         discountExpiry.textContent = 'This offer has expired.';
-        // Auto-deactivate
         promo.active = false;
         localStorage.setItem('sitePromo', JSON.stringify(promo));
         setTimeout(() => {
@@ -2251,7 +2284,6 @@ bookingForm.addEventListener('submit', async function(e) {
     discountInterval = setInterval(updateTimer, 1000);
   }
 
-  // ===== LISTEN FOR PROMO UPDATES =====
   window.addEventListener('promoUpdated', (e) => {
     const promo = e.detail;
     if (promo) {
@@ -2291,7 +2323,6 @@ bookingForm.addEventListener('submit', async function(e) {
 
   loadExistingPromo();
 
-  // ===== FIREBASE REAL-TIME PROMO LISTENER =====
   firebase.firestore().collection('promotions')
     .where('active', '==', true)
     .onSnapshot((snapshot) => {
@@ -2326,7 +2357,6 @@ bookingForm.addEventListener('submit', async function(e) {
   // ===== DYNAMIC DAILY SPECIALS - AUTO UPDATES BASED ON DAY =====
   // ================================================================
   
-  // Default weekly specials (fallback if Firestore fails)
   const defaultWeeklySpecials = [
     { day: 'Monday', name: 'Burger & Chips Combo', price: '4.99', desc: 'Cheese Burger, BBQ Chicken, or Premium Veg' },
     { day: 'Tuesday', name: 'Original Parma', price: '19.99', desc: 'Classic chicken parmigiana with napoli sauce' },
@@ -2339,14 +2369,12 @@ bookingForm.addEventListener('submit', async function(e) {
 
   let weeklySpecials = [];
   
-  // Load weekly specials from Firestore
   function loadWeeklySpecials() {
     firebase.firestore().collection('weeklySpecials')
       .onSnapshot((snapshot) => {
         if (!snapshot.empty) {
           weeklySpecials = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
         } else {
-          // Use defaults and save to Firestore
           weeklySpecials = defaultWeeklySpecials;
           defaultWeeklySpecials.forEach(async (spec) => {
             try {
@@ -2372,11 +2400,9 @@ bookingForm.addEventListener('submit', async function(e) {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const today = days[new Date().getDay()];
     
-    // Find today's special
     const todaySpecial = weeklySpecials.find(s => s.day === today) || 
                          defaultWeeklySpecials.find(s => s.day === today);
     
-    // Update the menu page highlight
     const dailySpecialHighlight = document.getElementById('dailySpecialHighlight');
     const dailySpecialName = document.getElementById('dailySpecialName');
     const dailySpecialPrice = document.getElementById('dailySpecialPrice');
@@ -2388,12 +2414,10 @@ bookingForm.addEventListener('submit', async function(e) {
       todayLabel.textContent = `${today.toUpperCase()}'S SPECIAL`;
       dailySpecialHighlight.style.display = 'flex';
       
-      // Update the featured section too
       document.getElementById('featuredSpecialName').textContent = todaySpecial.name || 'The Classic Stadium Stack';
       document.getElementById('featuredSpecialDesc').textContent = todaySpecial.desc || 'Today\'s featured lunch special!';
       document.getElementById('featuredSpecialPrice').textContent = `$${todaySpecial.price || '8.99'}`;
       
-      // Update add to order button
       const addBtn = document.querySelector('.daily-special-highlight .add-to-order');
       if (addBtn) {
         addBtn.dataset.name = todaySpecial.name;
@@ -2403,10 +2427,8 @@ bookingForm.addEventListener('submit', async function(e) {
       dailySpecialHighlight.style.display = 'none';
     }
     
-    // Update weekly specials list in the weekly section
     const weeklyList = document.getElementById('weeklySpecialsList');
     if (weeklyList) {
-      // Get unique specials by day
       const uniqueSpecials = [];
       const seenDays = new Set();
       weeklySpecials.forEach(spec => {
@@ -2416,7 +2438,6 @@ bookingForm.addEventListener('submit', async function(e) {
         }
       });
       
-      // Sort by day order
       const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       uniqueSpecials.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
       
@@ -2434,6 +2455,37 @@ bookingForm.addEventListener('submit', async function(e) {
       }).join('');
     }
   }
+
+  // ===== DRINKS DATA =====
+  const drinksData = [
+    { name: 'Dr Pepper Strawberries and Cream', price: '5.50' },
+    { name: 'Pepsi Max', price: '3.99' },
+    { name: 'Pepsi', price: '3.99' },
+    { name: 'Sunkist', price: '3.99' },
+    { name: 'Solo', price: '3.99' },
+    { name: 'Lemonade', price: '3.99' },
+    { name: 'A&W Creamy Soda', price: '5.50' },
+    { name: 'Bundaberg Ginger Beer', price: '5.50' },
+    { name: 'Bundaberg Diet Ginger Beer', price: '5.50' },
+    { name: 'Bundaberg Guava', price: '5.50' },
+    { name: 'Bundaberg Tropical Mango', price: '5.50' },
+    { name: 'Dr Pepper', price: '5.50' },
+    { name: 'Dr Pepper Cherry', price: '5.50' },
+    { name: 'Dr Pepper Cream Soda', price: '5.50' },
+    { name: 'Fanta Strawberry', price: '5.50' },
+    { name: 'Fanta Grape', price: '5.50' },
+    { name: 'Fanta Berry', price: '5.50' },
+    { name: 'Pop Tops Apple', price: '5.50' },
+    { name: 'Red Bull Red Edition', price: '5.50' },
+    { name: 'Red Bull Energy Drinks', price: '5.50' },
+    { name: 'Red Bull Sugarfree', price: '5.50' },
+    { name: 'Tropical Mango', price: '5.50' },
+    { name: 'Lemon Lime Bitters', price: '4.50' },
+    { name: 'Lipton Lemon Iced Tea', price: '4.50' },
+    { name: 'Lipton Peach Iced Tea', price: '4.50' },
+    { name: 'Sparkling Water Can', price: '4.50' },
+    { name: 'Water', price: '3.50' }
+  ];
 
   // ===== FULL MENU DATA =====
   const fullMenuData = {
@@ -2571,6 +2623,26 @@ bookingForm.addEventListener('submit', async function(e) {
         });
       }
     }
+
+    // Populate Drinks
+    const drinksContainer = document.getElementById('menuDrinksContainer');
+    if (drinksContainer) {
+      const grid = document.createElement('div');
+      grid.className = 'drinks-grid';
+      drinksData.forEach(drink => {
+        const div = document.createElement('div');
+        div.className = 'drink-item';
+        div.innerHTML = `
+          <span class="drink-name">${drink.name}</span>
+          <div style="display:flex;align-items:center;gap:0.25rem;">
+            <span class="drink-price">$${drink.price}</span>
+            <button class="add-item-btn" data-name="${drink.name}" data-price="${drink.price}">+</button>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+      drinksContainer.appendChild(grid);
+    }
   }
 
   // Initialize dynamic content
@@ -2579,6 +2651,7 @@ bookingForm.addEventListener('submit', async function(e) {
 
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('📡 Listening for updates from admin panel...');
+  console.log('🥤 Drinks menu loaded!');
 
 })();
 </script>
