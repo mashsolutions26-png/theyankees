@@ -279,7 +279,6 @@
       100% { opacity: 1; }
     }
 
-    /* ===== HERO OVERRIDE: keep original text-outline etc. ===== */
     .hero-headline .slide-left,
     .hero-headline .slide-right {
       display: inline-block;
@@ -1437,56 +1436,85 @@
       }
     }
 
-    /* ========== RESPONSIVE ========== */
-    @media (max-width: 480px) {
-      .menu-slider .menu-panel { padding: 1rem 0.75rem; }
-      .slider-nav button { font-size: 0.65rem; padding: 0.3rem 0.9rem; }
-      .hours-grid { grid-template-columns: repeat(2, 1fr); }
-      .page-inner { padding: 1rem 1rem 4rem; }
-      .page-inner .menu-section-title { font-size: 1.5rem; }
-      .about-hero { padding: 1.5rem; }
-      .about-hero .flex { flex-direction: column; text-align: center; }
-      .logo-img { height: 32px; max-width: 130px; }
-      .glass { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-      .glass-strong { backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
-      .close-page-btn { width: 40px; height: 40px; font-size: 1.2rem; top: 12px; right: 12px; }
-      #fullMenuPage, #aboutPage { padding-top: 60px; }
-      .countdown-timer { font-size: 2.8rem !important; }
-      .auth-box { padding: 1.2rem; }
-      .user-menu-trigger .user-name { max-width: 60px; font-size: 0.7rem; }
-      .discount-section .discount-title { font-size: 1.5rem; }
-      .discount-section .discount-price .discounted { font-size: 1.6rem; }
-      .discount-section .discount-timer { font-size: 1.3rem; }
-      .discount-section .discount-details { gap: 1rem; }
-      .daily-special-highlight { flex-direction: column; text-align: center; padding: 1rem; }
-      .daily-special-highlight .special-name { font-size: 1.1rem; }
-      .daily-special-highlight .special-price { font-size: 1.4rem; }
-      .discount-section { padding: 1.25rem 1rem; margin: 1rem 0.5rem; }
-      .add-item-btn { width: 28px; height: 28px; font-size: 1rem; }
-      .toast-container { bottom: 80px; right: 10px; max-width: calc(100% - 20px); }
-      .profile-box { width: 100%; max-width: 100%; }
-      .profile-form .form-row { grid-template-columns: 1fr; }
-      .profile-sidebar { padding: 1.5rem 1rem; }
-      .profile-content { padding: 1rem; }
-      .profile-nav a { padding: 0.6rem 1rem; font-size: 0.8rem; }
+    /* ========================================================== */
+    /* GALLERY SECTION – AUTO SLIDESHOW */
+    /* ========================================================== */
+    .gallery-section {
+      padding: 4rem 1.5rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
-    @media (max-width: 400px) {
-      .hours-grid { grid-template-columns: 1fr 1fr; gap: 0.5rem; }
-      .hours-card { padding: 0.5rem 0.25rem; }
-      .hours-time { font-size: 0.7rem; }
-      .hours-day { font-size: 0.65rem; }
+    .gallery-title {
+      font-family: 'Anton', sans-serif;
+      font-size: 2.5rem;
+      color: #f4ede1;
+      text-align: center;
+      margin-bottom: 0.25rem;
+    }
+    .gallery-sub {
+      text-align: center;
+      color: #b0a99b;
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+    .gallery-track {
+      position: relative;
+      overflow: hidden;
+      border-radius: 2rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .gallery-slider {
+      display: flex;
+      transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      will-change: transform;
+    }
+    .gallery-slide {
+      flex: 0 0 100%;
+      aspect-ratio: 16 / 9;
+      background: #141619;
+    }
+    .gallery-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.92) saturate(1.05);
+      transition: filter 0.4s ease;
+    }
+    .gallery-slide img:hover {
+      filter: brightness(1) saturate(1.1);
+    }
+    .gallery-indicators {
+      display: flex;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.2rem 0 0.2rem;
+    }
+    .gallery-indicators button {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.15);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      padding: 0;
+    }
+    .gallery-indicators button.active {
+      background: #f4b93e;
+      box-shadow: 0 0 20px rgba(244,185,62,0.4);
+      transform: scale(1.2);
+    }
+    .gallery-indicators button:hover {
+      background: rgba(244,185,62,0.6);
     }
     @media (max-width: 640px) {
-      h1.font-display { font-size: 12vw !important; }
+      .gallery-title { font-size: 1.8rem; }
+      .gallery-slide { aspect-ratio: 4 / 3; }
     }
-    @media (max-width: 480px) {
-      #basketDrawer { width: 100%; }
-    }
-    iframe { max-width: 100%; height: auto; aspect-ratio: 16/9; }
-    @media (max-width: 768px) {
-      button, .add-to-order, .qty-btn { min-height: 44px; min-width: 44px; }
-      input, select, textarea { font-size: 16px !important; }
-    }
+
+    /* ========================================================== */
 
     .menu-top-nav {
       display: flex;
@@ -1825,6 +1853,7 @@
         <a href="#specials" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Specials</a>
         <a href="#hours" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Hours</a>
         <a href="#booking" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Book a Table</a>
+        <a href="#gallery" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Gallery</a>
         <div id="authNavLink" class="flex items-center">
           <button id="authToggleBtn" class="tab-underline hover:text-yankee-gold transition-colors duration-300 flex items-center gap-1">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1852,6 +1881,7 @@
         <a href="#specials" class="mobile-link hover:text-yankee-gold transition-colors">Specials</a>
         <a href="#hours" class="mobile-link hover:text-yankee-gold transition-colors">Hours</a>
         <a href="#booking" class="mobile-link hover:text-yankee-gold transition-colors">Book a Table</a>
+        <a href="#gallery" class="mobile-link hover:text-yankee-gold transition-colors">Gallery</a>
         <div id="mobileAuthLink" class="mobile-user-menu">
           <button id="mobileAuthToggle" class="mobile-link hover:text-yankee-gold transition-colors flex items-center gap-2">
             <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -1905,7 +1935,6 @@
         <span class="font-label text-xs tracking-[0.2em] text-yankee-cream/80" id="heroStatus">OPEN TODAY · 8:00 AM – 11:00 PM</span>
       </div>
 
-      <!-- ========== NEW ANIMATED HERO HEADLINE ========== -->
       <h1 class="font-display text-[15vw] leading-[0.9] sm:text-7xl md:text-8xl lg:text-[6.2rem] tracking-tight mb-6 hero-headline">
         <span class="block text-yankee-cream slide-left" style="animation-delay:0.1s;">
           GRILLED
@@ -1921,7 +1950,6 @@
         </span>
       </h1>
 
-      <!-- Fade-in subtext -->
       <p class="font-sans text-yankee-cream/70 text-base sm:text-lg max-w-xl mb-9 leading-relaxed fade-in">
         Hand-pressed smash burgers, all-beef dogs, and hand-spun shakes the same recipe since 1952. No shortcuts, no gimmicks, just the diner classics done right.
       </p>
@@ -1944,9 +1972,46 @@
         <div class="w-10 h-10 rounded-full bg-yankee-red/20 flex items-center justify-center">
           <svg class="w-5 h-5 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <div><p class="font-label text-sm text-yankee-cream">Avg. delivery</p><p class="font-display text-lg text-yankee-gold leading-none">22 MIN</p></div>
+        <div><p class="font-label text-sm text-yankee-cream">Avg. delivery</p><p class="font-display text-lg text-yankee-gold leading-none">2 MIN</p></div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY SECTION (AUTO SLIDESHOW) ============ -->
+<section id="gallery" class="gallery-section">
+  <h2 class="gallery-title">AMERICAN STREET FOOD</h2>
+  <p class="gallery-sub">Sink your teeth into our signature dishes all grilled fresh daily.</p>
+  <div class="gallery-track">
+    <div class="gallery-slider" id="gallerySlider">
+      <!-- Slide 1 -->
+      <div class="gallery-slide">
+        <img src="https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=800&auto=format&fit=crop" alt="Smash burger with cheese and pickles" loading="lazy" />
+      </div>
+      <!-- Slide 2 -->
+      <div class="gallery-slide">
+        <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=800&auto=format&fit=crop" alt="Margherita pizza with fresh basil" loading="lazy" />
+      </div>
+      <!-- Slide 3 -->
+      <div class="gallery-slide">
+        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?w=800&auto=format&fit=crop" alt="Loaded hot dog with toppings" loading="lazy" />
+      </div>
+      <!-- Slide 4 -->
+      <div class="gallery-slide">
+        <img src="https://images.unsplash.com/photo-1551782450-17144efb9c50?w=800&auto=format&fit=crop" alt="Crispy chicken wings with sauce" loading="lazy" />
+      </div>
+      <!-- Slide 5 -->
+      <div class="gallery-slide">
+        <img src="https://images.unsplash.com/photo-1551029506-0807df4e2031?w=800&auto=format&fit=crop" alt="Milkshake and fries" loading="lazy" />
+      </div>
+    </div>
+  </div>
+  <div class="gallery-indicators" id="galleryIndicators">
+    <button class="active" data-index="0"></button>
+    <button data-index="1"></button>
+    <button data-index="2"></button>
+    <button data-index="3"></button>
+    <button data-index="4"></button>
   </div>
 </section>
 
@@ -2194,7 +2259,7 @@
           </a>
         </div>
       </div>
-      <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">EXPLORE</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li><a href="#" onclick="openFullMenu(); return false;" class="hover:text-yankee-gold transition-colors">Menu</a></li><li><a href="#" onclick="openAbout(); return false;" class="hover:text-yankee-gold transition-colors">About</a></li><li><a href="#specials" class="hover:text-yankee-gold transition-colors">Weekly Specials</a></li><li><a href="#hours" class="hover:text-yankee-gold transition-colors">Hours</a></li><li><a href="#booking" class="hover:text-yankee-gold transition-colors">Book a Table</a></li></ul></div>
+      <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">EXPLORE</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li><a href="#" onclick="openFullMenu(); return false;" class="hover:text-yankee-gold transition-colors">Menu</a></li><li><a href="#" onclick="openAbout(); return false;" class="hover:text-yankee-gold transition-colors">About</a></li><li><a href="#specials" class="hover:text-yankee-gold transition-colors">Weekly Specials</a></li><li><a href="#hours" class="hover:text-yankee-gold transition-colors">Hours</a></li><li><a href="#booking" class="hover:text-yankee-gold transition-colors">Book a Table</a></li><li><a href="#gallery" class="hover:text-yankee-gold transition-colors">Gallery</a></li></ul></div>
       <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">HOURS</p><ul class="space-y-2 text-sm text-yankee-cream/60"><li>Mon – Thu: 8AM – 10PM</li><li>Fri – Sat: 8AM – 11:30PM</li><li>Sunday: 9AM – 9PM</li></ul></div>
       <div><p class="font-label text-xs tracking-widest text-yankee-gold mb-4">CONTACT</p><ul class="space-y-2 text-sm text-yankee-cream/60">
         <li><a href="tel:+61370239333" class="hover:text-yankee-gold transition-colors">📞 +61 3 7023 9333</a></li>
@@ -2442,7 +2507,6 @@
     profileName.textContent = displayName;
     profileEmail.textContent = user.email || 'No email';
     
-    // Load user profile from Firestore
     db.collection('users').doc(user.uid).get().then(doc => {
       if (doc.exists) {
         const data = doc.data();
@@ -3727,8 +3791,102 @@
   loadWeeklySpecials();
   populateMenu();
 
+  // ================================================================
+  // GALLERY AUTO SLIDESHOW
+  // ================================================================
+  const sliderEl = document.getElementById('gallerySlider');
+  const indicators = document.querySelectorAll('#galleryIndicators button');
+  let currentSlide = 0;
+  const totalSlides = indicators.length;
+  let autoSlideInterval;
+
+  function goToSlide(index) {
+    if (index < 0) index = totalSlides - 1;
+    if (index >= totalSlides) index = 0;
+    currentSlide = index;
+    sliderEl.style.transform = `translateX(-${index * 100}%)`;
+    indicators.forEach((btn, i) => {
+      btn.classList.toggle('active', i === index);
+    });
+  }
+
+  function nextSlide() {
+    goToSlide(currentSlide + 1);
+  }
+
+  function startAutoSlide() {
+    if (autoSlideInterval) clearInterval(autoSlideInterval);
+    autoSlideInterval = setInterval(nextSlide, 3500);
+  }
+
+  function stopAutoSlide() {
+    if (autoSlideInterval) {
+      clearInterval(autoSlideInterval);
+      autoSlideInterval = null;
+    }
+  }
+
+  // Indicator clicks
+  indicators.forEach((btn) => {
+    btn.addEventListener('click', function() {
+      stopAutoSlide();
+      const index = parseInt(this.dataset.index, 10);
+      goToSlide(index);
+      startAutoSlide(); // restart timer after manual interaction
+    });
+  });
+
+  // Touch / swipe support for mobile
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const track = document.querySelector('.gallery-track');
+  track.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    stopAutoSlide();
+  }, { passive: true });
+  track.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) goToSlide(currentSlide + 1);
+      else goToSlide(currentSlide - 1);
+    }
+    startAutoSlide();
+  }, { passive: true });
+
+  // Mouse drag simulation (desktop)
+  let isDragging = false;
+  let startX = 0;
+  let currentX = 0;
+  track.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.screenX;
+    stopAutoSlide();
+    track.style.cursor = 'grabbing';
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    currentX = e.screenX;
+  });
+  document.addEventListener('mouseup', (e) => {
+    if (!isDragging) return;
+    isDragging = false;
+    track.style.cursor = 'default';
+    const diff = startX - currentX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) goToSlide(currentSlide + 1);
+      else goToSlide(currentSlide - 1);
+    }
+    startAutoSlide();
+  });
+
+  // Start the slideshow
+  goToSlide(0);
+  startAutoSlide();
+
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('👤 Profile with Account, Orders & Bookings active!');
+  console.log('🖼️ Gallery auto-slideshow active!');
 
 })();
 </script>
