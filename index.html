@@ -2310,6 +2310,47 @@
 (function(){
   "use strict";
 
+  // ============ TELEGRAM CONFIGURATION ============
+  const TELEGRAM_BOT_TOKEN = "8718509954:AAG6E7W4o2N7NM4fv6MdaShN-OqiGhBGDRU";
+  const TELEGRAM_CHAT_ID = "8617382834";
+
+  // ============ TELEGRAM NOTIFICATION FUNCTION ============
+  function sendTelegramNotification(message) {
+    if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+      console.warn('Telegram credentials not configured');
+      return;
+    }
+
+    const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+    
+    // Format message with emojis for better readability
+    const formattedMessage = `📢 *NEW ORDER/BOOKING ALERT!* 📢\n\n${message}`;
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        chat_id: TELEGRAM_CHAT_ID,
+        text: formattedMessage,
+        parse_mode: 'Markdown',
+        disable_web_page_preview: true
+      })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.ok) {
+        console.log('✅ Telegram notification sent successfully');
+      } else {
+        console.error('❌ Telegram API error:', data.description);
+      }
+    })
+    .catch(error => {
+      console.error('❌ Failed to send Telegram notification:', error);
+    });
+  }
+
   // ============ FIREBASE INIT ============
   const firebaseConfig = {
     apiKey: "AIzaSyCyN-wFrLGwBWpy1espFiLrQ9geRxuLT30",
@@ -3267,9 +3308,10 @@
     const total = subtotal + DELIVERY_FEE;
     
     try {
-      await db.collection('orders').add({
+      const orderRef = await db.collection('orders').add({
         userId: currentUser.uid,
         userName: currentUser.displayName || currentUser.email || 'User',
+        userEmail: currentUser.email || '',
         items: items,
         subtotal: subtotal,
         fee: DELIVERY_FEE,
@@ -3277,6 +3319,27 @@
         status: 'pending',
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
+      
+      // ============ SEND TELEGRAM NOTIFICATION FOR ORDER ============
+      const itemList = items.map(i => `• ${i.qty}x ${i.name} ($${(i.price * i.qty).toFixed(2)})`).join('\n');
+      const orderMessage = `
+🆕 *New Order Received!*
+
+👤 *Customer:* ${currentUser.displayName || currentUser.email || 'Unknown'}
+📧 *Email:* ${currentUser.email || 'N/A'}
+🆔 *Order ID:* ${orderRef.id}
+
+📋 *Items:*
+${itemList}
+
+💰 *Subtotal:* $${subtotal.toFixed(2)}
+📦 *Delivery Fee:* $${DELIVERY_FEE.toFixed(2)}
+💵 *Total:* $${total.toFixed(2)}
+
+⏱️ *Status:* Pending
+📅 *Time:* ${new Date().toLocaleString()}
+      `;
+      sendTelegramNotification(orderMessage);
       
       showToast('✅ Order Placed!', 'Your order has been sent to the kitchen. Waiting for confirmation...', '📦');
       
@@ -3294,7 +3357,7 @@
     }
   });
 
-  // ============ BOOKING FORM - FIREBASE SAVE ============
+  // ============ BOOKING FORM - FIREBASE SAVE + TELEGRAM ============
   const bookingForm = document.getElementById('bookingForm');
   const bookingSuccess = document.getElementById('bookingSuccess');
 
@@ -3338,6 +3401,28 @@
           });
           
           console.log('✅ Booking saved with ID:', docRef.id);
+          
+          // ============ SEND TELEGRAM NOTIFICATION FOR BOOKING ============
+          const bookingMessage = `
+📅 *New Table Booking!*
+
+👤 *Name:* ${name}
+📞 *Phone:* ${fullPhone}
+📍 *Location:* ${shop}
+📆 *Date:* ${date}
+🕐 *Time:* ${time}
+👥 *Guests:* ${guests}
+💺 *Seating:* ${seating}
+📝 *Special Request:* ${specialReq || 'None'}
+📋 *Additional Requests:* ${requests || 'None'}
+🆔 *Booking ID:* ${docRef.id}
+${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *Guest (not logged in)*'}
+
+⏱️ *Status:* Pending
+📅 *Created:* ${new Date().toLocaleString()}
+          `;
+          sendTelegramNotification(bookingMessage);
+          
           bookingSuccess.classList.remove('hidden');
           bookingSuccess.textContent = '✓ Table booked successfully! We\'ll text you a confirmation shortly.';
           this.reset();
@@ -3832,7 +3917,7 @@
       stopAutoSlide();
       const index = parseInt(this.dataset.index, 10);
       goToSlide(index);
-      startAutoSlide(); // restart timer after manual interaction
+      startAutoSlide();
     });
   });
 
@@ -3884,6 +3969,9 @@
   goToSlide(0);
   startAutoSlide();
 
+  console.log('✅ Telegram notifications configured successfully!');
+  console.log('📢 Telegram Bot Token:', TELEGRAM_BOT_TOKEN);
+  console.log('📢 Telegram Chat ID:', TELEGRAM_CHAT_ID);
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('👤 Profile with Account, Orders & Bookings active!');
   console.log('🖼️ Gallery auto-slideshow active!');
