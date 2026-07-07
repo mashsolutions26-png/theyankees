@@ -123,45 +123,6 @@
     }
     .add-item-btn:active { transform: scale(0.9); }
 
-    /* ===== Weekly Special hover preview ===== */
-    .weekly-special-row {
-      cursor: pointer;
-      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), background 0.35s ease;
-    }
-    .weekly-special-row:hover {
-      transform: translateX(6px) scale(1.015);
-      background: rgba(244,185,62,0.06);
-    }
-    #featuredSpecialImg {
-      transition: opacity 0.35s ease, transform 0.7s ease;
-    }
-    #featuredSpecialImg.img-swapping {
-      opacity: 0;
-      transform: scale(1.12);
-    }
-    .featured-fade {
-      transition: opacity 0.28s ease, transform 0.32s ease;
-    }
-    .featured-fade.text-swapping {
-      opacity: 0;
-      transform: translateY(4px);
-    }
-    #specialPreviewBadge {
-      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.23,1,0.32,1);
-      opacity: 0;
-      transform: scale(0.85);
-      pointer-events: none;
-    }
-    #specialPreviewBadge.show {
-      opacity: 1;
-      transform: scale(1);
-    }
-    @keyframes previewPulse {
-      0% { box-shadow: 0 0 0 0 rgba(244,185,62,0.5); }
-      100% { box-shadow: 0 0 0 10px rgba(244,185,62,0); }
-    }
-    #specialPreviewBadge.show { animation: previewPulse 1s ease-out; }
-
     .hours-grid {
       display: flex;
       flex-wrap: wrap;
@@ -2350,19 +2311,18 @@
       <div class="lg:col-span-5">
         <div class="relative glass-strong rounded-3xl overflow-hidden h-full shadow-2xl group">
           <div class="relative h-64 overflow-hidden">
-            <img id="featuredSpecialImg" src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1974&auto=format&fit=crop" alt="Today's featured lunch special" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+            <img src="https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1974&auto=format&fit=crop" alt="Today's featured lunch special" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
             <div class="absolute inset-0 bg-gradient-to-t from-ink-900 via-ink-900/20 to-transparent"></div>
-            <span class="absolute top-4 left-4 bg-yankee-red text-white font-label text-xs tracking-widest px-3 py-1.5 rounded-full shadow-glow" id="featuredBadge">TODAY'S FEATURE</span>
-            <span class="absolute top-4 right-4 bg-yankee-gold text-ink-950 font-label text-[0.65rem] tracking-widest px-3 py-1.5 rounded-full" id="specialPreviewBadge">PREVIEW</span>
+            <span class="absolute top-4 left-4 bg-yankee-red text-white font-label text-xs tracking-widest px-3 py-1.5 rounded-full shadow-glow">TODAY'S FEATURE</span>
           </div>
           <div class="p-7">
             <div class="flex items-start justify-between gap-4 mb-3">
-              <h3 class="font-condensed text-3xl text-yankee-cream tracking-wide featured-fade" id="featuredSpecialName">THE CLASSIC STADIUM STACK</h3>
+              <h3 class="font-condensed text-3xl text-yankee-cream tracking-wide" id="featuredSpecialName">THE CLASSIC STADIUM STACK</h3>
             </div>
-            <p class="text-yankee-cream/60 text-sm mb-6 leading-relaxed featured-fade" id="featuredSpecialDesc">Double smash patty, aged cheddar, pickles & house sauce on a toasted brioche — comes with fries and a fountain drink.</p>
+            <p class="text-yankee-cream/60 text-sm mb-6 leading-relaxed" id="featuredSpecialDesc">Double smash patty, aged cheddar, pickles & house sauce on a toasted brioche — comes with fries and a fountain drink.</p>
             <div class="flex items-center justify-between">
               <div class="flex items-baseline gap-3">
-                <span class="font-display text-4xl text-yankee-gold featured-fade" id="featuredSpecialPrice">$8.99</span>
+                <span class="font-display text-4xl text-yankee-gold" id="featuredSpecialPrice">$8.99</span>
               </div>
               <span class="bg-yankee-gold/15 text-yankee-gold font-label text-xs tracking-wider px-3 py-1.5 rounded-full border border-yankee-gold/30">⭐ TODAY ONLY</span>
             </div>
@@ -2632,6 +2592,7 @@
         <td style="width: 50%; text-align: right; vertical-align: top; box-sizing: border-box; padding: 0;">
           <div style="font-size: 13px; color: #666;">CUSTOMER</div>
           <div style="font-size: 16px; font-weight: 600; color: #111; margin-top: 2px;" id="pdf-customer-name">John Doe</div>
+          <div style="font-size: 13px; color: #444; margin-top: 2px;">📞 <span id="pdf-customer-phone">—</span></div>
         </td>
       </tr>
     </table>
@@ -2714,7 +2675,7 @@
   }
 
   // ============ SEND INVOICE EMAIL VIA EMAILJS ============
-  async function sendInvoiceEmail(customerEmail, customerName, orderId, items, total, orderType) {
+  async function sendInvoiceEmail(customerEmail, customerName, customerPhone, orderId, items, total, orderType) {
     try {
       const itemList = items.map(item => 
         `${item.qty}x ${item.name} - $${(item.price * item.qty).toFixed(2)}`
@@ -2723,6 +2684,7 @@
       const templateParams = {
         to_email: customerEmail,
         to_name: customerName || 'Valued Customer',
+        to_phone: customerPhone || 'N/A',
         order_id: orderId || 'N/A',
         items: itemList || 'No items',
         total: total ? `$${total.toFixed(2)} AUD` : '$0.00 AUD',
@@ -3814,10 +3776,24 @@
     const feeTypeLabel = selectedFeeType === 'delivery' ? 'Delivery Fee' : 'Service Fee (10%)';
     
     try {
+      // ============ FETCH CUSTOMER PROFILE (NAME & PHONE) ============
+      let profileData = {};
+      try {
+        const profileDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (profileDoc.exists) profileData = profileDoc.data();
+      } catch (e) {
+        console.warn('Could not load customer profile for order:', e);
+      }
+      const customerName = profileData.name || currentUser.displayName || currentUser.email?.split('@')[0] || 'Valued Customer';
+      const customerPhone = profileData.phone || '';
+
       const orderRef = await db.collection('orders').add({
         userId: currentUser.uid,
         userName: currentUser.displayName || currentUser.email || 'User',
         userEmail: currentUser.email || '',
+        customerName: customerName,
+        phone: customerPhone,
+        email: currentUser.email || '',
         items: items,
         subtotal: subtotal,
         fee: fee,
@@ -3833,7 +3809,8 @@
       const orderMessage = `
 🆕 *New Order Received!*
 
-👤 *Customer:* ${currentUser.displayName || currentUser.email || 'Unknown'}
+👤 *Customer:* ${customerName}
+📞 *Phone:* ${customerPhone || 'N/A'}
 📧 *Email:* ${currentUser.email || 'N/A'}
 🆔 *Order ID:* ${orderRef.id}
 📦 *Order Type:* ${orderType}
@@ -3852,10 +3829,10 @@ ${selectedFeeType === 'delivery' ? '🚚 *Delivery Fee:* ' : '📦 *Service Fee 
       sendTelegramNotification(orderMessage);
 
       // ============ SEND INVOICE EMAIL VIA EMAILJS ============
-      const customerName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Valued Customer';
       const emailSent = await sendInvoiceEmail(
         currentUser.email,
         customerName,
+        customerPhone,
         orderRef.id,
         items,
         total,
@@ -4113,25 +4090,14 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
   // ================================================================
   
   const defaultWeeklySpecials = [
-    { day: 'Monday', name: 'Burger & Chips Combo', price: '11.99', desc: 'Choose from Cheese Burger, BBQ Chicken, or Premium Veg', img: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Tuesday', name: 'Original Parma', price: '19.99', desc: 'Weekly special on our signature Parma!', img: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Wednesday', name: '10 Wings', price: '14.99', desc: 'Original, BBQ, Hot, Buffalo, Portuguese, or Blue Cheese', img: 'https://images.unsplash.com/photo-1551782450-17144efb9c50?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Thursday', name: 'Pork Ribs', price: '25.99', desc: 'Original, BBQ, Hot, Buffalo, or Portuguese', img: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Friday', name: 'Any Hotdog', price: '11.99', desc: 'Weekly special on our delicious hotdogs', img: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Saturday', name: 'Nachos', price: '14.99', desc: 'Add ons: Chicken +6, Pulled Pork +7, Bacon +6', img: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=1600&auto=format&fit=crop' },
-    { day: 'Sunday', name: 'Any Pizza', price: '17.99', desc: 'Weekly special on our mouthwatering pizzas!', img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=1600&auto=format&fit=crop' }
+    { day: 'Monday', name: 'Burger & Chips Combo', price: '11.99', desc: 'Choose from Cheese Burger, BBQ Chicken, or Premium Veg' },
+    { day: 'Tuesday', name: 'Original Parma', price: '19.99', desc: 'Weekly special on our signature Parma!' },
+    { day: 'Wednesday', name: '10 Wings', price: '14.99', desc: 'Original, BBQ, Hot, Buffalo, Portuguese, or Blue Cheese' },
+    { day: 'Thursday', name: 'Pork Ribs', price: '25.99', desc: 'Original, BBQ, Hot, Buffalo, or Portuguese' },
+    { day: 'Friday', name: 'Any Hotdog', price: '11.99', desc: 'Weekly special on our delicious hotdogs' },
+    { day: 'Saturday', name: 'Nachos', price: '14.99', desc: 'Add ons: Chicken +6, Pulled Pork +7, Bacon +6' },
+    { day: 'Sunday', name: 'Any Pizza', price: '17.99', desc: 'Weekly special on our mouthwatering pizzas!' }
   ];
-
-  // Fallback images keyed by day, used if a Firestore-loaded special doesn't have its own `img` field
-  const dayFallbackImages = {
-    Monday: 'https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?q=80&w=1600&auto=format&fit=crop',
-    Tuesday: 'https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?q=80&w=1600&auto=format&fit=crop',
-    Wednesday: 'https://images.unsplash.com/photo-1551782450-17144efb9c50?q=80&w=1600&auto=format&fit=crop',
-    Thursday: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1600&auto=format&fit=crop',
-    Friday: 'https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1600&auto=format&fit=crop',
-    Saturday: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?q=80&w=1600&auto=format&fit=crop',
-    Sunday: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?q=80&w=1600&auto=format&fit=crop'
-  };
 
   let weeklySpecials = [];
   
@@ -4184,18 +4150,6 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
       document.getElementById('featuredSpecialDesc').textContent = todaySpecial.desc || 'Today\'s featured lunch special!';
       document.getElementById('featuredSpecialPrice').textContent = `$${todaySpecial.price || '8.99'}`;
       
-      const todayImg = todaySpecial.img || dayFallbackImages[today];
-      const featuredImgEl = document.getElementById('featuredSpecialImg');
-      if (featuredImgEl && todayImg) featuredImgEl.src = todayImg;
-      
-      // Remember today's data so we can smoothly restore it when the user stops hovering a row
-      window._todaysFeaturedSpecial = {
-        name: todaySpecial.name || 'The Classic Stadium Stack',
-        desc: todaySpecial.desc || "Today's featured lunch special!",
-        price: `$${todaySpecial.price || '8.99'}`,
-        img: todayImg
-      };
-      
       const addBtn = document.querySelector('.daily-special-highlight .add-to-order');
       if (addBtn) {
         addBtn.dataset.name = todaySpecial.name;
@@ -4220,14 +4174,8 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
       uniqueSpecials.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
       weeklyList.innerHTML = uniqueSpecials.map(spec => {
         const isToday = spec.day === today;
-        const specImg = spec.img || dayFallbackImages[spec.day] || '';
         return `
-          <div class="weekly-special-row flex items-center justify-between gap-4 px-4 sm:px-6 py-4 ${isToday ? 'rounded-2xl bg-yankee-red/10 ring-1 ring-yankee-red/30' : ''}"
-               data-day="${spec.day}"
-               data-name="${(spec.name || '').replace(/"/g, '&quot;')}"
-               data-desc="${(spec.desc || '').replace(/"/g, '&quot;')}"
-               data-price="${spec.price}"
-               data-img="${specImg}">
+          <div class="flex items-center justify-between gap-4 px-4 sm:px-6 py-4 ${isToday ? 'rounded-2xl bg-yankee-red/10 ring-1 ring-yankee-red/30' : ''}">
             <div class="flex items-center gap-4 flex-wrap">
               <span class="font-label text-xs tracking-widest ${isToday ? 'text-yankee-gold' : 'text-yankee-red'} w-12">${spec.day.substring(0, 3)}</span>
               <span class="${isToday ? 'text-yankee-cream font-semibold' : 'text-yankee-cream/90 font-medium'}">${spec.name} ${isToday ? '<span class="text-yankee-gold text-xs">· TODAY</span>' : ''}</span>
@@ -4237,68 +4185,7 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
           </div>
         `;
       }).join('');
-      
-      setupWeeklySpecialHoverPreview();
     }
-  }
-
-  // ================================================================
-  // ===== HOVER PREVIEW: swap the featured image/details when =====
-  // ===== the user hovers a day's row in the weekly specials list =
-  // ================================================================
-  function swapFeaturedSpecialPreview(data) {
-    const imgEl = document.getElementById('featuredSpecialImg');
-    const nameEl = document.getElementById('featuredSpecialName');
-    const descEl = document.getElementById('featuredSpecialDesc');
-    const priceEl = document.getElementById('featuredSpecialPrice');
-    if (!imgEl || !data) return;
-
-    // Crossfade the image
-    if (data.img && imgEl.src !== data.img) {
-      imgEl.classList.add('img-swapping');
-      setTimeout(() => {
-        imgEl.src = data.img;
-        imgEl.classList.remove('img-swapping');
-      }, 260);
-    }
-
-    // Crossfade the text details
-    [nameEl, descEl, priceEl].forEach(el => el && el.classList.add('text-swapping'));
-    setTimeout(() => {
-      if (nameEl) nameEl.textContent = data.name;
-      if (descEl) descEl.textContent = data.desc;
-      if (priceEl) priceEl.textContent = data.price;
-      [nameEl, descEl, priceEl].forEach(el => el && el.classList.remove('text-swapping'));
-    }, 220);
-  }
-
-  function setupWeeklySpecialHoverPreview() {
-    const weeklyList = document.getElementById('weeklySpecialsList');
-    const previewBadge = document.getElementById('specialPreviewBadge');
-    if (!weeklyList) return;
-
-    weeklyList.querySelectorAll('.weekly-special-row').forEach(row => {
-      row.addEventListener('mouseenter', () => {
-        const data = {
-          name: row.dataset.name,
-          desc: row.dataset.desc,
-          price: `$${row.dataset.price}`,
-          img: row.dataset.img
-        };
-        swapFeaturedSpecialPreview(data);
-        if (previewBadge) previewBadge.classList.add('show');
-      });
-
-      row.addEventListener('mouseleave', () => {
-        // Only revert once the pointer isn't hovering another row (avoids flicker between adjacent rows)
-        setTimeout(() => {
-          if (!weeklyList.matches(':hover') && window._todaysFeaturedSpecial) {
-            swapFeaturedSpecialPreview(window._todaysFeaturedSpecial);
-            if (previewBadge) previewBadge.classList.remove('show');
-          }
-        }, 30);
-      });
-    });
   }
 
   // ===== DRINKS DATA =====
