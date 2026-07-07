@@ -124,22 +124,52 @@
     .add-item-btn:active { transform: scale(0.9); }
 
     .hours-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: stretch;
       gap: 0.75rem;
     }
     .hours-card {
       background: rgba(255,255,255,0.03);
       border-radius: 1rem;
-      padding: 0.75rem 0.5rem;
+      padding: 0.85rem 0.5rem;
       text-align: center;
       border: 1px solid rgba(255,255,255,0.05);
-      transition: all 0.3s ease;
+      transition: transform 0.35s cubic-bezier(0.23,1,0.32,1), box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease, opacity 0.6s ease;
+      flex: 1 1 130px;
+      max-width: 150px;
+      opacity: 0;
+      transform: translateY(24px) scale(0.94);
+    }
+    .hours-card.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .hours-card.closed.in-view {
+      opacity: 0.5;
+    }
+    .hours-card:hover {
+      transform: translateY(-6px) scale(1.03);
+      border-color: rgba(244,185,62,0.35);
+      box-shadow: 0 16px 34px -16px rgba(200,16,46,0.45);
+      background: rgba(255,255,255,0.05);
     }
     .hours-card.today {
       border-color: #f4b93e;
       background: rgba(244,185,62,0.08);
       box-shadow: 0 0 30px -8px rgba(244,185,62,0.15);
+    }
+    .hours-card.today.in-view {
+      animation: todayGlowPulse 2.6s ease-in-out infinite;
+    }
+    .hours-card.today:hover {
+      transform: translateY(-6px) scale(1.05);
+      box-shadow: 0 0 40px -6px rgba(244,185,62,0.4);
+    }
+    @keyframes todayGlowPulse {
+      0%, 100% { box-shadow: 0 0 30px -8px rgba(244,185,62,0.15); }
+      50% { box-shadow: 0 0 36px -6px rgba(244,185,62,0.35); }
     }
     .hours-card.closed {
       opacity: 0.5;
@@ -171,8 +201,12 @@
       display: inline-block;
       margin-top: 0.2rem;
     }
-    .status-open { background: rgba(34,197,94,0.2); color: #22c55e; }
+    .status-open { background: rgba(34,197,94,0.2); color: #22c55e; animation: statusOpenPulse 2s ease-in-out infinite; }
     .status-closed { background: rgba(239,68,68,0.2); color: #ef4444; }
+    @keyframes statusOpenPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0.35); }
+      50% { box-shadow: 0 0 0 5px rgba(34,197,94,0); }
+    }
 
     .countdown-wrapper {
       background: rgba(12,14,18,0.6);
@@ -250,6 +284,17 @@
     @keyframes fadeUp {
       0% { opacity: 0; transform: translateY(30px) scale(0.98); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Scroll-triggered reveal for the Opening Hours section */
+    .hours-reveal {
+      opacity: 0;
+      transform: translateY(28px) scale(0.98);
+      transition: opacity 0.8s cubic-bezier(0.23,1,0.32,1), transform 0.8s cubic-bezier(0.23,1,0.32,1);
+    }
+    .hours-reveal.in-view {
+      opacity: 1;
+      transform: translateY(0) scale(1);
     }
 
     /* ===== HERO SLIDE ANIMATIONS ===== */
@@ -2236,12 +2281,12 @@
 <!-- ============ OPENING HOURS ============ -->
 <section id="hours" class="relative py-24 sm:py-32 bg-ink-900/30">
   <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-    <div class="text-center max-w-2xl mx-auto mb-14">
+    <div class="text-center max-w-2xl mx-auto mb-14 hours-reveal" id="hoursHeading">
       <p class="font-label text-yankee-gold tracking-[0.3em] text-xs mb-3">WHEN WE'RE OPEN</p>
       <h2 class="font-display text-4xl sm:text-5xl text-yankee-cream">OPENING HOURS</h2>
       <p class="text-yankee-cream/60 mt-4">We're here to serve you — check our hours and plan your visit.</p>
     </div>
-    <div class="countdown-wrapper anim-fade-up anim-fade-up-d1 max-w-3xl mx-auto">
+    <div class="countdown-wrapper hours-reveal max-w-3xl mx-auto" id="hoursCountdown">
       <div class="countdown-label">⏳ LIVE COUNTDOWN</div>
       <div id="countdownDisplay" class="countdown-timer">--:--:--</div>
       <div id="statusDisplay" class="countdown-status-text">
@@ -2250,7 +2295,7 @@
       </div>
     </div>
     <div id="hoursContainer" class="hours-grid max-w-3xl mx-auto"></div>
-    <div id="currentStatus" class="text-center mt-6 font-label text-sm tracking-wide"></div>
+    <div id="currentStatus" class="text-center mt-6 font-label text-sm tracking-wide hours-reveal"></div>
   </div>
 </section>
 
@@ -3499,7 +3544,8 @@
     const openStatus = isOpen(h.day, h.open, h.close, h.nextDay);
     if (todayCheck) { isCurrentlyOpen = openStatus; todayOpen = h.open; todayClose = h.close; }
     const card = document.createElement('div');
-    card.className = `hours-card ${todayCheck ? 'today' : ''} ${!openStatus && todayCheck ? 'closed' : ''} anim-fade-up anim-fade-up-d${(index % 7) + 1}`;
+    card.className = `hours-card ${todayCheck ? 'today' : ''} ${!openStatus && todayCheck ? 'closed' : ''}`;
+    card.style.transitionDelay = `${index * 0.08}s`;
     card.innerHTML = `
       <div class="hours-day">${h.day}</div>
       <span class="hours-date">July ${h.date}</span>
@@ -3508,6 +3554,22 @@
     `;
     container.appendChild(card);
   });
+
+  // Reveal the Opening Hours section (heading, countdown, cards) as it scrolls into view
+  const hoursSection = document.getElementById('hours');
+  if (hoursSection && 'IntersectionObserver' in window) {
+    const hoursObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          hoursSection.querySelectorAll('.hours-reveal, .hours-card').forEach(el => el.classList.add('in-view'));
+          hoursObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+    hoursObserver.observe(hoursSection);
+  } else {
+    document.querySelectorAll('.hours-reveal, .hours-card').forEach(el => el.classList.add('in-view'));
+  }
 
   const heroStatus = document.getElementById('heroStatus');
   if (isCurrentlyOpen && todayOpen && todayClose) {
