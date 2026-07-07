@@ -1590,6 +1590,31 @@
       background: rgba(255,255,255,0.06);
       color: #f4ede1;
     }
+
+    /* Order status messages */
+    .order-status-msg {
+      font-size: 0.8rem;
+      margin-top: 0.3rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.5rem;
+      display: inline-block;
+    }
+    .order-status-msg.pending {
+      color: #f4b93e;
+      background: rgba(244,185,62,0.1);
+    }
+    .order-status-msg.confirmed {
+      color: #22c55e;
+      background: rgba(34,197,94,0.1);
+    }
+    .order-status-msg.completed {
+      color: #3b82f6;
+      background: rgba(59,130,246,0.1);
+    }
+    .order-status-msg.cancelled {
+      color: #ef4444;
+      background: rgba(239,68,68,0.1);
+    }
   </style>
 </head>
 <body class="bg-ink-950 text-yankee-cream font-sans antialiased selection:bg-yankee-red selection:text-white">
@@ -1683,9 +1708,6 @@
           <p class="text-yankee-cream/70 leading-relaxed">Known for its juicy, meaty burgers, hearty hot dogs, refreshing drinks, and lively atmosphere, Yankee's is the perfect destination for indulgent flavors and good times.</p>
         </div>
         <div class="md:w-1/3">
-          <div class="w-32 h-32 rounded-full bg-gradient-to-br from-yankee-red to-yankee-redDark border-4 border-yankee-gold flex items-center justify-center mx-auto shadow-glow">
-            <span class="font-display text-5xl text-yankee-gold">Y</span>
-          </div>
         </div>
       </div>
     </div>
@@ -1857,7 +1879,7 @@
         <div class="section-title">Order History</div>
         <div class="section-sub" id="orderCountLabel">Your past and current orders</div>
         <div id="profileOrdersList">
-          <div class="text-yankee-cream/40 text-sm text-center py-8">No orders yet. Start by ordering something delicious!</div>
+          <div class="text-yankee-cream/40 text-sm text-center py-8">Loading orders...</div>
         </div>
       </div>
 
@@ -1866,7 +1888,7 @@
         <div class="section-title">Your Bookings</div>
         <div class="section-sub" id="bookingCountLabel">Table reservations you've made</div>
         <div id="profileBookingsList">
-          <div class="text-yankee-cream/40 text-sm text-center py-8">No bookings yet. Reserve a table today!</div>
+          <div class="text-yankee-cream/40 text-sm text-center py-8">Loading bookings...</div>
         </div>
       </div>
     </div>
@@ -2005,7 +2027,7 @@
         <div class="w-10 h-10 rounded-full bg-yankee-red/20 flex items-center justify-center">
           <svg class="w-5 h-5 text-yankee-gold" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/><path d="M12 6v6l4 2"/></svg>
         </div>
-        <div><p class="font-label text-sm text-yankee-cream">Avg. delivery</p><p class="font-display text-lg text-yankee-gold leading-none">2 MIN</p></div>
+        <div><p class="font-label text-sm text-yankee-cream">Avg. delivery</p><p class="font-display text-lg text-yankee-gold leading-none">21 MIN</p></div>
       </div>
     </div>
   </div>
@@ -2763,8 +2785,13 @@
 
   // ============ LOAD ORDERS ============
   function loadOrders() {
-    if (!currentUser) return;
+    if (!currentUser) {
+      profileOrdersList.innerHTML = `<div class="text-yankee-cream/40 text-sm text-center py-8">Please login to view your orders.</div>`;
+      return;
+    }
     if (ordersListener) ordersListener();
+    
+    profileOrdersList.innerHTML = `<div class="text-yankee-cream/40 text-sm text-center py-8">Loading orders...</div>`;
     
     ordersListener = db.collection('orders')
       .where('userId', '==', currentUser.uid)
@@ -2797,10 +2824,16 @@
           const itemList = items.map(i => `${i.qty}x ${i.name}`).join(', ');
           const total = order.total || 0;
           
-          const statusMsg = order.status === 'pending' ? '<div class="text-yankee-gold/60 text-xs mt-1">⏳ Waiting for confirmation...</div>' :
-                            order.status === 'confirmed' ? '<div class="text-green-400/60 text-xs mt-1">✅ Order confirmed! We\'re preparing your food.</div>' :
-                            order.status === 'completed' ? '<div class="text-blue-400/60 text-xs mt-1">✅ Order completed. Enjoy your meal!</div>' :
-                            order.status === 'cancelled' ? '<div class="text-red-400/60 text-xs mt-1">❌ Order cancelled.</div>' : '';
+          let statusMsg = '';
+          if (order.status === 'pending') {
+            statusMsg = `<div class="order-status-msg pending">⏳ Waiting for confirmation...</div>`;
+          } else if (order.status === 'confirmed') {
+            statusMsg = `<div class="order-status-msg confirmed">✅ Order confirmed! We're preparing your food.</div>`;
+          } else if (order.status === 'completed') {
+            statusMsg = `<div class="order-status-msg completed">✅ Order completed. Enjoy your meal!</div>`;
+          } else if (order.status === 'cancelled') {
+            statusMsg = `<div class="order-status-msg cancelled">❌ Order cancelled.</div>`;
+          }
           
           return `
             <div class="order-item">
@@ -2824,8 +2857,13 @@
 
   // ============ LOAD BOOKINGS ============
   function loadBookings() {
-    if (!currentUser) return;
+    if (!currentUser) {
+      profileBookingsList.innerHTML = `<div class="text-yankee-cream/40 text-sm text-center py-8">Please login to view your bookings.</div>`;
+      return;
+    }
     if (bookingsListener) bookingsListener();
+    
+    profileBookingsList.innerHTML = `<div class="text-yankee-cream/40 text-sm text-center py-8">Loading bookings...</div>`;
     
     bookingsListener = db.collection('bookings')
       .where('userId', '==', currentUser.uid)
@@ -2853,6 +2891,13 @@
           const guests = booking.guests || 'N/A';
           const shop = booking.shop || 'N/A';
           
+          let statusMsg = '';
+          if (booking.status === 'pending') {
+            statusMsg = `<div class="order-status-msg pending">⏳ Waiting for confirmation...</div>`;
+          } else if (booking.status === 'confirmed') {
+            statusMsg = `<div class="order-status-msg confirmed">✅ Booking confirmed! See you soon.</div>`;
+          }
+          
           return `
             <div class="booking-item">
               <div class="booking-header">
@@ -2863,8 +2908,7 @@
                 <span class="booking-total">${guests}</span>
               </div>
               <div class="booking-details">${shop} · ${bookingDate} at ${bookingTime}</div>
-              ${booking.status === 'pending' ? '<div class="text-yankee-gold/60 text-xs mt-1">⏳ Waiting for confirmation...</div>' : 
-                booking.status === 'confirmed' ? '<div class="text-green-400/60 text-xs mt-1">✅ Booking confirmed! See you soon.</div>' : ''}
+              ${statusMsg}
             </div>
           `;
         }).join('');
@@ -2878,6 +2922,10 @@
   function updateOrderDots() {
     const dots = document.querySelectorAll('.order-dot, .order-dot-lg');
     dots.forEach(dot => {
+      dot.classList.toggle('show', hasPendingOrder);
+    });
+    const badgeDots = document.querySelectorAll('.badge-dot');
+    badgeDots.forEach(dot => {
       dot.classList.toggle('show', hasPendingOrder);
     });
   }
@@ -3523,7 +3571,7 @@
 📧 *Email:* ${currentUser.email || 'N/A'}
 🆔 *Order ID:* ${orderRef.id}
 📦 *Order Type:* ${orderType}
-${selectedFeeType === 'delivery' ? '🚚 *Delivery Address:* To be confirmed by customer' : '📦 *Pick Up Location:* ' + (selectedFeeType === 'pickup' ? 'Store' : '')}
+${selectedFeeType === 'delivery' ? '🚚 *Delivery Address:* To be confirmed by customer' : '📦 *Pick Up Location:* Store'}
 
 📋 *Items:*
 ${itemList}
@@ -4191,6 +4239,7 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
   console.log('👤 Profile with Account, Orders & Bookings active!');
   console.log('🖼️ Gallery auto-slideshow active!');
   console.log('📦 Basket with Pick Up/Delivery selector active!');
+  console.log('✅ Order status messages (pending/confirmed/completed) displayed!');
 
 })();
 </script>
