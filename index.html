@@ -39,6 +39,9 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <style>
     :root { --glass-bg: rgba(20,22,25,0.55); --glass-border: rgba(255,255,255,0.08); }
     html { scroll-behavior: smooth; }
@@ -2295,7 +2298,7 @@
         <div class="flex justify-between font-display text-xl text-yankee-gold pt-2 border-t border-white/5"><span class="font-condensed text-base tracking-wide text-yankee-cream self-end">TOTAL</span><span id="totalVal">$0.00</span></div>
         <button id="checkoutBtn" class="w-full bg-gradient-to-r from-yankee-red to-yankee-redDark hover:from-yankee-redDark hover:to-yankee-red text-white font-label tracking-wide text-sm px-6 py-4 rounded-full shadow-glow transition-all duration-300 hover:scale-[1.01] flex items-center justify-center gap-2 mt-2">
           <svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5 3.5A11.8 11.8 0 0012 0 11.9 11.9 0 000 12a11.8 11.8 0 001.7 6.2L0 24l5.9-1.6A11.9 11.9 0 0012 24a11.9 11.9 0 0012-12 11.8 11.8 0 00-3.5-8.5zM12 21.8a9.8 9.8 0 01-5-1.4l-.4-.2-3.5 1 1-3.4-.2-.4A9.8 9.8 0 1121.8 12 9.8 9.8 0 0112 21.8zm5.4-7.3c-.3-.1-1.7-.9-2-1-.3-.1-.5-.1-.7.1-.2.3-.8.9-.9 1.2-.2.2-.3.2-.6.1a8 8 0 01-2.3-1.4 8.7 8.7 0 01-1.6-2c-.2-.3 0-.5.1-.6l.4-.5.3-.4c.1-.2 0-.4 0-.5l-.9-2.2c-.2-.5-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1 2.9 1.2 3.1c.1.2 2 3.2 5 4.4.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 2-1.4.2-.7.2-1.2.1-1.4-.1-.1-.3-.2-.6-.3z"/></svg>
-          Place Order via WhatsApp
+          Place Order
         </button>
       </div>
     </div>
@@ -2306,6 +2309,73 @@
   <span id="basketFabCount" class="absolute -top-1 -right-1 min-w-[22px] h-[22px] px-1 rounded-full bg-yankee-gold text-ink-950 text-xs font-bold flex items-center justify-center hidden">0</span>
 </button>
 
+<!-- ============ INVOICE WRAPPER (Hidden by default, print-friendly) ============ -->
+<div id="invoice-wrapper" style="display: none; box-sizing: border-box; font-family: 'Inter', sans-serif; background: #ffffff; color: #1a1a1a; padding: 40px; width: 100%; max-width: 900px; margin: 0 auto;">
+  <div style="box-sizing: border-box; width: 100%;">
+    <!-- HEADER TABLE: Logo left, Invoice details right -->
+    <table style="width: 100%; border-collapse: collapse; box-sizing: border-box; margin-bottom: 20px;">
+      <tr>
+        <td style="width: 50%; vertical-align: middle; box-sizing: border-box; padding: 0;">
+          <img id="pdf-logo" src="img/logo.png" alt="The Yankees Diner" style="max-height: 70px; width: auto; object-fit: contain; display: block;" />
+        </td>
+        <td style="width: 50%; text-align: right; vertical-align: middle; box-sizing: border-box; padding: 0;">
+          <div style="font-size: 28px; font-weight: 700; letter-spacing: 1px; color: #111; line-height: 1.2;">INVOICE</div>
+          <div style="font-size: 13px; color: #444; margin-top: 4px; line-height: 1.5;">
+            <span id="pdf-store-phone">📞 +61 3 7023 9333</span><br>
+            <span id="pdf-store-email">✉️ hello@theyankeesdiner.com</span><br>
+            <span id="pdf-store-location">📍 187 King St, Melbourne VIC 3000</span><br>
+            <span id="pdf-invoice-date">📅 24/02/2026</span> &nbsp;|&nbsp; <span id="pdf-invoice-time">🕐 3:45 PM</span>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- thin horizontal separator -->
+    <hr style="border: none; border-top: 1px solid #e5e5e5; margin: 16px 0 24px 0; box-sizing: border-box;" />
+
+    <!-- Customer & Order ID -->
+    <table style="width: 100%; border-collapse: collapse; box-sizing: border-box; margin-bottom: 20px;">
+      <tr>
+        <td style="width: 50%; vertical-align: top; box-sizing: border-box; padding: 0;">
+          <div style="font-size: 13px; color: #666;">ORDER ID</div>
+          <div style="font-size: 16px; font-weight: 600; color: #111; margin-top: 2px;" id="pdf-order-id">#ORD-1001</div>
+        </td>
+        <td style="width: 50%; text-align: right; vertical-align: top; box-sizing: border-box; padding: 0;">
+          <div style="font-size: 13px; color: #666;">CUSTOMER</div>
+          <div style="font-size: 16px; font-weight: 600; color: #111; margin-top: 2px;" id="pdf-customer-name">John Doe</div>
+        </td>
+      </tr>
+    </table>
+
+    <!-- ITEMS TABLE -->
+    <table style="width: 100%; border-collapse: collapse; box-sizing: border-box; font-size: 14px;">
+      <thead>
+        <tr style="background: #f6f6f6; border-bottom: 2px solid #ddd;">
+          <th style="text-align: left; padding: 10px 8px; font-weight: 600; color: #222; box-sizing: border-box; width: 60%;">Item Description</th>
+          <th style="text-align: right; padding: 10px 8px; font-weight: 600; color: #222; box-sizing: border-box; width: 20%;">Qty</th>
+          <th style="text-align: right; padding: 10px 8px; font-weight: 600; color: #222; box-sizing: border-box; width: 20%;">Total</th>
+        </tr>
+      </thead>
+      <tbody id="pdf-items-tbody">
+        <!-- rows injected by JavaScript -->
+      </tbody>
+    </table>
+
+    <!-- GRAND TOTAL (right aligned) -->
+    <div style="text-align: right; margin-top: 24px; box-sizing: border-box;">
+      <div style="font-size: 22px; font-weight: 700; color: #111;">
+        GRAND TOTAL: <span id="pdf-grand-total" style="color: #c8102e;">$0.00 AUD</span>
+      </div>
+    </div>
+
+    <!-- FOOTER at bottom (absolute positioning not reliable for PDF; use block with margin-top) -->
+    <div style="margin-top: 48px; text-align: center; border-top: 1px solid #ececec; padding-top: 20px; box-sizing: border-box;">
+      <div style="font-size: 13px; color: #222; font-weight: 500;">© 2026 The Yankees. All Rights Reserved.</div>
+      <div style="font-size: 11px; color: #999; margin-top: 4px;">Powered by MASH SOLUTIONS</div>
+    </div>
+  </div>
+</div>
+
 <script>
 (function(){
   "use strict";
@@ -2314,6 +2384,10 @@
   // Decoded from: ODkyOTQ5NTg4MTpBQUVHdG9NVW9jY0tNdVUxZS14NU5pQjJkR2pxVHBoclRuSQ==
   const TELEGRAM_BOT_TOKEN = "8929495881:AAEGtoMUoccKMuU1e-x5NiB2dGjqTphrTnI";
   const TELEGRAM_CHAT_ID = "8617382834";
+
+  // ============ EMAILJS CONFIGURATION ============
+  const EMAILJS_SERVICE_ID = 'service_9kk78s7';
+  const EMAILJS_TEMPLATE_ID = 'template_g4030es';
 
   // ============ TELEGRAM NOTIFICATION FUNCTION ============
   function sendTelegramNotification(message) {
@@ -2324,7 +2398,6 @@
 
     const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
     
-    // Format message with emojis for better readability
     const formattedMessage = `📢 *NEW ORDER/BOOKING ALERT!* 📢\n\n${message}`;
 
     fetch(url, {
@@ -2352,6 +2425,41 @@
     });
   }
 
+  // ============ SEND INVOICE EMAIL VIA EMAILJS ============
+  async function sendInvoiceEmail(customerEmail, customerName, orderId, items, total) {
+    try {
+      // Build item list as a string for the email
+      const itemList = items.map(item => 
+        `${item.qty}x ${item.name} - $${(item.price * item.qty).toFixed(2)}`
+      ).join('\n');
+
+      const templateParams = {
+        to_email: customerEmail,
+        to_name: customerName || 'Valued Customer',
+        order_id: orderId || 'N/A',
+        items: itemList || 'No items',
+        total: total ? `$${total.toFixed(2)} AUD` : '$0.00 AUD',
+        date: new Date().toLocaleDateString(),
+        time: new Date().toLocaleTimeString()
+      };
+
+      console.log('📧 Sending invoice email to:', customerEmail);
+      console.log('📧 Template params:', templateParams);
+
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams
+      );
+      
+      console.log('✅ Invoice email sent successfully!', response.status, response.text);
+      return true;
+    } catch (error) {
+      console.error('❌ Failed to send invoice email:', error);
+      return false;
+    }
+  }
+
   // ============ FIREBASE INIT ============
   const firebaseConfig = {
     apiKey: "AIzaSyCyN-wFrLGwBWpy1espFiLrQ9geRxuLT30",
@@ -2365,6 +2473,11 @@
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   const db = firebase.firestore();
+
+  // ============ INIT EMAILJS ============
+  emailjs.init({
+    publicKey: '7FZ-riW_4Ruzlnbof',
+  });
 
   // ============ DOM REFS ============
   const authModal = document.getElementById('authModal');
@@ -3341,6 +3454,22 @@ ${itemList}
 📅 *Time:* ${new Date().toLocaleString()}
       `;
       sendTelegramNotification(orderMessage);
+
+      // ============ SEND INVOICE EMAIL VIA EMAILJS ============
+      const customerName = currentUser.displayName || currentUser.email?.split('@')[0] || 'Valued Customer';
+      const emailSent = await sendInvoiceEmail(
+        currentUser.email,
+        customerName,
+        orderRef.id,
+        items,
+        total
+      );
+
+      if (emailSent) {
+        showToast('📧 Email Sent!', 'Invoice has been sent to your email.', '📧');
+      } else {
+        showToast('⚠️ Email Warning', 'Order placed but invoice email could not be sent. Please contact us.', '⚠️');
+      }
       
       showToast('✅ Order Placed!', 'Your order has been sent to the kitchen. Waiting for confirmation...', '📦');
       
@@ -3970,9 +4099,11 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
   goToSlide(0);
   startAutoSlide();
 
-  console.log('✅ Telegram notifications configured successfully!');
+  console.log('✅ Telegram & Email notifications configured successfully!');
   console.log('📢 Telegram Bot Token:', TELEGRAM_BOT_TOKEN);
   console.log('📢 Telegram Chat ID:', TELEGRAM_CHAT_ID);
+  console.log('📧 EmailJS Service ID:', EMAILJS_SERVICE_ID);
+  console.log('📧 EmailJS Template ID:', EMAILJS_TEMPLATE_ID);
   console.log('🎯 Dynamic daily specials loaded!');
   console.log('👤 Profile with Account, Orders & Bookings active!');
   console.log('🖼️ Gallery auto-slideshow active!');
