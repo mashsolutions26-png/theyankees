@@ -4280,12 +4280,44 @@
     { day: 'Sunday', date: 5, open: '11:00 AM', close: '1:00 AM', nextDay: true }
   ];
   const dayMap = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const now = new Date();
-  const currentDay = dayMap[now.getDay()];
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
-  const currentHour = now.getHours();
-  const currentMinute = now.getMinutes();
+
+  // ---- Shop's real timezone: Sri Lanka (Asia/Colombo) ----
+  // No matter where the visitor is (Melbourne, London, etc.), all "current time"
+  // calculations below are pinned to Sri Lanka time so the hours/countdown always
+  // reflect the shop's actual local time.
+  function getSriLankaTimeParts() {
+    const fmt = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Asia/Colombo',
+      weekday: 'long',
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      second: 'numeric',
+      hour12: false
+    });
+    const map = {};
+    fmt.formatToParts(new Date()).forEach(p => { if (p.type !== 'literal') map[p.type] = p.value; });
+    let hour = parseInt(map.hour, 10);
+    if (hour === 24) hour = 0; // some locales report midnight as 24
+    return {
+      weekday: map.weekday,
+      year: parseInt(map.year, 10),
+      month: parseInt(map.month, 10) - 1,
+      day: parseInt(map.day, 10),
+      hour,
+      minute: parseInt(map.minute, 10),
+      second: parseInt(map.second, 10)
+    };
+  }
+
+  const slNow = getSriLankaTimeParts();
+  const currentDay = slNow.weekday;
+  const currentMonth = slNow.month;
+  const currentYear = slNow.year;
+  const currentHour = slNow.hour;
+  const currentMinute = slNow.minute;
 
   function isToday(dayData) { return dayData.day === currentDay && currentMonth === 6 && currentYear === 2026; }
   function isOpen(day, open, close, nextDay) {
@@ -4352,9 +4384,9 @@
 
   // ============ COUNTDOWN ============
   function getNextEventTime() {
-    const now = new Date();
-    const totalSeconds = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
-    const todaySched = hoursData.find(h => h.day === currentDay);
+    const slParts = getSriLankaTimeParts();
+    const totalSeconds = slParts.hour * 3600 + slParts.minute * 60 + slParts.second;
+    const todaySched = hoursData.find(h => h.day === slParts.weekday);
     if (!todaySched) return { seconds: 0, type: 'open' };
     let openHour = parseInt(todaySched.open.split(':')[0]), openMin = parseInt(todaySched.open.split(':')[1].split(' ')[0]), openPeriod = todaySched.open.split(' ')[1];
     if (openPeriod === 'PM' && openHour !== 12) openHour += 12;
