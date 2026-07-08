@@ -1961,7 +1961,8 @@
       visibility: visible;
       transform: translateY(0) scale(1);
     }
-    .branch-dropdown .branch-menu a {
+    .branch-dropdown .branch-menu a,
+    .mobile-branch-dropdown .branch-menu a {
       display: flex;
       align-items: center;
       gap: 10px;
@@ -1976,14 +1977,16 @@
     .branch-dropdown .branch-menu a:hover {
       background: rgba(255,255,255,0.05);
     }
-    .branch-dropdown .branch-menu a .branch-dot {
+    .branch-dropdown .branch-menu a .branch-dot,
+    .mobile-branch-dropdown .branch-menu a .branch-dot {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: #c8102e;
       flex-shrink: 0;
     }
-    .branch-dropdown .branch-menu a .branch-dot.active-dot {
+    .branch-dropdown .branch-menu a .branch-dot.active-dot,
+    .mobile-branch-dropdown .branch-menu a .branch-dot.active-dot {
       background: #22c55e;
       box-shadow: 0 0 12px rgba(34,197,94,0.4);
     }
@@ -1994,17 +1997,20 @@
       color: #b0a99b;
       margin-left: auto;
     }
-    .branch-dropdown .branch-menu a.active-branch {
+    .branch-dropdown .branch-menu a.active-branch,
+    .mobile-branch-dropdown .branch-menu a.active-branch {
       background: rgba(244,185,62,0.08);
       border-left: 3px solid #f4b93e;
     }
-    .branch-dropdown .branch-menu a .branch-check {
+    .branch-dropdown .branch-menu a .branch-check,
+    .mobile-branch-dropdown .branch-menu a .branch-check {
       color: #f4b93e;
       margin-left: auto;
       font-size: 0.9rem;
       display: none;
     }
-    .branch-dropdown .branch-menu a.active-branch .branch-check {
+    .branch-dropdown .branch-menu a.active-branch .branch-check,
+    .mobile-branch-dropdown .branch-menu a.active-branch .branch-check {
       display: inline;
     }
 
@@ -2013,6 +2019,8 @@
       width: 100%;
     }
     .mobile-branch-dropdown .branch-trigger {
+      display: flex;
+      align-items: center;
       width: 100%;
       justify-content: space-between;
       padding: 0.6rem 1rem;
@@ -2025,26 +2033,42 @@
     }
     .mobile-branch-dropdown .branch-menu {
       position: static;
-      box-shadow: none;
-      border: none;
-      background: transparent;
-      padding: 0.25rem 0;
-      backdrop-filter: none;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.25);
+      padding: 0.35rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       transform: none;
       opacity: 1;
       visibility: visible;
       display: none;
-      background: rgba(255,255,255,0.02);
-      border-radius: 0.75rem;
-      margin-top: 4px;
+      border-radius: 0.9rem;
+      margin-top: 8px;
       overflow: hidden;
     }
     .mobile-branch-dropdown .branch-menu.active {
       display: block;
+      animation: mobileBranchDropIn 0.22s ease;
+    }
+    @keyframes mobileBranchDropIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .mobile-branch-dropdown .branch-menu a {
-      padding: 0.6rem 1.2rem;
+      padding: 0.75rem 0.85rem;
       font-size: 0.85rem;
+      border-radius: 0.6rem;
+    }
+    .mobile-branch-dropdown .branch-menu a + a {
+      margin-top: 2px;
+    }
+    .mobile-branch-dropdown .branch-menu a:active {
+      background: rgba(255,255,255,0.08);
+    }
+    .mobile-branch-dropdown .branch-menu a.active-branch {
+      border-left: 3px solid #f4b93e;
+      padding-left: calc(0.85rem - 3px);
     }
 
     /* ============ BRANCH-SPECIFIC MENU PANELS ============ */
