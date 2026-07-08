@@ -1893,6 +1893,225 @@
       margin-top: 0.25rem;
       display: none;
     }
+
+    /* Branch dropdown in navbar */
+    .branch-dropdown {
+      display: inline-block;
+      position: relative;
+    }
+    .branch-dropdown .branch-trigger {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.4rem 0.8rem 0.4rem 0.4rem;
+      border-radius: 40px;
+      background: rgba(244,185,62,0.08);
+      border: 1px solid rgba(244,185,62,0.15);
+      color: #f4ede1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .branch-dropdown .branch-trigger:hover {
+      background: rgba(244,185,62,0.15);
+      border-color: rgba(244,185,62,0.3);
+    }
+    .branch-dropdown .branch-trigger .branch-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(200,16,46,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+    }
+    .branch-dropdown .branch-trigger .branch-chevron {
+      color: #b0a99b;
+      font-size: 0.55rem;
+      transition: transform 0.2s;
+      margin-left: 0.2rem;
+    }
+    .branch-dropdown .branch-trigger .branch-chevron.open {
+      transform: rotate(180deg);
+    }
+    .branch-dropdown .branch-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 180px;
+      background: rgba(20,22,25,0.96);
+      backdrop-filter: blur(16px);
+      border-radius: 1rem;
+      padding: 0.5rem 0;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-8px) scale(0.96);
+      transition: all 0.2s ease;
+      z-index: 110;
+    }
+    .branch-dropdown .branch-menu.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0) scale(1);
+    }
+    .branch-dropdown .branch-menu a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.2rem;
+      color: #f4ede1;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: background 0.15s;
+      cursor: pointer;
+    }
+    .branch-dropdown .branch-menu a:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .branch-dropdown .branch-menu a .branch-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c8102e;
+      flex-shrink: 0;
+    }
+    .branch-dropdown .branch-menu a .branch-dot.active-dot {
+      background: #22c55e;
+      box-shadow: 0 0 12px rgba(34,197,94,0.4);
+    }
+    .branch-dropdown .branch-menu a .branch-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      color: #b0a99b;
+      margin-left: auto;
+    }
+    .branch-dropdown .branch-menu a.active-branch {
+      background: rgba(244,185,62,0.08);
+      border-left: 3px solid #f4b93e;
+    }
+    .branch-dropdown .branch-menu a .branch-check {
+      color: #f4b93e;
+      margin-left: auto;
+      font-size: 0.9rem;
+      display: none;
+    }
+    .branch-dropdown .branch-menu a.active-branch .branch-check {
+      display: inline;
+    }
+
+    /* Mobile branch dropdown */
+    .mobile-branch-dropdown {
+      width: 100%;
+    }
+    .mobile-branch-dropdown .branch-trigger {
+      width: 100%;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.08);
+      border-radius: 0.75rem;
+    }
+    .mobile-branch-dropdown .branch-trigger:hover {
+      background: rgba(255,255,255,0.08);
+    }
+    .mobile-branch-dropdown .branch-menu {
+      position: static;
+      box-shadow: none;
+      border: none;
+      background: transparent;
+      padding: 0.25rem 0;
+      backdrop-filter: none;
+      transform: none;
+      opacity: 1;
+      visibility: visible;
+      display: none;
+      background: rgba(255,255,255,0.02);
+      border-radius: 0.75rem;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .mobile-branch-dropdown .branch-menu.active {
+      display: block;
+    }
+    .mobile-branch-dropdown .branch-menu a {
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+    }
+
+    /* ============ BRANCH-SPECIFIC MENU PANELS ============ */
+    .branch-menu-panel {
+      display: block;
+    }
+    .branch-menu-panel.hidden {
+      display: none;
+    }
+    .branch-menu-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .branch-menu-nav button {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: #b0a99b;
+      font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+    }
+    .branch-menu-nav button.active {
+      background: rgba(200,16,46,0.2);
+      border-color: #f4b93e;
+      color: #f4b93e;
+      box-shadow: 0 0 30px rgba(244,185,62,0.08);
+    }
+    .branch-menu-nav button:hover:not(.active) {
+      background: rgba(255,255,255,0.08);
+      color: #f4ede1;
+    }
+    @media (max-width: 480px) {
+      .branch-menu-nav button {
+        font-size: 0.6rem;
+        padding: 0.3rem 0.8rem;
+      }
+    }
+
+    /* Hide native full menu sections when branch is not Melbourne */
+    .branch-dependent {
+      transition: opacity 0.3s ease;
+    }
+
+    /* ============ SURFERS PARADISE DRINKS MENU ============ */
+    .drinks-category-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: #f4b93e;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(244,185,62,0.15);
+      padding-bottom: 0.3rem;
+    }
+    .drinks-category-title:first-of-type {
+      margin-top: 0.5rem;
+    }
   </style>
 </head>
 <body class="bg-ink-950 text-yankee-cream font-sans antialiased selection:bg-yankee-red selection:text-white">
@@ -1903,69 +2122,210 @@
   <div class="page-inner">
     <h1 class="font-display text-4xl sm:text-5xl text-yankee-gold mb-2">OUR FULL MENU</h1>
     <p class="text-yankee-cream/50 text-sm mb-6">Everything we serve — straight from our kitchen to your table.</p>
-    
-    <div class="menu-top-nav" id="menuTopNav">
-      <button class="active" data-target="starters">🍔 Starters & More</button>
-      <button data-target="signature">✨ Signature Dishes</button>
-    </div>
-    
-    <div id="dailySpecialHighlight" class="daily-special-highlight">
-      <div>
-        <span class="day-label" id="todayLabel">TODAY'S SPECIAL</span>
-        <span class="special-name" id="dailySpecialName">Loading...</span>
-      </div>
-      <span class="special-price" id="dailySpecialPrice">$0.00</span>
-    </div>
-    
-    <div class="menu-slider" id="menuSlider">
-      <div class="menu-panel" data-panel="starters" id="menuPanelStarters">
-        <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌮 STARTERS</h2>
-        <div id="menuStartersContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🍗 WINGS & RIBS</h2>
-        <div id="menuWingsContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🧀 NACHOS & LOADED FRIES</h2>
-        <div id="menuNachosContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🍽️ AMERICAN PLATTERS</h2>
-        <div id="menuPlattersContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🍔 BURGERS</h2>
-        <p class="text-sm text-yankee-cream/50 mb-3">GF & Grilled Options Available · Meal deals from $4.99 (excludes fries & drink)</p>
-        <div id="menuBurgersContainer"></div>
-      </div>
-      <div class="menu-panel" data-panel="signature" id="menuPanelSignature">
-        <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌭 AMERICAN HOTDOGS</h2>
-        <p class="text-sm text-yankee-cream/50 mb-3">All dogs are American style charred sausage</p>
-        <div id="menuHotdogsContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🍕 PIZZAS</h2>
-        <div id="menuPizzasContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">✨ SIGNATURE DISHES</h2>
-        <div id="menuSignatureContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🥩 STEAKS — ARLO Queensland 10 Day Grain Fed Beef</h2>
-        <p class="text-sm text-yankee-cream/50 mb-3">ARLO cattle roam under clear blue skies and starry nights of northern Queensland. Each cut expresses the Australian territory upon which it was raised — unmatched tenderness and flavour.</p>
-        <div id="menuSteaksContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🧂 DIPS</h2>
-        <div id="menuDipsContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🧒 KIDS MENU</h2>
-        <p class="text-sm text-yankee-cream/50 mb-3">Served with a soft drink — exclusions apply</p>
-        <div id="menuKidsContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🥗 SALADS</h2>
-        <div id="menuSaladsContainer"></div>
-        <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
-        <div id="menuDessertsContainer"></div>
-        
-        <h2 class="menu-section-title text-yankee-cream">🥤 DRINKS</h2>
-        <p class="text-sm text-yankee-cream/50 mb-3">Refreshing beverages to pair with your meal</p>
-        <div id="menuDrinksContainer"></div>
-      </div>
+
+    <!-- Branch Menu Navigation -->
+    <div class="branch-menu-nav" id="branchMenuNav">
+      <button class="active" data-branch-target="melbourne">🇺🇸 Melbourne CBD</button>
+      <button data-branch-target="hopeisland">🌴 Hope Island</button>
+      <button data-branch-target="surfers">🏖️ Surfers Paradise</button>
     </div>
 
-    <h2 class="menu-section-title text-yankee-cream">📅 WEEKLY LUNCH SPECIALS</h2>
-    <p class="text-sm text-yankee-cream/50 mb-3">Available after any drink purchase · 11:00 AM – 5:00 PM</p>
-    <div id="weeklyLunchSpecials"></div>
-    <h2 class="menu-section-title text-yankee-cream">🍻 HAPPY HOUR</h2>
-    <p class="text-sm text-yankee-cream/50 mb-3">Everyday · 2:00 PM – 6:00 PM <br> 9:30 PM – 11:30 PM</p>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Buy One Cocktail Get One Free</span></div><span class="menu-item-price">—</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any 2 Beer Pots</span></div><span class="menu-item-price">$11.99</span></div>
-    <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any Beer Jug</span></div><span class="menu-item-price">$17.99</span></div>
+    <!-- Melbourne CBD Panel -->
+    <div class="branch-menu-panel" id="panel-melbourne">
+      <div class="menu-top-nav" id="menuTopNav">
+        <button class="active" data-target="starters">🍔 Starters & More</button>
+        <button data-target="signature">✨ Signature Dishes</button>
+      </div>
+      
+      <div id="dailySpecialHighlight" class="daily-special-highlight">
+        <div>
+          <span class="day-label" id="todayLabel">TODAY'S SPECIAL</span>
+          <span class="special-name" id="dailySpecialName">Loading...</span>
+        </div>
+        <span class="special-price" id="dailySpecialPrice">$0.00</span>
+      </div>
+      
+      <div class="menu-slider" id="menuSlider">
+        <div class="menu-panel" data-panel="starters" id="menuPanelStarters">
+          <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌮 STARTERS</h2>
+          <div id="menuStartersContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🍗 WINGS & RIBS</h2>
+          <div id="menuWingsContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🧀 NACHOS & LOADED FRIES</h2>
+          <div id="menuNachosContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🍽️ AMERICAN PLATTERS</h2>
+          <div id="menuPlattersContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🍔 BURGERS</h2>
+          <p class="text-sm text-yankee-cream/50 mb-3">GF & Grilled Options Available · Meal deals from $4.99 (excludes fries & drink)</p>
+          <div id="menuBurgersContainer"></div>
+        </div>
+        <div class="menu-panel" data-panel="signature" id="menuPanelSignature">
+          <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🌭 AMERICAN HOTDOGS</h2>
+          <p class="text-sm text-yankee-cream/50 mb-3">All dogs are American style charred sausage</p>
+          <div id="menuHotdogsContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🍕 PIZZAS</h2>
+          <div id="menuPizzasContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">✨ SIGNATURE DISHES</h2>
+          <div id="menuSignatureContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🥩 STEAKS — ARLO Queensland 10 Day Grain Fed Beef</h2>
+          <p class="text-sm text-yankee-cream/50 mb-3">ARLO cattle roam under clear blue skies and starry nights of northern Queensland. Each cut expresses the Australian territory upon which it was raised — unmatched tenderness and flavour.</p>
+          <div id="menuSteaksContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🧂 DIPS</h2>
+          <div id="menuDipsContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🧒 KIDS MENU</h2>
+          <p class="text-sm text-yankee-cream/50 mb-3">Served with a soft drink — exclusions apply</p>
+          <div id="menuKidsContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🥗 SALADS</h2>
+          <div id="menuSaladsContainer"></div>
+          <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
+          <div id="menuDessertsContainer"></div>
+          
+          <h2 class="menu-section-title text-yankee-cream">🥤 DRINKS</h2>
+          <p class="text-sm text-yankee-cream/50 mb-3">Refreshing beverages to pair with your meal</p>
+          <div id="menuDrinksContainer"></div>
+        </div>
+      </div>
+
+      <h2 class="menu-section-title text-yankee-cream">📅 WEEKLY LUNCH SPECIALS</h2>
+      <p class="text-sm text-yankee-cream/50 mb-3">Available after any drink purchase · 11:00 AM – 5:00 PM</p>
+      <div id="weeklyLunchSpecials"></div>
+      <h2 class="menu-section-title text-yankee-cream">🍻 HAPPY HOUR</h2>
+      <p class="text-sm text-yankee-cream/50 mb-3">Everyday · 2:00 PM – 6:00 PM <br> 9:30 PM – 11:30 PM</p>
+      <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Buy One Cocktail Get One Free</span></div><span class="menu-item-price">—</span></div>
+      <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any 2 Beer Pots</span></div><span class="menu-item-price">$11.99</span></div>
+      <div class="menu-item-row"><div class="menu-item-left"><span class="menu-item-name">Any Beer Jug</span></div><span class="menu-item-price">$17.99</span></div>
+    </div>
+
+    <!-- Hope Island Panel -->
+    <div class="branch-menu-panel hidden" id="panel-hopeisland">
+      <!-- Hope Island Breakfast -->
+      <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🍳 BREAKFAST PLATES</h2>
+      <div id="hopeIslandBreakfastContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🥗 BOWLS</h2>
+      <div id="hopeIslandBowlsContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🧇 SWEET BREAKFAST</h2>
+      <div id="hopeIslandSweetContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🥪 SANDWICHES</h2>
+      <div id="hopeIslandSandwichesContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍹 SMOOTHIES</h2>
+      <div id="hopeIslandSmoothiesContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🧃 FRESH JUICES</h2>
+      <div id="hopeIslandJuicesContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">☕ COFFEE</h2>
+      <div id="hopeIslandCoffeeContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🧋 NOT COFFEE</h2>
+      <div id="hopeIslandNotCoffeeContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🧊 ICED COFFEE</h2>
+      <div id="hopeIslandIcedCoffeeContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🥛 MILK OPTIONS</h2>
+      <div id="hopeIslandMilkContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">➕ EXTRAS</h2>
+      <div id="hopeIslandExtrasContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍽️ MAIN</h2>
+      <p class="text-sm text-yankee-cream/50 mb-3">Where Every Meal Becomes a Memory</p>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-2">START HERE</h3>
+      <div id="hopeIslandStartersContainer"></div>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-4">🔥 GRILL</h3>
+      <div id="hopeIslandGrillContainer"></div>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-4">🍝 PASTA</h3>
+      <div id="hopeIslandPastaContainer"></div>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-4">🍚 RISOTTO</h3>
+      <div id="hopeIslandRisottoContainer"></div>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-4">🥗 SALADS</h3>
+      <div id="hopeIslandSaladsContainer"></div>
+      <h3 class="font-label text-yankee-gold text-sm tracking-wider mt-4">🍽️ SHARING PLATTERS</h3>
+      <div id="hopeIslandPlattersContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍕 PIZZA</h2>
+      <div id="hopeIslandPizzaContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍔 BURGERS</h2>
+      <p class="text-sm text-yankee-cream/50 mb-3">All burgers served with fries · GF bun available +4</p>
+      <div id="hopeIslandBurgersContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🧒 KIDS MENU</h2>
+      <div id="hopeIslandKidsContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍟 SIDES</h2>
+      <div id="hopeIslandSidesContainer"></div>
+      
+      <h2 class="menu-section-title text-yankee-cream">🍰 DESSERTS</h2>
+      <div id="hopeIslandDessertsContainer"></div>
+      
+      <p class="text-sm text-yankee-cream/50 mt-4">Gluten-free options available · vegan & vegetarian options available</p>
+      <p class="text-sm text-yankee-cream/50">All prices include GST · 15% surcharge on public holidays</p>
+    </div>
+
+    <!-- Surfers Paradise Panel -->
+    <div class="branch-menu-panel hidden" id="panel-surfers">
+      <h2 class="menu-section-title text-yankee-cream" style="margin-top:0;">🍺 DRINKS — SURFERS PARADISE</h2>
+      <p class="text-sm text-yankee-cream/50 mb-4">Quench your thirst with our extensive selection of beers, cocktails, wines & more.</p>
+
+      <!-- TASTER BEER PADDLE -->
+      <div class="drinks-category-title">🍺 TASTER BEER PADDLE</div>
+      <p class="text-sm text-yankee-cream/40 mb-2">Choose From Our Tap Beers To Create The Perfect 4 Glass Paddle. All Tasting Glasses Are 110ml</p>
+      <div id="surfersTasterPaddle"></div>
+
+      <!-- BOTTLED BEERS -->
+      <div class="drinks-category-title">🍾 BOTTLED BEERS</div>
+      <div id="surfersBottledBeers"></div>
+
+      <!-- TAP BEER -->
+      <div class="drinks-category-title">🍺 TAP BEER (MUG, PINT, TOWER)</div>
+      <div id="surfersTapBeer"></div>
+
+      <!-- CLASSIC COCKTAILS -->
+      <div class="drinks-category-title">🍸 CLASSIC COCKTAILS</div>
+      <div id="surfersClassicCocktails"></div>
+
+      <!-- SIGNATURE COCKTAIL -->
+      <div class="drinks-category-title">🍹 SIGNATURE COCKTAILS</div>
+      <div id="surfersSignatureCocktails"></div>
+
+      <!-- MOCKTAILS -->
+      <div class="drinks-category-title">🧃 MOCKTAILS (GLASS, BOTTLE)</div>
+      <div id="surfersMocktails"></div>
+
+      <!-- RED WINE -->
+      <div class="drinks-category-title">🍷 RED WINE</div>
+      <div id="surfersRedWine"></div>
+
+      <!-- WHITE WINE -->
+      <div class="drinks-category-title">🥂 WHITE WINE</div>
+      <div id="surfersWhiteWine"></div>
+
+      <!-- SPARKLING -->
+      <div class="drinks-category-title">🍾 SPARKLING</div>
+      <div id="surfersSparkling"></div>
+
+      <!-- BOURBONS -->
+      <div class="drinks-category-title">🥃 BOURBONS</div>
+      <div id="surfersBourbons"></div>
+
+      <!-- TEQUILA -->
+      <div class="drinks-category-title">🌵 TEQUILA</div>
+      <div id="surfersTequila"></div>
+
+      <!-- VODKA -->
+      <div class="drinks-category-title">🍸 VODKA</div>
+      <div id="surfersVodka"></div>
+
+      <!-- WHISKEY & SCOTCH -->
+      <div class="drinks-category-title">🥃 WHISKEY & SCOTCH</div>
+      <div id="surfersWhiskey"></div>
+    </div>
+
     <div class="mt-8 text-center text-yankee-cream/30 text-xs">All prices in AUD · Tax included</div>
   </div>
 </div>
@@ -2270,6 +2630,35 @@
         <img src="img/logo.png" alt="The Yankee's Restaurant & Bar logo" class="logo-img" />
       </a>
       <nav class="hidden lg:flex items-center gap-6 font-label text-sm tracking-wide text-yankee-cream/80">
+        <!-- Branch dropdown in navbar -->
+        <div class="branch-dropdown" id="branchDropdown">
+          <div class="branch-trigger" id="branchTrigger">
+            <span class="branch-icon">📍</span>
+            <span id="selectedBranchLabel">Melbourne CBD</span>
+            <span class="branch-chevron" id="branchChevron">▼</span>
+          </div>
+          <div class="branch-menu" id="branchMenu">
+            <a href="#" data-branch="Melbourne CBD" class="active-branch">
+              <span class="branch-dot active-dot"></span>
+              <span>Melbourne CBD</span>
+              <span class="branch-label">King St</span>
+              <span class="branch-check">✓</span>
+            </a>
+            <a href="#" data-branch="Surfers Paradise">
+              <span class="branch-dot"></span>
+              <span>Surfers Paradise</span>
+              <span class="branch-label">Orchid Ave</span>
+              <span class="branch-check">✓</span>
+            </a>
+            <a href="#" data-branch="Hope Island">
+              <span class="branch-dot"></span>
+              <span>Hope Island</span>
+              <span class="branch-label">Santa Barbara Rd</span>
+              <span class="branch-check">✓</span>
+            </a>
+          </div>
+        </div>
+
         <a href="#" onclick="openFullMenu(); return false;" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Menu</a>
         <a href="#" onclick="openAbout(); return false;" class="tab-underline hover:text-yankee-gold transition-colors duration-300">About</a>
         <a href="#specials" class="tab-underline hover:text-yankee-gold transition-colors duration-300">Specials</a>
@@ -2298,6 +2687,34 @@
     <!-- Mobile Menu -->
     <div id="mobileMenu" class="lg:hidden overflow-hidden max-h-0 transition-all duration-300 ease-in-out">
       <div class="glass-strong rounded-2xl mt-2 px-6 py-6 flex flex-col gap-5 font-label text-base tracking-wide">
+        <!-- Mobile Branch Dropdown -->
+        <div class="mobile-branch-dropdown" id="mobileBranchDropdown">
+          <div class="branch-trigger" id="mobileBranchTrigger">
+            <span style="display:flex;align-items:center;gap:0.5rem;">
+              <span class="branch-icon" style="font-size:0.8rem;">📍</span>
+              <span id="mobileSelectedBranch">Melbourne CBD</span>
+            </span>
+            <span class="branch-chevron" id="mobileBranchChevron">▼</span>
+          </div>
+          <div class="branch-menu" id="mobileBranchMenu">
+            <a href="#" data-branch="Melbourne CBD" class="active-branch">
+              <span class="branch-dot active-dot"></span>
+              <span>Melbourne CBD</span>
+              <span class="branch-check">✓</span>
+            </a>
+            <a href="#" data-branch="Surfers Paradise">
+              <span class="branch-dot"></span>
+              <span>Surfers Paradise</span>
+              <span class="branch-check">✓</span>
+            </a>
+            <a href="#" data-branch="Hope Island">
+              <span class="branch-dot"></span>
+              <span>Hope Island</span>
+              <span class="branch-check">✓</span>
+            </a>
+          </div>
+        </div>
+
         <a href="#" onclick="openFullMenu(); return false;" class="mobile-link hover:text-yankee-gold transition-colors">Menu</a>
         <a href="#" onclick="openAbout(); return false;" class="mobile-link hover:text-yankee-gold transition-colors">About</a>
         <a href="#specials" class="mobile-link hover:text-yankee-gold transition-colors">Specials</a>
@@ -2970,6 +3387,24 @@
   const popupConfirm = document.getElementById('popupConfirm');
   const popupCancel = document.getElementById('popupCancel');
 
+  // Branch Dropdown
+  const branchTrigger = document.getElementById('branchTrigger');
+  const branchMenu = document.getElementById('branchMenu');
+  const branchChevron = document.getElementById('branchChevron');
+  const selectedBranchLabel = document.getElementById('selectedBranchLabel');
+  const mobileBranchTrigger = document.getElementById('mobileBranchTrigger');
+  const mobileBranchMenu = document.getElementById('mobileBranchMenu');
+  const mobileBranchChevron = document.getElementById('mobileBranchChevron');
+  const mobileSelectedBranch = document.getElementById('mobileSelectedBranch');
+  const branchItems = document.querySelectorAll('#branchMenu a[data-branch]');
+  const mobileBranchItems = document.querySelectorAll('#mobileBranchMenu a[data-branch]');
+
+  // Branch menu nav (inside full menu)
+  const branchMenuNavBtns = document.querySelectorAll('#branchMenuNav button');
+  const melbournePanel = document.getElementById('panel-melbourne');
+  const hopeIslandPanel = document.getElementById('panel-hopeisland');
+  const surfersPanel = document.getElementById('panel-surfers');
+
   let currentTab = 'login';
   let currentUser = null;
   let ordersListener = null;
@@ -2978,6 +3413,131 @@
   let selectedFeeType = 'pickup'; // 'pickup' or 'delivery'
   const DELIVERY_FEE = 5.00;
   const SERVICE_FEE_PERCENT = 0.10; // 10%
+
+  // ============ BRANCH DROPDOWN LOGIC ============
+  function setBranch(branch) {
+    const displayNames = {
+      'Melbourne CBD': 'Melbourne CBD',
+      'Surfers Paradise': 'Surfers Paradise',
+      'Hope Island': 'Hope Island'
+    };
+    const label = displayNames[branch] || branch;
+    selectedBranchLabel.textContent = label;
+    mobileSelectedBranch.textContent = label;
+
+    // Update active state in desktop menu
+    branchItems.forEach(item => {
+      const isActive = item.dataset.branch === branch;
+      item.classList.toggle('active-branch', isActive);
+      const dot = item.querySelector('.branch-dot');
+      if (dot) {
+        dot.classList.toggle('active-dot', isActive);
+      }
+    });
+
+    // Update active state in mobile menu
+    mobileBranchItems.forEach(item => {
+      const isActive = item.dataset.branch === branch;
+      item.classList.toggle('active-branch', isActive);
+      const dot = item.querySelector('.branch-dot');
+      if (dot) {
+        dot.classList.toggle('active-dot', isActive);
+      }
+    });
+
+    // Update booking form location
+    const bookingShop = document.getElementById('bookingShop');
+    if (bookingShop) {
+      const optionValues = ['Melbourne CBD', 'Surfers Paradise', 'Hope Island'];
+      if (optionValues.includes(branch)) {
+        bookingShop.value = branch;
+      }
+    }
+
+    // Update branch menu panel in full menu
+    if (branch === 'Hope Island') {
+      melbournePanel.classList.add('hidden');
+      hopeIslandPanel.classList.remove('hidden');
+      surfersPanel.classList.add('hidden');
+      branchMenuNavBtns.forEach(b => b.classList.toggle('active', b.dataset.branchTarget === 'hopeisland'));
+    } else if (branch === 'Surfers Paradise') {
+      melbournePanel.classList.add('hidden');
+      hopeIslandPanel.classList.add('hidden');
+      surfersPanel.classList.remove('hidden');
+      branchMenuNavBtns.forEach(b => b.classList.toggle('active', b.dataset.branchTarget === 'surfers'));
+    } else {
+      melbournePanel.classList.remove('hidden');
+      hopeIslandPanel.classList.add('hidden');
+      surfersPanel.classList.add('hidden');
+      branchMenuNavBtns.forEach(b => b.classList.toggle('active', b.dataset.branchTarget === 'melbourne'));
+    }
+
+    localStorage.setItem('selectedBranch', branch);
+  }
+
+  // Desktop branch trigger
+  if (branchTrigger && branchMenu) {
+    branchTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      branchMenu.classList.toggle('active');
+      branchChevron.classList.toggle('open');
+    });
+
+    document.addEventListener('click', function(e) {
+      const container = document.getElementById('branchDropdown');
+      if (container && !container.contains(e.target)) {
+        branchMenu.classList.remove('active');
+        branchChevron.classList.remove('open');
+      }
+    });
+
+    branchItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const branch = this.dataset.branch;
+        setBranch(branch);
+        branchMenu.classList.remove('active');
+        branchChevron.classList.remove('open');
+      });
+    });
+  }
+
+  // Mobile branch trigger
+  if (mobileBranchTrigger && mobileBranchMenu) {
+    mobileBranchTrigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      mobileBranchMenu.classList.toggle('active');
+      mobileBranchChevron.classList.toggle('open');
+    });
+
+    mobileBranchItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        e.preventDefault();
+        const branch = this.dataset.branch;
+        setBranch(branch);
+        mobileBranchMenu.classList.remove('active');
+        mobileBranchChevron.classList.remove('open');
+      });
+    });
+  }
+
+  // Branch menu nav inside full menu
+  branchMenuNavBtns.forEach(btn => {
+    btn.addEventListener('click', function() {
+      const target = this.dataset.branchTarget;
+      if (target === 'hopeisland') {
+        setBranch('Hope Island');
+      } else if (target === 'surfers') {
+        setBranch('Surfers Paradise');
+      } else {
+        setBranch('Melbourne CBD');
+      }
+    });
+  });
+
+  // Load saved branch
+  const savedBranch = localStorage.getItem('selectedBranch') || 'Melbourne CBD';
+  setBranch(savedBranch);
 
   // ============ TOAST SYSTEM ============
   function showToast(title, message, icon = '🎉') {
@@ -4471,6 +5031,281 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
     { name: 'Water', price: '3.50' }
   ];
 
+  // ===== SURFERS PARADISE DRINKS DATA =====
+  const surfersDrinksData = {
+    'Taster Beer Paddle': [
+      { name: 'Taster Beer Paddle (4 x 110ml)', price: '??', description: 'Choose From Our Tap Beers To Create The Perfect 4 Glass Paddle.' }
+    ],
+    'Bottled Beers': [
+      { name: 'Heineken', price: '??' },
+      { name: 'Corona', price: '??' },
+      { name: 'Carlton Dry', price: '??' },
+      { name: 'Great Northern', price: '??' }
+    ],
+    'Tap Beer': [
+      { name: 'XXXX', price: '??' },
+      { name: 'XXXX Ultra', price: '??' },
+      { name: 'Coors', price: '??' },
+      { name: 'Stone & Wood Pacific Ale', price: '??' },
+      { name: 'Stone & Wood Green Coast Crisp', price: '??' },
+      { name: 'Byron Bay Lager', price: '??' },
+      { name: 'Byron Bay Lemon Squash', price: '??' },
+      { name: 'Burleigh Tropical Pale Ale', price: '??' },
+      { name: 'James Squire Ginger Beer', price: '??' },
+      { name: 'James Squire Pale Ale', price: '??' },
+      { name: 'Tooheys New', price: '??' },
+      { name: 'Hahn 3.5', price: '??' },
+      { name: 'Hahn 4.6', price: '??' },
+      { name: 'Seasonal Rotational', price: '??' },
+      { name: 'Yankee\'s House Beer', price: '??' }
+    ],
+    'Classic Cocktails': [
+      { name: 'Tequila Sunrise', price: '??' },
+      { name: 'Aperol Spritz', price: '??' },
+      { name: 'Negroni', price: '??' },
+      { name: 'Old Fashioned', price: '??' },
+      { name: 'Manhattan', price: '??' },
+      { name: 'Sex On The Beach', price: '??' },
+      { name: 'Cosmopolitan', price: '??' },
+      { name: 'Mojito', price: '??' },
+      { name: 'Long Island Iced Tea', price: '??' },
+      { name: 'Pina Colada', price: '??' }
+    ],
+    'Signature Cocktails': [
+      { name: 'Blue Raspberry Lemonade', price: '??' },
+      { name: 'Rose Kiss Sour', price: '??' },
+      { name: 'Pink Gin Sour', price: '??' },
+      { name: 'Amaretto Sour', price: '??' },
+      { name: 'Strawberry Daiquiri', price: '??' },
+      { name: 'Espresso Martini', price: '??' },
+      { name: 'Just Peachy', price: '??' },
+      { name: 'Margarita', price: '??', description: '🌶️' },
+      { name: 'Coconut Margarita', price: '??' },
+      { name: 'Raspberry Mojito', price: '??' },
+      { name: 'Rum Punch', price: '??' },
+      { name: 'Watermelon Punch', price: '??' },
+      { name: 'Beached', price: '??' }
+    ],
+    'Mocktails': [
+      { name: 'Electric Lemonade', price: '??' },
+      { name: 'Virgin Mojito', price: '??' },
+      { name: 'Pina Colada', price: '??' },
+      { name: 'Watermelon Punch', price: '??' },
+      { name: 'Sunrise', price: '??' },
+      { name: 'Blue Raspberry Lemonade', price: '??' }
+    ],
+    'Red Wine': [
+      { name: 'Jacobs Creek Reserve Cabernet Sauvignon', price: '??' },
+      { name: 'Oyster Bay Pinot Noir', price: '??' },
+      { name: 'Barossa Valley Estate Shiraz', price: '??' }
+    ],
+    'White Wine': [
+      { name: 'Jacobs Creek Chardonnay', price: '??' },
+      { name: 'Mojo Pinot Gris', price: '??' },
+      { name: 'Oyster Bay Sauvignon Blanc', price: '??' },
+      { name: 'Oyster Bay Rose', price: '??' }
+    ],
+    'Sparkling': [
+      { name: 'Grant Burge Prosecco', price: '??' }
+    ],
+    'Bourbons': [
+      { name: 'Wild Turkey', price: '??' },
+      { name: 'Maker\'s Mark', price: '??' },
+      { name: 'Bulleit Rye', price: '??' },
+      { name: 'Buffalo Trace', price: '??' },
+      { name: 'Jim Beam', price: '??' },
+      { name: 'Woodford Reserve', price: '??' }
+    ],
+    'Tequila': [
+      { name: 'Jose Cuervo', price: '??' },
+      { name: 'Don Julio Blanco', price: '??' },
+      { name: '1800 Coconut', price: '??' },
+      { name: '1800 Silver', price: '??' },
+      { name: 'El Jimador', price: '??' },
+      { name: 'Don Julio Reposado', price: '??' },
+      { name: 'Casamigos Blanco', price: '??' },
+      { name: 'Patron Silver', price: '??' },
+      { name: 'Clase Azul Reposado', price: '??' }
+    ],
+    'Vodka': [
+      { name: 'Smirnoff', price: '??' },
+      { name: 'Absolute Vodka', price: '??' },
+      { name: 'Grey Goose', price: '??' },
+      { name: 'Belvedere', price: '??' },
+      { name: 'Haku Vodka', price: '??' },
+      { name: 'Smirnoff Raspberry', price: '??' }
+    ],
+    'Whiskey': [
+      { name: 'Chivas Regal (12 years)', price: '??' },
+      { name: 'Jameson', price: '??' },
+      { name: 'Canadian Club', price: '??' },
+      { name: 'Johnnie Walker Black', price: '??' },
+      { name: 'Johnnie Walker Red', price: '??' },
+      { name: 'Johnnie Walker Green Label', price: '??' },
+      { name: 'Glenfiddich 12 years Single Malt', price: '??' },
+      { name: 'The Macallan', price: '??' },
+      { name: 'Dimple', price: '??' }
+    ]
+  };
+
+  // ===== HOPE ISLAND MENU DATA =====
+  const hopeIslandMenuData = {
+    'Breakfast': [
+      { name: 'Big Breakfast', price: '27', description: 'Bacon, eggs, mushrooms, sausage, baked beans, hash brown & tomato relish.' },
+      { name: 'Open Stack (House Special)', price: '25', description: 'Grilled steak, bacon & eggs, melted cheese, pickled onions, finished with our homemade sauce.' },
+      { name: 'Bacon, Egg & Cheese Roll', price: '19', description: 'Soft roll with crispy bacon, fried egg, melted cheese and tomato relish.' },
+      { name: 'Avo & Feta Smash', price: '19', description: 'Smashed avocado, feta, pickled onions, radish & pumpkin seeds. Served on sourdough or Turkish bread.' },
+      { name: 'Eggs Benedict', price: '19', description: 'Two poached eggs on sourdough or Turkish bread with hollandaise sauce. Mushroom | Smoked Salmon +$5 | Bacon +$4 | Ham +$4' },
+      { name: 'Bacon & Eggs', price: '18', description: 'Free-range eggs and crispy bacon cooked your way, served with potato rosti & tomato relish.' },
+      { name: 'Eggs Your Way', price: '14', description: 'Two free-range eggs cooked your way. Served with sourdough or Turkish bread.' }
+    ],
+    'Bowls': [
+      { name: 'Smoked Salmon Bowl', price: '24', description: 'Smoked salmon, avocado, spinach, pickled onions, cherry tomatoes, capers, sourdough & homemade tangy dressing.' },
+      { name: 'Chilli Eggs', price: '19', description: 'Poached eggs on sourdough with avocado, cherry tomatoes & homemade chilli oil.' },
+      { name: 'Muesli Bowl', price: '17', description: 'Greek yoghurt, toasted muesli & mixed berry compote.' }
+    ],
+    'Sweet Breakfast': [
+      { name: 'Waffles', price: '21', description: 'Maple bacon, vanilla ice cream & berry compote.' },
+      { name: 'Mixed Berry Pancakes', price: '20', description: 'Fluffy pancakes topped with mixed berries, vanilla ice cream, orange & fresh strawberries.' }
+    ],
+    'Sandwiches': [
+      { name: 'BLAT (Spicy Option)', price: '16.5', description: 'Bacon, lettuce, avocado & tomato with sriracha mayo.' },
+      { name: 'BLT', price: '15.5', description: 'Bacon, lettuce, tomato & aioli.' }
+    ],
+    'Smoothies': [
+      { name: 'Green Marina Glow', price: '10', description: 'Spinach, apple, kiwi, ginger & lime.' },
+      { name: 'Tropical Coast', price: '9.5', description: 'Mango, pineapple, banana & coconut milk.' },
+      { name: 'Berry Breeze', price: '9.5', description: 'Mixed berries, banana, yoghurt & honey.' }
+    ],
+    'Juices': [
+      { name: 'Green Detox', price: '10', description: 'Apple, cucumber & celery.' },
+      { name: 'Valencia Orange', price: '9.5', description: 'Freshly squeezed.' },
+      { name: 'Watermelon Mint Cooler', price: '9.5', description: 'Watermelon, mint & lime.' }
+    ],
+    'Coffee': [
+      { name: 'Espresso Single', price: '4.00' },
+      { name: 'Espresso Double', price: '5.00' },
+      { name: 'Long Black', price: '5.00' },
+      { name: 'Short Black', price: '4.00' },
+      { name: 'Flat White', price: '5.00' },
+      { name: 'Latte', price: '5.00' },
+      { name: 'Cappuccino', price: '5.00' },
+      { name: 'Mocha', price: '6.00' },
+      { name: 'Piccolo', price: '5.00' },
+      { name: 'Macchiato', price: '5.00' }
+    ],
+    'Not Coffee': [
+      { name: 'Hot Chocolate', price: '6.00' },
+      { name: 'Chai Latte', price: '6.00' },
+      { name: 'Matcha Latte', price: '6.00' },
+      { name: 'Tea Selection — English Breakfast', price: '5.00' },
+      { name: 'Tea Selection — Earl Grey', price: '5.00' },
+      { name: 'Tea Selection — Peppermint', price: '5.00' },
+      { name: 'Tea Selection — Green Tea', price: '5.00' },
+      { name: 'Tea Selection — Chamomile', price: '5.00' }
+    ],
+    'Iced Coffee': [
+      { name: 'Iced Latte', price: '6.00' },
+      { name: 'Iced Long Black', price: '6.00' },
+      { name: 'Iced Mocha', price: '7.00' },
+      { name: 'Iced Coffee (with milk and ice cream)', price: '7.00' }
+    ],
+    'Milk Options': [
+      { name: 'Full Cream', price: 'Included' },
+      { name: 'Skim', price: 'Included' },
+      { name: 'Soy', price: '+$1.00' },
+      { name: 'Almond', price: '+$1.00' },
+      { name: 'Oat', price: '+$1.00' },
+      { name: 'Lactose Free', price: '+$1.00' }
+    ],
+    'Extras': [
+      { name: 'Extra Shot', price: '+$1.00' },
+      { name: 'Decaf', price: '+$1.00' },
+      { name: 'Vanilla Syrup', price: '+$1.00' },
+      { name: 'Caramel Syrup', price: '+$1.00' },
+      { name: 'Hazelnut Syrup', price: '+$1.00' },
+      { name: 'Chocolate Powder', price: '+$1.00' }
+    ],
+    'Starters': [
+      { name: 'Oysters Natural (6)', price: '??', description: 'Fresh natural oysters served with lemon.' },
+      { name: 'Tandoori Chicken Wings', price: '??', description: 'Charred tandoori wings with warm spices and citrus notes, served with salad & fresh lime.' },
+      { name: 'Karaage Chicken', price: '??', description: 'Japanese fried chicken with Japanese mayo serve with salad.' },
+      { name: 'Prawns (Garlic | Cocktail)', price: '??', description: 'Succulent prawns sauteed in fragrant garlic butter with lemon & herbs, or served chilled with cocktail sauce' },
+      { name: 'Calamari', price: '??', description: 'Crispy beer-battered calamari, golden and tender, served with lemon wedges & house-made aioli.' },
+      { name: 'Garlic Focaccia', price: '??', description: 'Warm toasted focaccia with garlic butter' },
+      { name: 'Bruschetta', price: '??', description: 'Marinated tomato served with ciabatta bread basil, balsamic glaze & olive oil' },
+      { name: 'Arancini', price: '??', description: 'Golden fried risotto balls served with homemade red sauce.' },
+      { name: 'Chicken Wings (6 pcs)', price: '??', description: 'Choice of BBQ, buffalo, Portuguese or hot sauce.' }
+    ],
+    'Grill': [
+      { name: 'Pork Ribs', price: '??', description: 'Slow-cooked house-marinated pork ribs served with fresh Coleslaw and fries.' },
+      { name: 'Scotch Fillet 250g', price: '??', description: 'Premium marbled steak cooked to your liking, served with chips, salad & gravy' },
+      { name: 'Rump Steak 300g', price: '??', description: 'Served with chips, salad & gravy' },
+      { name: 'Slow-Braised Lamb Shank', price: '??', description: 'Slow-cooked lamb served on mash with rich shank sauce with salad.' },
+      { name: 'Pan-Seared Salmon', price: '??', description: 'Crispy skin salmon, pan-seared to perfection, served with mash, salad & hollandaise sauce.' },
+      { name: 'Lasagne', price: '??', description: 'Layered pasta with rich beef ragu, bechamel sauce & melted cheese, served with salad.' },
+      { name: 'Golden Crumbed Chicken Schnitzel', price: '??', description: 'Golden crumbed chicken breast served with salad, fries & gravy.' },
+      { name: 'Signature Chicken', price: '??', description: 'Flame-grilled chicken with capsicum, onion, salad & aioli & lemon.' },
+      { name: 'Crispy Beer-Battered Fish & Chips', price: '??', description: 'Beer battered fish served with fries & tartare sauce & salad.' }
+    ],
+    'Pasta': [
+      { name: 'Rigatoni Ragu', price: '??', description: 'Slow-braised beef ragu finished with parmesan & herbs.' },
+      { name: 'Carbonara Fettuccine', price: '??', description: 'Fettuccine in creamy carbonara with egg yolk, pancetta, parmesan & cracked black pepper.' },
+      { name: 'Gnocchi Napoli', price: '??', description: 'Potato gnocchi in slow-simmered tomato base sauce, basil.' },
+      { name: 'Spaghetti Meatballs', price: '??', description: 'Classic meatballs in rich tomato sauce with shallots & parmesan.' },
+      { name: 'Pollo Funghi Penne', price: '??', description: 'Chicken, mushrooms & creamy garlic sauce.' },
+      { name: 'Cheese & Spinach Ravioli', price: '??', description: 'Ricotta & spinach ravioli in creamy sauce with parmesan.' },
+      { name: 'Spaghetti Aglio e Olio', price: '??', description: 'Garlic, olive oil, chilli & parsley.' }
+    ],
+    'Risotto': [
+      { name: 'Risotto al Gambero', price: '??', description: 'Prawns cooked with creamy base and garlic & herbs.' },
+      { name: 'Risotto Pollo e Funghi', price: '??', description: 'Chicken & mushroom risotto cooked with creamy garlic sauce finished with parmesan.' }
+    ],
+    'Salads': [
+      { name: 'Caesar Salad', price: '??', description: 'Lettuce, cherry tomato, onion, bacon, croutons, cucumber & egg, Caesar dressing.' },
+      { name: 'Green Goddess', price: '??', description: 'Mixed leaves, avocado, feta, onion, olives, cucumber, cherry tomato & green goddess dressing' }
+    ],
+    'Sharing Platters': [
+      { name: 'Meat Platter', price: '??', description: 'Half rack pork rib, wings(6), meatballs(6), pork sausage & salami served with olives & salad.' },
+      { name: 'Seafood Platter', price: '??', description: 'Oysters (6), prawns (garlic & cocktail), calamari, cocktail sauce, aioli, beer batter fish serve with chips & salad.' }
+    ],
+    'Pizza': [
+      { name: 'Garlic Prawn Italiano', price: '??', description: 'Prawns, garlic, tomato & fior di latte' },
+      { name: 'Meat Lover', price: '??', description: 'Hot salami, pork sausage, ham & fior di latte' },
+      { name: 'Truffle Pizza', price: '??', description: 'Truffle oil, mushrooms & fior di latte' },
+      { name: 'Pollo Funghi Alfredo', price: '??', description: 'Chicken, mushrooms, creamy Alfredo sauce & fior di latte' },
+      { name: 'Diavola', price: '??', description: 'Spicy salami, chilli, tomato base & fior di latte' },
+      { name: 'Mediterranean Delight', price: '??', description: 'Pesto, olives, roasted peppers, feta & fior di latte' },
+      { name: 'Margherita', price: '??', description: 'Tomato sauce, basil & fior di latte' }
+    ],
+    'Burgers': [
+      { name: 'The Ozzie Burger', price: '??', description: 'Beef, bacon, egg, beetroot, pineapple, tomato, onion, pickles & lettuce' },
+      { name: 'Southern Fried Chicken', price: '??', description: 'Crispy chicken, slaw, jalapeno, pickles, bacon, aioli & maple syrup' },
+      { name: 'Premium Veg Burger', price: '??', description: 'Vegetable patty, cheese, onion, jalapeno, tomato, lettuce, aioli & ketchup' },
+      { name: 'BBQ Chicken Burger', price: '??', description: 'Fried chicken, cheese, BBQ sauce, aioli, onion, pickles & lettuce' },
+      { name: 'Classic New Yorker', price: '??', description: 'Beef, cheese, pickles, lettuce, maple bacon, ketchup, mustard & mayo' }
+    ],
+    'Kids': [
+      { name: 'Penne Napoli', price: '??', description: 'Penne pasta in tomato basil sauce' },
+      { name: 'Penne Ragu', price: '??', description: 'Penne pasta in slow-braised beef ragu' },
+      { name: 'Margherita Pizza', price: '??', description: 'Tomato sauce, basil & fior di latte' },
+      { name: 'Ham & Cheese Pizza', price: '??', description: 'Tomato sauce, ham & mozzarella' },
+      { name: 'Junior Beef Burger', price: '??', description: 'Beef patty, cheese, lettuce & tomato sauce' },
+      { name: 'Junior Chicken Burger', price: '??', description: 'Grilled chicken, cheese, lettuce & tomato sauce' }
+    ],
+    'Sides': [
+      { name: 'Parmesan Truffle Fries', price: '??' },
+      { name: 'Fries & Aioli', price: '??' },
+      { name: 'Garlic Bread', price: '??' }
+    ],
+    'Desserts': [
+      { name: 'Chocolate Brownie', price: '??' },
+      { name: 'Panna Cotta', price: '??' },
+      { name: 'Chocolate Mousse', price: '??' },
+      { name: 'Tiramisu', price: '??' }
+    ]
+  };
+
   // ===== FULL MENU DATA =====
   const fullMenuData = {
     'Starters': [
@@ -4570,7 +5405,7 @@ ${user ? `👤 *User:* ${user.email || user.displayName || 'Unknown'}` : '👤 *
     ]
   };
 
-const menuCategoryMap = {
+  const menuCategoryMap = {
     'Starters': 'menuStartersContainer',
     'Wings': 'menuWingsContainer',
     'Nachos': 'menuNachosContainer',
@@ -4584,6 +5419,49 @@ const menuCategoryMap = {
     'Kids': 'menuKidsContainer',
     'Salads': 'menuSaladsContainer',
     'Desserts': 'menuDessertsContainer'
+  };
+
+  // Hope Island category container map
+  const hopeIslandCategoryMap = {
+    'Breakfast': 'hopeIslandBreakfastContainer',
+    'Bowls': 'hopeIslandBowlsContainer',
+    'Sweet Breakfast': 'hopeIslandSweetContainer',
+    'Sandwiches': 'hopeIslandSandwichesContainer',
+    'Smoothies': 'hopeIslandSmoothiesContainer',
+    'Juices': 'hopeIslandJuicesContainer',
+    'Coffee': 'hopeIslandCoffeeContainer',
+    'Not Coffee': 'hopeIslandNotCoffeeContainer',
+    'Iced Coffee': 'hopeIslandIcedCoffeeContainer',
+    'Milk Options': 'hopeIslandMilkContainer',
+    'Extras': 'hopeIslandExtrasContainer',
+    'Starters': 'hopeIslandStartersContainer',
+    'Grill': 'hopeIslandGrillContainer',
+    'Pasta': 'hopeIslandPastaContainer',
+    'Risotto': 'hopeIslandRisottoContainer',
+    'Salads': 'hopeIslandSaladsContainer',
+    'Sharing Platters': 'hopeIslandPlattersContainer',
+    'Pizza': 'hopeIslandPizzaContainer',
+    'Burgers': 'hopeIslandBurgersContainer',
+    'Kids': 'hopeIslandKidsContainer',
+    'Sides': 'hopeIslandSidesContainer',
+    'Desserts': 'hopeIslandDessertsContainer'
+  };
+
+  // Surfers Paradise category container map
+  const surfersCategoryMap = {
+    'Taster Beer Paddle': 'surfersTasterPaddle',
+    'Bottled Beers': 'surfersBottledBeers',
+    'Tap Beer': 'surfersTapBeer',
+    'Classic Cocktails': 'surfersClassicCocktails',
+    'Signature Cocktails': 'surfersSignatureCocktails',
+    'Mocktails': 'surfersMocktails',
+    'Red Wine': 'surfersRedWine',
+    'White Wine': 'surfersWhiteWine',
+    'Sparkling': 'surfersSparkling',
+    'Bourbons': 'surfersBourbons',
+    'Tequila': 'surfersTequila',
+    'Vodka': 'surfersVodka',
+    'Whiskey': 'surfersWhiskey'
   };
 
   // Items added live from the Admin Panel (Firestore 'menu' collection)
@@ -4634,6 +5512,55 @@ const menuCategoryMap = {
         grid.appendChild(div);
       });
       drinksContainer.appendChild(grid);
+    }
+  }
+
+  // ===== RENDER HOPE ISLAND MENU =====
+  function populateHopeIslandMenu() {
+    for (const [category, containerId] of Object.entries(hopeIslandCategoryMap)) {
+      const container = document.getElementById(containerId);
+      if (!container) continue;
+      const items = hopeIslandMenuData[category] || [];
+      container.innerHTML = '';
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'menu-item-row';
+        const subHTML = item.description ? `<span class="menu-sub">${item.description}</span>` : '';
+        const priceDisplay = item.price === 'Included' || item.price.startsWith('+') ? item.price : `$${item.price}`;
+        row.innerHTML = `
+          <div class="menu-item-left">
+            <span class="menu-item-name">${item.name} ${subHTML}</span>
+          </div>
+          <span class="menu-item-price">${priceDisplay}</span>
+          ${item.price !== 'Included' && !item.price.startsWith('+') ? `<button class="add-item-btn" data-name="${item.name}" data-price="${item.price}">+</button>` : ''}
+        `;
+        container.appendChild(row);
+      });
+    }
+  }
+
+  // ===== RENDER SURFERS PARADISE DRINKS MENU =====
+  function populateSurfersMenu() {
+    for (const [category, containerId] of Object.entries(surfersCategoryMap)) {
+      const container = document.getElementById(containerId);
+      if (!container) continue;
+      const items = surfersDrinksData[category] || [];
+      container.innerHTML = '';
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.className = 'menu-item-row';
+        const subHTML = item.description ? `<span class="menu-sub">${item.description}</span>` : '';
+        const price = item.price || '??';
+        const priceDisplay = price === '??' ? '??' : `$${price}`;
+        row.innerHTML = `
+          <div class="menu-item-left">
+            <span class="menu-item-name">${item.name} ${subHTML}</span>
+          </div>
+          <span class="menu-item-price">${priceDisplay}</span>
+          ${price !== '??' ? `<button class="add-item-btn" data-name="${item.name}" data-price="${price}">+</button>` : ''}
+        `;
+        container.appendChild(row);
+      });
     }
   }
 
@@ -4689,6 +5616,8 @@ const menuCategoryMap = {
 
   loadWeeklySpecials();
   populateMenu(); // initial paint with static data so the page isn't empty while Firestore loads
+  populateHopeIslandMenu(); // initial paint for Hope Island menu
+  populateSurfersMenu(); // initial paint for Surfers Paradise menu
 
   // Live-sync with the Admin Panel's "Full Menu" (Firestore collection: menu)
   db.collection('menu').onSnapshot((snapshot) => {
@@ -4812,6 +5741,9 @@ const menuCategoryMap = {
   console.log('✅ Order status messages (pending/confirmed/completed) displayed!');
   console.log('⭐ New "Admin Specials" section added to Full Menu page — synced with Firestore `specials` collection!');
   console.log('📞 Phone popup for order confirmation with country code + phone number added!');
+  console.log('📍 Branch dropdown with 3 locations added to navbar!');
+  console.log('🌴 Hope Island full menu added with branch-specific panel!');
+  console.log('🏖️ Surfers Paradise drinks menu added!');
 
 })();
 </script>
